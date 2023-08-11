@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ImageBackground, Image, Animated,ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import {Button,Text } from 'react-native-paper';
+import {Button } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Input from '../../Components/Input';
 import Label from '../../Components/Label';
@@ -38,18 +38,14 @@ const LoginScreen = () => {
 
           <TouchableOpacity>
           <Label textval= "I don't remember my password" styless={{ color: 'blue', marginBottom: hp('2%'),fontSize: wp('3.8%') }} />
-          </TouchableOpacity>
+            
+            </TouchableOpacity>
 
-          <TouchableOpacity>
-            <Button
-              style={[styles.button, { width: wp('60%') }]} // Adjust the width based on your preference
-              contentStyle={{ height: hp('7%') }}
-              labelStyle={styles.buttonLabel}
-            >
-              Login
+           <TouchableOpacity>
+            <Button style={styles.button} contentStyle={{ height: hp('7%') }}>
+              <Text style={{ fontSize: hp('2.5%'), color: colors.white }}>Login</Text>
             </Button>
           </TouchableOpacity>
-
           
 
           <View style={styles.registerContainer}>
@@ -98,23 +94,18 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent:'center',
     width: wp('80%'),
     height: hp('7%'),
     borderWidth: 1,
     borderColor: colors.primary,
-    backgroundColor: colors.primary,
+    backgroundColor:colors.primary,
     borderRadius: wp('2%'),
     paddingHorizontal: wp('2%'),
+    fontSize: hp('6%'), // Adjust font size using responsive height
     color: colors.white,
-    alignSelf: 'center', // Change this line
+    textAlign:'center'    
   },
-  
-  buttonLabel: {
-    fontSize: hp('2.5%'), // Set the desired font size
-    color: colors.white,
-  },
-  
   
   registerContainer: {
     flexDirection: 'row',

@@ -2,6 +2,8 @@ export const colors = {
     primary_dark:'#110822',
     primary: '#160833',
     secondary: '#1d0853',
+    white:'#ffffff',
+    black:'#000000',
     tertiary:'#1f085f',
     background: '#29292b',
     chat_background: '#e3e3e3',
