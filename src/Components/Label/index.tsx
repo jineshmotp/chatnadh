@@ -19,8 +19,9 @@ const styles = StyleSheet.create({
         fontSize: wp('5%'),
         fontWeight: 'bold',
         color: colors.primary,
-        textAlign:'center'
-      },
+        textAlign:'center',
+        
+     },
 });
 
 export default Label;

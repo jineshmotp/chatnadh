@@ -8,7 +8,7 @@ import { colors } from '../../Constants/colors';
 
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-const LoginScreen = () => {
+const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -21,12 +21,13 @@ const LoginScreen = () => {
     console.log('Button pressed!');
   };
 
-  const gotoRegister = () => {
-    navigation.navigate('RegisterScreen');
+  const gotoLogin = () => {
+    navigation.navigate('LoginScreen');
   };
 
   const gotoForgotPassword = () => {
-    navigation.navigate('ForgotPasswordScreen');
+    // Logic to execute when the button is pressed
+    console.log('Button pressed!');
   };
 
   useEffect(() => {
@@ -73,31 +74,28 @@ const LoginScreen = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
           >
-            <Label textval="WELCOME TO CHATNADH" styless={{ marginTop: hp('0%'), marginBottom: hp('3%') }} />
-
+            <Label textval="FORGOT PASSWORD" styless={{ marginTop: hp('0%'), marginBottom: hp('3%') }} />
+            
             <Input label="Email" secure={false} iconName="envelope" />
-            <Input label="Password" secure={true} iconName="lock" />
-
-            <TouchableOpacity onPress={gotoForgotPassword}>
-              <Label textval="I don't remember my password" styless={{ color: 'blue', marginBottom: hp('2%'), fontSize: wp('3.8%') }} />
-            </TouchableOpacity>
+            <Input label="New Password" secure={true} iconName="lock" />
+            <Input label="Re Enter New Password" secure={true} iconName="lock" />
 
             <ButtonInput
               styless={{ width: wp('80%'), backgroundColor: colors.primary }}
               contentStyle={{ height: hp('7%') }}
               labelStyle={{ fontSize: hp('2.5%'), color: colors.white, fontWeight: 'bold' }}
               onPress={handleButtonPress}
-              label="LOGIN"
+              label="UPDATE PASSWORD"
             />
 
             <View style={styles.registerContainer}>
               <Label
-                textval="Don't have an account?"
+                textval="Already have an account?"
                 styless={{ color: colors.tertiary, marginRight: wp('1%'), fontSize: hp('2.5%'), flexShrink: 1, marginTop: hp('3%'), marginBottom: hp('3%') }}
               />
 
-              <TouchableOpacity style={styles.registerLink} onPress={gotoRegister}>
-                <Label textval="Register" styless={{ color: 'blue', marginRight: wp('1%'), fontSize: hp('2.5%'), flexShrink: 1, marginTop: hp('3%'), marginBottom: hp('3%') }} />
+              <TouchableOpacity style={styles.registerLink} onPress={gotoLogin}>
+                <Label textval="Login" styless={{ color: 'blue', marginRight: wp('1%'), fontSize: hp('2.5%'), flexShrink: 1, marginTop: hp('3%'), marginBottom: hp('3%') }} />
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -144,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default ForgotPasswordScreen;
