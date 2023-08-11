@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ImageBackground, Image, Animated,ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import {Button,Text } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Input from '../../Components/Input';
 import Label from '../../Components/Label';
+import ButtonInput from '../../Components/ButtonInput';
 import { colors } from '../../Constants/colors';
 
 const LoginScreen = () => {
   const [scaleAnim] = useState(new Animated.Value(0)); // Initial value for scale: 0
 
+  const handleButtonPress = () => {
+    // Logic to execute when the button is pressed
+    console.log('Button pressed!');
+  };
+
+  
+  
   useEffect(() => {
     Animated.spring(
       scaleAnim,
@@ -40,16 +47,13 @@ const LoginScreen = () => {
           <Label textval= "I don't remember my password" styless={{ color: 'blue', marginBottom: hp('2%'),fontSize: wp('3.8%') }} />
           </TouchableOpacity>
 
-          <TouchableOpacity>
-            <Button
-              style={[styles.button, { width: wp('60%') }]} // Adjust the width based on your preference
+          <ButtonInput
+              styless={{ width: wp('80%') }}
               contentStyle={{ height: hp('7%') }}
-              labelStyle={styles.buttonLabel}
-            >
-              Login
-            </Button>
-          </TouchableOpacity>
-
+              labelStyle={{ fontSize: hp('2.5%'), color: colors.white }}
+              onPress={handleButtonPress}
+              label="Login"
+            />
           
 
           <View style={styles.registerContainer}>
@@ -69,6 +73,8 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   containerTop: {
     flex: 1,
@@ -81,39 +87,18 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   containerBottom: {
-    
+    width: wp('100%'),
     borderTopLeftRadius: wp('8%'),
     borderTopRightRadius: wp('8%'),
     alignItems: 'center',
     padding: wp('5%'),
-    backgroundColor: 'white',
-    
+    backgroundColor: 'white',    
   },
 
   scrollViewContent: {
     flexGrow: 1, // Allow content to be scrollable
     justifyContent: 'space-between', // Distribute content evenly vertically
   },  
- 
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: wp('80%'),
-    height: hp('7%'),
-    borderWidth: 1,
-    borderColor: colors.primary,
-    backgroundColor: colors.primary,
-    borderRadius: wp('2%'),
-    paddingHorizontal: wp('2%'),
-    color: colors.white,
-    alignSelf: 'center', // Change this line
-  },
-  
-  buttonLabel: {
-    fontSize: hp('2.5%'), // Set the desired font size
-    color: colors.white,
-  },
   
   
   registerContainer: {
