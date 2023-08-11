@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
         fontSize: wp('5%'),
         fontWeight: 'bold',
         color: colors.primary,
-        marginBottom: hp('3%'), // Adjust margin to fit better
         textAlign:'center'
       },
 });

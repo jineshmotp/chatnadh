@@ -7,7 +7,8 @@ import ButtonInput from '../../Components/ButtonInput';
 import { colors } from '../../Constants/colors';
 
 const LoginScreen = () => {
-  const [scaleAnim] = useState(new Animated.Value(0)); // Initial value for scale: 0
+  const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
+  const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
 
   const handleButtonPress = () => {
     // Logic to execute when the button is pressed
@@ -17,15 +18,25 @@ const LoginScreen = () => {
   
   
   useEffect(() => {
-    Animated.spring(
-      scaleAnim,
-      {
-        toValue: 1,
-        friction: 3,
-        useNativeDriver: true,
-      }
-    ).start();
-  }, []);
+    Animated.parallel([
+      Animated.timing(
+        fadeAnim,
+        {
+          toValue: 1,
+          duration: 1000, // Adjust the duration as needed
+          useNativeDriver: true,
+        }
+      ),
+      Animated.timing(
+        translateYAnim,
+        {
+          toValue: 0,
+          duration: 1000, // Adjust the duration as needed
+          useNativeDriver: true,
+        }
+      ),
+    ]).start();
+  }, [fadeAnim, translateYAnim]);
 
   return (
     <ImageBackground source={require('../../Images/background.jpg')} style={styles.main_container}>
@@ -34,9 +45,8 @@ const LoginScreen = () => {
      </View>
 
     <KeyboardAvoidingView >
-    <Animated.View style={[styles.containerBottom, { transform: [{ scale: scaleAnim }] }]}>
-
-          <Label textval= "WELCOME TO CHATNADH"  />
+    <Animated.View style={[styles.containerBottom, { opacity: fadeAnim, transform: [{ translateY: translateYAnim }] }]}>
+          <Label textval= "WELCOME TO CHATNADH" styless={{marginTop: hp('0%'),marginBottom: hp('3%')}} />
          
 
           <Input label="Email" secure={false} iconName="envelope" />
@@ -48,19 +58,19 @@ const LoginScreen = () => {
           </TouchableOpacity>
 
           <ButtonInput
-              styless={{ width: wp('80%') }}
+              styless={{ width: wp('80%') , backgroundColor:colors.primary}}
               contentStyle={{ height: hp('7%') }}
-              labelStyle={{ fontSize: hp('2.5%'), color: colors.white }}
+              labelStyle={{ fontSize: hp('2.5%'), color: colors.white, fontWeight:'bold' }}
               onPress={handleButtonPress}
-              label="Login"
+              label="LOGIN"
             />
           
 
           <View style={styles.registerContainer}>
-          <Label textval= "Don't have an account?" styless={{  color: colors.tertiary,marginRight: wp('1%'),fontSize: hp('2.5%'),flexShrink: 1, }} />  
+          <Label textval= "Don't have an account?" styless={{  color: colors.tertiary,marginRight: wp('1%'),fontSize: hp('2.5%'),flexShrink: 1,marginTop: hp('3%'),marginBottom: hp('3%'), }} />  
           
           <TouchableOpacity style={styles.registerLink}>
-          <Label textval= "Register" styless={{   color: 'blue',marginRight: wp('1%'),fontSize: hp('2.5%'),flexShrink: 1,marginTop: wp('6%'),  }} />  
+          <Label textval= "Register" styless={{   color: 'blue',marginRight: wp('1%'),fontSize: hp('2.5%'),flexShrink: 1, marginTop: hp('3%'),marginBottom: hp('3%'),  }} />  
            </TouchableOpacity>
         </View>
 
@@ -99,14 +109,11 @@ const styles = StyleSheet.create({
     flexGrow: 1, // Allow content to be scrollable
     justifyContent: 'space-between', // Distribute content evenly vertically
   },  
-  
-  
+    
   registerContainer: {
-    flexDirection: 'row',
-    marginTop: hp('2%'),
+    flexDirection: 'row',   
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: hp('3%'), // Increase margin bottom for better spacing
+    justifyContent: 'center',   
     flexWrap: 'wrap', // Allow text to wrap to next line
   }, 
   registerLink: {
