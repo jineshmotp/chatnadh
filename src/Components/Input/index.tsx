@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { View, StyleSheet,TextInput } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../Constants/colors';
@@ -20,11 +19,12 @@ const Input: FunctionComponent<InputProps> = ({ label, secure, iconName,onChange
       </View>
       <View style={styles.inputWrapper}>
         <TextInput
-          label={label}
+          placeholder={label}          
           style={styles.input}
           secureTextEntry={secure} // Use the secure prop here
           theme={{ colors: { primary: 'transparent' } }}
           onChangeText={onChangeText}
+          textAlignVertical="center" // Add this line
         />
       </View>
     </View>
@@ -54,16 +54,18 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flex: 1,
     marginLeft: wp('2%'),
-    backgroundColor: 'transparent', // Set input background to transparent
+    backgroundColor: 'transparent',
     borderRadius: wp('2%'),
-    overflow: 'hidden', // To prevent child element (TextInput) from overflowing
+    overflow: 'hidden',
   },
   input: {
     backgroundColor: 'transparent',
-    flex: 1,
     fontSize: wp('4%'),
     color: colors.primary,
+    paddingTop: 0, // Reset paddingTop
+    paddingBottom: 0, // Reset paddingBottom
   },
+
 });
 
 export default Input;

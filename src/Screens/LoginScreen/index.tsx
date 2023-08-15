@@ -8,9 +8,14 @@ import Label from '../../Components/Label';
 import ButtonInput from '../../Components/ButtonInput';
 import { colors } from '../../Constants/colors';
 
+import { TextInput } from 'react-native';
+
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../redux-actions/userActions';
 import { useRoute, useNavigation } from '@react-navigation/native';
+
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const LoginScreen: React.FC<Props> = ({ }) => {
 
@@ -127,11 +132,13 @@ const LoginScreen: React.FC<Props> = ({ }) => {
           >
             <Label textval="WELCOME TO CHATNADH" styless={{ marginTop: hp('0%'), marginBottom: hp('3%') }} />
 
-            <Input label="Email" 
+             <Input 
+            label="Email" 
             secure={false} 
             iconName="envelope"
             onChangeText={handleEmailChange}
-             />
+             /> 
+
             <Input 
             label="Password" 
             secure={true} 
@@ -209,6 +216,7 @@ const styles = StyleSheet.create({
   registerLink: {
     marginLeft: wp('1%'),
   },
+  
 });
 
 export default LoginScreen;
