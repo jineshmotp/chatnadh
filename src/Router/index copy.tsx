@@ -44,7 +44,17 @@ const Router = () => {
             name="ForgotPasswordScreen"
             component={ForgotPasswordScreen}
             options={{ headerShown: false }}
-          />          
+          />
+
+          
+<RouterStack.Screen
+            name="BottomTabNav"
+            component={BottomTabNav}
+            options={{ headerShown: false }}
+          />
+          
+          
+          
           
           
         </>

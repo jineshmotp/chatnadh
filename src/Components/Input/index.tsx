@@ -9,9 +9,10 @@ interface InputProps {
   label: string;
   secure?: boolean; // Make secure prop optional
   iconName: string; // Corrected prop name to camelCase
+  onChangeText?: (text: string) => void; // Add this prop
 }
 
-const Input: FunctionComponent<InputProps> = ({ label, secure, iconName }) => {
+const Input: FunctionComponent<InputProps> = ({ label, secure, iconName,onChangeText }) => {
   return (
     <View style={styles.inputContainer}>
       <View style={styles.iconContainer}>
@@ -23,6 +24,7 @@ const Input: FunctionComponent<InputProps> = ({ label, secure, iconName }) => {
           style={styles.input}
           secureTextEntry={secure} // Use the secure prop here
           theme={{ colors: { primary: 'transparent' } }}
+          onChangeText={onChangeText}
         />
       </View>
     </View>
