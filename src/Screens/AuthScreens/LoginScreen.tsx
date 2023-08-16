@@ -11,11 +11,12 @@ import { colors } from '../../Constants/colors';
 import { TextInput } from 'react-native';
 
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '../../redux-actions/userActions';
+import { login,checkLoginStatus } from '../../redux-actions/userActions';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import LoadingScreen from '../../Components/LoadingScreen';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -47,15 +48,10 @@ const LoginScreen = () => {
     return emailRegex.test(email);
   };
 
-  // useEffect(() => {
-  //   if (user) {
-  //     navigation.navigate('AppStack'); // Navigate to BottomTabNav when user is authenticated
-  //   }
-  // }, [user, navigation]);
-    
+ 
 
   
-  const gotoLogin = () => {
+  const gotoLogin = async() => {
    
     console.log(email+' '+password);
     seterrorMsg('');
@@ -65,10 +61,16 @@ const LoginScreen = () => {
       seterrorMsg('Please Enter a valid Email');
     } else if (password.length < 8) {
       seterrorMsg('Password must be at least 8 characters');
-    } else {
-      seterrorMsg(''); // Clear error message if everything is valid
-      dispatch(login(email, password));
-      console.log(error)
+    } 
+    
+    else {
+      try {
+        await dispatch(login(email, password));
+        seterrorMsg(''); // Clear error message if everything is valid                          
+      } catch (error) {
+        seterrorMsg(error.message);
+      }      
+      
     }
 
   };
@@ -80,6 +82,13 @@ const LoginScreen = () => {
   const gotoForgotPassword = () => {
     navigation.navigate('ForgotPasswordScreen');
   };
+
+  // useEffect(() => {
+  //   if (user) {
+  //     checkLoginStatus();
+  //   }
+  // }, [user, navigation]);
+    
 
   useEffect(() => {
     Animated.parallel([
@@ -112,7 +121,9 @@ const LoginScreen = () => {
   }, []);
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color={colors.primary} />;
+    return (
+      <LoadingScreen />
+    )
   }
 
   return (

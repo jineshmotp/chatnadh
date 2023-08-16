@@ -17,6 +17,11 @@ const Router = () => {
   const dispatch = useDispatch();
 
   const [logstatus, setLogstatus] = useState(false);
+  const [loadinstack, setLoadinstack] = useState(false);
+
+  const userLogin = useSelector(state => state.userLogin);
+  const { user } = userLogin;
+
 
   useEffect(() => {
     dispatch(checkLoginStatus());
@@ -28,8 +33,10 @@ const Router = () => {
       .then(isLoggedIn => {
         if (isLoggedIn) {
           setLogstatus(true);
+          setLoadinstack(true);
         } else {
           setLogstatus(false);
+          setLoadinstack(true);
         }
       })
       .catch(error => {
@@ -38,15 +45,23 @@ const Router = () => {
   }, [dispatch]); // Make sure to include dispatch in the dependency array
 
 
+  if(loadinstack == false)
+  {
+    return (
+      <LoadingScreen/>
 
-  const refreshScreen = () => {
-    <LoadingScreen />
-  };
+    )
+
+  }
 
 
   return (
-    <NavigationContainer>
-      {logstatus ? <AppStack /> : <AuthStack  />}
+    <NavigationContainer >
+      {user ? (
+        <AppStack  />
+      ) : (
+        <AuthStack />
+      )}
     </NavigationContainer>
   );
 };
