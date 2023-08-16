@@ -1,13 +1,26 @@
-import React, { FC } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
+import storePromise from './store'; // Import the store promise
 import Router from './src/Router';
-import { Provider } from 'react-redux'; // Import the Provider
-import store from './store'; // Import the store from the root
 
-const App: FC = () => {
+const App: React.FC = () => {
+  const [resolvedStore, setResolvedStore] = useState(null);
+
+  useEffect(() => {
+    storePromise.then(store => {
+      setResolvedStore(store);
+    });
+  }, []);
+
+  if (!resolvedStore) {
+    // Return null or an empty component while the store is being resolved
+    return null;
+  }
+
   return (
-    <Provider store={store}>
-   <Router />
-   </Provider>
+    <Provider store={resolvedStore}>
+      <Router />
+    </Provider>
   );
 };
 

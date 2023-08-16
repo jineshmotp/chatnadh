@@ -4,13 +4,13 @@ import ChatListScreen from '../Screens/ChatListScreen';
 import NotificationScreen from '../Screens/NotificationScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Tab = createBottomTabNavigator();
+const AppStackScreen = createBottomTabNavigator();
 
-const BottomTabNav = () => {
+const AppStack = () => {
   return (
-    <Tab.Navigator
+    <AppStackScreen.Navigator
     screenOptions={{headerShown: false}}>
-      <Tab.Screen
+      <AppStackScreen.Screen
         component={ChatListScreen}
         name="ChatListScreen"
         options={{
@@ -20,7 +20,7 @@ const BottomTabNav = () => {
           ),
         }}
       />
-      <Tab.Screen
+      <AppStackScreen.Screen
         component={NotificationScreen}
         name="NotificationScreen"
         options={{
@@ -29,8 +29,8 @@ const BottomTabNav = () => {
           ),
         }}
       />     
-    </Tab.Navigator>
+    </AppStackScreen.Navigator>
   );
 };
 
-export default BottomTabNav;
+export default AppStack;

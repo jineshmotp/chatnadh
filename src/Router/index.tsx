@@ -1,57 +1,45 @@
 // src/Router/index.tsx
-import React from 'react';
+import React, {useEffect,useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../Screens/LoginScreen';
-import RegisterScreen from '../Screens/RegisterScreen';
-import ForgotPasswordScreen from '../Screens/ForgotPasswordScreen';
-import BottomTabNav from './BottomTabNav';
+
+import AppStack from './AppStack';
+import AuthStack from './AuthStack';
+
+import { checkLoginStatus } from '../redux-actions/userActions';
 
 import { useDispatch, useSelector } from 'react-redux'
 
-const RouterStack = createNativeStackNavigator();
 
 const Router = () => {
+  const dispatch = useDispatch();
 
-  const userLogin = useSelector(state => state.userLogin);
-  const {user,isloading,error } = userLogin
+  const [logstatus, setLogstatus] = useState(false);
+
+  useEffect(() => {
+    dispatch(checkLoginStatus());
+  }, []);
+
+  useEffect(() => {
+    // Dispatch the action using the dispatch function
+    dispatch(checkLoginStatus())
+      .then(isLoggedIn => {
+        if (isLoggedIn) {
+          setLogstatus(true);
+        } else {
+          setLogstatus(false);
+        }
+      })
+      .catch(error => {
+        console.log('Error checking login status:', error);
+      });
+  }, [dispatch]); // Make sure to include dispatch in the dependency array
+
 
   return (
-   
     <NavigationContainer>
-    <RouterStack.Navigator>
-      {user ? ( // Check if the user is authenticated
-        <>
-          <RouterStack.Screen
-            name="BottomTabNav"
-            component={BottomTabNav}
-            options={{ headerShown: false }}
-          />
-        </>
-      ) : (
-        <>
-          <RouterStack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
-          <RouterStack.Screen
-            name="RegisterScreen"
-            component={RegisterScreen}
-            options={{ headerShown: false }}
-          />
-          <RouterStack.Screen
-            name="ForgotPasswordScreen"
-            component={ForgotPasswordScreen}
-            options={{ headerShown: false }}
-          />          
-          
-          
-        </>
-      )}
-    </RouterStack.Navigator>
-  </NavigationContainer>
-   
+      {logstatus ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
   );
 };
 

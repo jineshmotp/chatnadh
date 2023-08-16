@@ -17,8 +17,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const LoginScreen: React.FC<Props> = ({ }) => {
-
+const LoginScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const [email, setEmail] = useState('');
@@ -48,11 +47,11 @@ const LoginScreen: React.FC<Props> = ({ }) => {
     return emailRegex.test(email);
   };
 
-  useEffect(() => {
-    if (user) {
-      navigation.navigate('BottomTabNav'); // Navigate to BottomTabNav when user is authenticated
-    }
-  }, [user, navigation]);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigation.navigate('AppStack'); // Navigate to BottomTabNav when user is authenticated
+  //   }
+  // }, [user, navigation]);
     
 
   
