@@ -28,9 +28,16 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 export const logout = () => async (dispatch) => {
-  await auth.signOut();
+  try {
+   
+    await auth.signOut();
+    dispatch({ type: USER_LOGOUT });
 
-  dispatch({ type: USER_LOGOUT });
+    return Promise.resolve(); // Resolve the promise if logout is successful
+  } catch (error) {
+    return Promise.reject(error); // Reject the promise if logout fails
+  }
+
 };
 
 export const checkLoginStatus = () => async (dispatch) => { // Wrap the action creator in an async function

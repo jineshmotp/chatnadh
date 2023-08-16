@@ -11,36 +11,12 @@ import {
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ButtonInput from '../../Components/ButtonInput';
-import { colors } from '../../Constants/colors';
 
-import { useDispatch, useSelector } from 'react-redux'
-import { logout,checkLoginStatus } from '../../redux-actions/userActions';
-import { useRoute, useNavigation } from '@react-navigation/native';
-
-
-import LoadingScreen from '../../Components/LoadingScreen';
-
-const NotificationScreen = () => {
-  const navigation = useNavigation();
+const SettingsScreen = () => {
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
-  
-  const dispatch = useDispatch()
-  const userLogin = useSelector(state => state.userLogin)
-  const {user,isLoading,error } = userLogin
 
-  
-  const gotoLogout = async () => {
-    try {
-      await dispatch(logout()); // Await the logout action     
-    } catch (error) {
-      console.error('Logout failed:', error);
-      // Optionally, you could display an error message to the user
-    }
-  };
-    
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -78,19 +54,8 @@ const NotificationScreen = () => {
           { opacity: fadeAnim, transform: [{ translateY: translateYAnim }] },
         ]}
       >
-
-            <ButtonInput
-              styless={{ width: wp('80%'), backgroundColor: colors.primary }}
-              contentStyle={{ height: hp('7%') }}
-              labelStyle={{ fontSize: hp('2.5%'), color: colors.white, fontWeight: 'bold' }}
-              onPress={gotoLogout}
-              label="LOGOUT"
-            />
-
-
-
-
-       
+        {/* Your content here */}
+        <Text style={styles.notificationText}>SettingsScreen</Text>
       </Animated.View>
 
       {/* Modal */}
@@ -176,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotificationScreen;
+export default SettingsScreen;

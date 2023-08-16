@@ -55,7 +55,9 @@ const LoginScreen = () => {
     
 
   
-  const gotoLogin = async () => {
+  const gotoLogin = () => {
+   
+    console.log(email+' '+password);
     seterrorMsg('');
     if (email === "" || password === "") {
       seterrorMsg('Please Enter valid Email/Password');
@@ -65,15 +67,10 @@ const LoginScreen = () => {
       seterrorMsg('Password must be at least 8 characters');
     } else {
       seterrorMsg(''); // Clear error message if everything is valid
-  
-      try {
-        await dispatch(login(email, password));        
-        navigation.navigate('AppStack'); // Navigate to AppStack after successful login
-      } catch (error) {
-        console.error('Login failed:', error);
-        // Handle login error (show error message, etc.)
-      }
+      dispatch(login(email, password));
+      console.log(error)
     }
+
   };
 
   const gotoRegister = () => {

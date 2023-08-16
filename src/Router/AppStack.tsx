@@ -10,6 +10,7 @@ const AppStack = () => {
   return (
     <AppStackScreen.Navigator
     screenOptions={{headerShown: false}}>
+     
       <AppStackScreen.Screen
         component={ChatListScreen}
         name="ChatListScreen"
@@ -20,15 +21,18 @@ const AppStack = () => {
           ),
         }}
       />
-      <AppStackScreen.Screen
-        component={NotificationScreen}
-        name="NotificationScreen"
-        options={{
-          tabBarIcon: ({color}) => (
-            <Icon name="user" color={color} size={25} />
-          ),
-        }}
-      />     
+
+        <AppStackScreen.Screen 
+            name="NotificationScreen"        
+            component={NotificationScreen}
+            options={{
+              tabBarIcon: ({color}) => (
+                <Icon name="user" color={color} size={25} />
+              ),
+            }}  
+          />
+              
+
     </AppStackScreen.Navigator>
   );
 };

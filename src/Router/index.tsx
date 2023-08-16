@@ -3,6 +3,8 @@ import React, {useEffect,useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import LoadingScreen from '../Components/LoadingScreen';
+
 import AppStack from './AppStack';
 import AuthStack from './AuthStack';
 
@@ -36,9 +38,15 @@ const Router = () => {
   }, [dispatch]); // Make sure to include dispatch in the dependency array
 
 
+
+  const refreshScreen = () => {
+    <LoadingScreen />
+  };
+
+
   return (
     <NavigationContainer>
-      {logstatus ? <AppStack /> : <AuthStack />}
+      {logstatus ? <AppStack /> : <AuthStack  />}
     </NavigationContainer>
   );
 };
