@@ -3,24 +3,49 @@ import {
   View,
   Text,
   Animated,
-  ImageBackground
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ModelPopup from '../../Components/ModelPopup';
-import Header  from '../../Components/Header';
+import Header from '../../Components/Header';
+import BackgroundImage from '../../Components/BackgroundImage';
+import ButtonInput from '../../Components/ButtonInput';
+import { colors } from '../../Constants/colors';
 import styles from './styles';
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../../redux-actions/userActions';
+
+
+const userImage = require('../../Images/chatnadh_logo.png'); // Replace with your user image asset
 
 const SettingsScreen = () => {
-  const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
-  const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
-  const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
-  
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [translateYAnim] = useState(new Animated.Value(30));
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const dispatch = useDispatch()
+  const userLogin = useSelector(state => state.userLogin)
+  const {user,isLoading,error } = userLogin
+
+
   const closeModal = () => {
     setModalVisible(false);
   };
 
   const openModal = () => {
     setModalVisible(true);
+  };
+
+ 
+  
+  const gotoLogout = async () => {
+    try {
+      await dispatch(logout()); // Await the logout action     
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Optionally, you could display an error message to the user
+    }
   };
 
   useEffect(() => {
@@ -39,9 +64,9 @@ const SettingsScreen = () => {
   }, [fadeAnim, translateYAnim]);
 
   return (
-    <ImageBackground source={require('../../Images/background.jpg')} style={styles.main_container}>
-      <View style={styles.containerTop}> 
-          <Header openModal={openModal}  labeltxt="Conversations" pageidx={0}/>
+    <BackgroundImage>
+      <View style={styles.containerTop}>
+        <Header openModal={openModal} labeltxt="Conversations" pageidx={0} />
       </View>
 
       <Animated.View
@@ -50,13 +75,35 @@ const SettingsScreen = () => {
           { opacity: fadeAnim, transform: [{ translateY: translateYAnim }] },
         ]}
       >
-        {/* Your content here */}
-        <Text style={styles.notificationText}>Settings Screen</Text>
-      </Animated.View>   
+        <View style={styles.userInfoContainer}>
+          <Image source={userImage} style={styles.userImage} />
+          <View style={styles.userInfo}>
+            <Text style={styles.userName}>{user.uid}</Text>
+            <Text style={styles.userEmail}>{user.email}</Text>
+          </View>
+          <TouchableOpacity style={styles.editButton}>
+            <Text style={styles.editButtonText}>Edit</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.userDetails}>
+          <Text style={styles.detailLabel}>Date of Joining:</Text>
+          <Text style={styles.detailText}>Jan 1, 2023</Text>
+          <Text style={styles.detailLabel}>Date of Last Sign-In:</Text>
+          <Text style={styles.detailText}>Aug 15, 2023</Text>
+        </View>
+
+        <ButtonInput
+          styless={{ width: wp('80%'), backgroundColor: colors.primary, marginBottom: hp('3%') }}
+          contentStyle={{ height: hp('7%') }}
+          labelStyle={{ fontSize: hp('2.5%'), color: colors.white, fontWeight: 'bold' }}
+          onPress={gotoLogout}
+          label="Logout"
+        />
+      </Animated.View>
 
       <ModelPopup isModalVisible={isModalVisible} closeModal={closeModal} />
-
-    </ImageBackground>
+    </BackgroundImage>
   );
 };
 

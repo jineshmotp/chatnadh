@@ -3,12 +3,11 @@ import {
   View,
   Text,
   Animated,
-  ImageBackground
 } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ModelPopup from '../../Components/ModelPopup';
 import Header  from '../../Components/Header';
 import styles from './styles';
+import BackgroundImage from '../../Components/BackgroundImage';
 
 const ChatListScreen = () => {
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
@@ -39,7 +38,7 @@ const ChatListScreen = () => {
   }, [fadeAnim, translateYAnim]);
 
   return (
-    <ImageBackground source={require('../../Images/background.jpg')} style={styles.main_container}>
+    <BackgroundImage>
       <View style={styles.containerTop}> 
           <Header openModal={openModal}  labeltxt="Conversations" pageidx={0}/>
       </View>
@@ -56,7 +55,7 @@ const ChatListScreen = () => {
 
       <ModelPopup isModalVisible={isModalVisible} closeModal={closeModal} />
 
-    </ImageBackground>
+    </BackgroundImage>
   );
 };
 

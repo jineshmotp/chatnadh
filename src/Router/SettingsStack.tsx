@@ -6,8 +6,16 @@ const Stack = createNativeStackNavigator();
 
 const SettingsStack = () => {
   return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarVisible: false,
+      }}
+    >
+      <Stack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
+      />
     </Stack.Navigator>
   );
 };

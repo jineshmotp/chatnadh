@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
+import { useNavigation } from '@react-navigation/native'; 
 
 interface ModalProps {  
   isModalVisible: string; // Custom styles for the button label
@@ -10,6 +10,17 @@ interface ModalProps {
 
 const ModelPopup: React.FC<ModalProps> =({isModalVisible,closeModal}) => {
 
+  const navigation = useNavigation();
+  
+  const handleSettingsPress = () => {
+    navigation.navigate('SettingsStack'); // Navigate to the SettingsStack
+    closeModal(); // Close the modal
+  };
+
+  const handleAboutPress = () => {
+    navigation.navigate('AboutStack'); // Navigate to the AboutStack
+    closeModal(); // Close the modal
+  };
 
   return (
     <View>
@@ -23,8 +34,12 @@ const ModelPopup: React.FC<ModalProps> =({isModalVisible,closeModal}) => {
           onPress={closeModal} // Hide the modal on overlay press
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalOption}>Settings</Text>
-            <Text style={styles.modalOption}>About</Text>
+          <TouchableOpacity onPress={handleSettingsPress} >
+              <Text style={styles.modalOption}>Settings</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleAboutPress} >
+              <Text style={styles.modalOption}>About</Text>
+            </TouchableOpacity>
             {/* Add more options as needed */}
           </View>
         </TouchableOpacity>
@@ -53,6 +68,11 @@ const styles = StyleSheet.create({
     fontSize: hp('2%'),
     paddingVertical: wp('3%'),
   },
+  modeltouch:
+  {
+   textAlign:'center',
+    width: wp('100%'),
+  }
 });
 
 export default ModelPopup;

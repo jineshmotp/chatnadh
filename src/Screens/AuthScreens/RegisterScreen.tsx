@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ImageBackground, Image, Animated, ScrollView, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
+import { View, Image, Animated, ScrollView, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Input from '../../Components/Input';
 import Label from '../../Components/Label';
@@ -8,6 +8,7 @@ import { colors } from '../../Constants/colors';
 import styles from './styles';
 
 import { useRoute, useNavigation } from '@react-navigation/native';
+import BackgroundImage from '../../Components/BackgroundImage';
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -62,7 +63,7 @@ const RegisterScreen = () => {
   }, []);
 
   return (
-    <ImageBackground source={require('../../Images/background.jpg')} style={styles.main_container}>
+    <BackgroundImage>    
       {!isKeyboardVisible && (
         <View style={styles.containerTop}>
           <Image source={require('../../Images/chatnadh_logo_white.png')} style={styles.TopLogo} />
@@ -103,7 +104,7 @@ const RegisterScreen = () => {
           </KeyboardAvoidingView>
         </ScrollView>
       </Animated.View>
-    </ImageBackground>
+      </BackgroundImage>
   );
 };
 

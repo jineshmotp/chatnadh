@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Animated,
-  ImageBackground
-} from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { View, Text, Animated, Image, TouchableOpacity } from 'react-native';
 import ModelPopup from '../../Components/ModelPopup';
-import Header  from '../../Components/Header';
+import Header from '../../Components/Header';
 import styles from './styles';
+import BackgroundImage from '../../Components/BackgroundImage';
 
 const AboutScreen = () => {
-  const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
-  const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
-  const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
-  
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [translateYAnim] = useState(new Animated.Value(30));
+  const [isModalVisible, setModalVisible] = useState(false);
+
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -39,9 +34,9 @@ const AboutScreen = () => {
   }, [fadeAnim, translateYAnim]);
 
   return (
-    <ImageBackground source={require('../../Images/background.jpg')} style={styles.main_container}>
-      <View style={styles.containerTop}> 
-          <Header openModal={openModal}  labeltxt="Conversations" pageidx={0}/>
+    <BackgroundImage>
+      <View style={styles.containerTop}>
+        <Header openModal={openModal} labeltxt="About Us" pageidx={0} />
       </View>
 
       <Animated.View
@@ -50,13 +45,30 @@ const AboutScreen = () => {
           { opacity: fadeAnim, transform: [{ translateY: translateYAnim }] },
         ]}
       >
-        {/* Your content here */}
-        <Text style={styles.notificationText}>Aboutus Screen</Text>
-      </Animated.View>   
+        <Image
+          source={require('../../Images/chatnadh_logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Text style={styles.heading}>Welcome to ChatNadh !</Text>
+        <Text style={styles.description}>
+          Our chat application brings a unique experience by incorporating AI and emotional
+          transactions based on facial expressions. With cutting-edge technology, we ensure
+          meaningful and engaging conversations that go beyond words.
+        </Text>
+       
+        {/* <TouchableOpacity
+          style={styles.button}
+          onPress={openModal}
+        >
+          <Text style={styles.buttonText}>Learn More</Text>
+        </TouchableOpacity> */}
+        <Text style={styles.NameText}>www.jineshmotp.com</Text>
+      </Animated.View>
 
       <ModelPopup isModalVisible={isModalVisible} closeModal={closeModal} />
 
-    </ImageBackground>
+    </BackgroundImage>
   );
 };
 

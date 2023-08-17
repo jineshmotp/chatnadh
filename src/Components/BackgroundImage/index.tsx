@@ -1,12 +1,14 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
-import { Button, Text } from 'react-native-paper';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { colors } from '../../Constants/colors';
+import { StyleSheet,ImageBackground } from 'react-native';
 
-const BackgroundImage = () => {
+const BackgroundImage = ({ children }) => {
   return (
- 
+    <ImageBackground
+      source={require('../../Images/background.jpg')} // Adjust the path to your image
+      style={styles.imageBackground}
+    >
+      {children}
+    </ImageBackground>
   );
 };
 
