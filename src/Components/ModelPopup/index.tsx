@@ -3,7 +3,12 @@ import { Text, View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
-const ModelPopup = ({isModalVisible,closeModal}) => {
+interface ModalProps {  
+  isModalVisible: string; // Custom styles for the button label
+  closeModal: () => void; // Function to execute on button press  
+}
+
+const ModelPopup: React.FC<ModalProps> =({isModalVisible,closeModal}) => {
 
 
   return (

@@ -3,7 +3,14 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Header = ({ openModal, labeltxt, pageidx }) => {
+interface HeaderProps {
+  openModal: () => void; // Function to execute on button press
+  labeltxt: string; // Button label
+  pageidx:number;
+}
+
+
+const Header: React.FC<HeaderProps> =  ({ openModal, labeltxt, pageidx }) => {
   const renderLogoOrBackButton = () => {
     if (pageidx === 1) {
       return (
@@ -13,7 +20,7 @@ const Header = ({ openModal, labeltxt, pageidx }) => {
       );
     } else {
       return (
-        <Image source={require('../../Images/chatnadh_logo_white.png')} style={styles.logo} />
+        <Image source={require('../../Images/logo_white.png')} style={styles.logo} />
       );
     }
   };

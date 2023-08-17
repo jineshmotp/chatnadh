@@ -2,17 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   Animated,
-  TouchableOpacity,
-  Modal,
-  Image,
   ImageBackground
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import ModelPopup from '../../Components/ModelPopup';
 import Header  from '../../Components/Header';
+import styles from './styles';
 
 const ChatListScreen = () => {
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
@@ -44,8 +40,7 @@ const ChatListScreen = () => {
 
   return (
     <ImageBackground source={require('../../Images/background.jpg')} style={styles.main_container}>
-      <View style={styles.containerTop}>       
-
+      <View style={styles.containerTop}> 
           <Header openModal={openModal}  labeltxt="Conversations" pageidx={0}/>
       </View>
 
@@ -64,32 +59,5 @@ const ChatListScreen = () => {
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  main_container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  containerTop: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  containerBottom: {
-    flex: 6,
-    justifyContent: 'center',
-    width: wp('100%'),
-    borderTopLeftRadius: wp('8%'),
-    borderTopRightRadius: wp('8%'),
-    alignItems: 'center',
-    padding: wp('5%'),
-    backgroundColor: 'white',
-  },
-  notificationText: {
-    fontSize: hp('2.5%'),
-  },
-  
-});
 
 export default ChatListScreen;

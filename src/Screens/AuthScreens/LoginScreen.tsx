@@ -144,6 +144,7 @@ const LoginScreen = () => {
             label="Password" 
             secure={true} 
             iconName="lock" 
+            iconNametwo="eye" 
             onChangeText={handlePasswordChange}
             />
 

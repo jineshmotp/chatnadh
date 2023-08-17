@@ -1,5 +1,5 @@
-import React, { FunctionComponent } from 'react';
-import { View, StyleSheet,TextInput } from 'react-native';
+import React, { FunctionComponent,useState } from 'react';
+import { View, StyleSheet,TextInput, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../Constants/colors';
@@ -8,10 +8,18 @@ interface InputProps {
   label: string;
   secure?: boolean; // Make secure prop optional
   iconName: string; // Corrected prop name to camelCase
+  iconNametwo: string; // Corrected prop name to camelCase
   onChangeText?: (text: string) => void; // Add this prop
 }
 
-const Input: FunctionComponent<InputProps> = ({ label, secure, iconName,onChangeText }) => {
+const Input: FunctionComponent<InputProps> = ({ label, secure, iconName,iconNametwo,onChangeText }) => {
+ 
+  const [isPasswordVisible, setPasswordVisible] = useState(!secure);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!isPasswordVisible);
+  };
+  
   return (
     <View style={styles.inputContainer}>
       <View style={styles.iconContainer}>
@@ -21,12 +29,18 @@ const Input: FunctionComponent<InputProps> = ({ label, secure, iconName,onChange
         <TextInput
           placeholder={label}          
           style={styles.input}
-          secureTextEntry={secure} // Use the secure prop here
+          secureTextEntry={!isPasswordVisible}
           theme={{ colors: { primary: 'transparent' } }}
           onChangeText={onChangeText}
           textAlignVertical="center" // Add this line
         />
       </View>
+      
+      {iconNametwo && ( // Check if iconNametwo is provided
+        <TouchableOpacity style={styles.iconContainer} onPress={togglePasswordVisibility}>
+          <Icon name={isPasswordVisible ? 'eye-slash' : 'eye'}  size={wp('5%')} color={colors.secondary} style={styles.icon} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
