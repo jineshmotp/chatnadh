@@ -6242,10 +6242,10 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   "version" "17.0.2"
 
-"react-native-paper@^5.10.0":
-  "integrity" "sha512-RiPHyIOmO0oJlRxVIPC+9PhRFIqHSP9lTTZy+kzWNdwWW62MF6DySAwvTe9FBE6z6x/4lef87bfeu/JThVCqqA=="
-  "resolved" "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.10.0.tgz"
-  "version" "5.10.0"
+"react-native-paper@^5.10.1":
+  "integrity" "sha512-/VNo9T87dtPBdQQI5CcaXjHtIAmlOoIe60W/iBcwUjZTVKMI///ZxcmxRSkACUYTcwyGAbkjhHHPqN2knrXp9Q=="
+  "resolved" "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.10.1.tgz"
+  "version" "5.10.1"
   dependencies:
     "@callstack/react-theme-provider" "^3.0.9"
     "color" "^3.1.2"

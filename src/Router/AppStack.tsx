@@ -1,39 +1,59 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import ChatListScreen from '../Screens/ChatListScreen';
-import NotificationScreen from '../Screens/NotificationScreen';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ChatListScreen from '../Screens/AppScreens/ChatListScreen';
+import NotificationScreen from '../Screens/AppScreens/NotificationScreen';
+import TabBarItem from '../Components/TabBarItem'; // Adjust the import path accordingly
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const AppStackScreen = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 const AppStack = () => {
   return (
-    <AppStackScreen.Navigator
-    screenOptions={{headerShown: false}}>
+    <Tab.Navigator
      
-      <AppStackScreen.Screen
-        component={ChatListScreen}
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: 'white',
+          borderTopLeftRadius: wp('8%'),
+          borderTopRightRadius: wp('8%'),
+          position: 'absolute',
+          height: wp('15%'),
+        },
+        tabBarShowLabel: false, // Hide default labels
+      })}
+    >
+      <Tab.Screen
         name="ChatListScreen"
-        options={{
-          headerShown:false,
-          tabBarIcon: ({color}) => (
-            <Icon name="home" color={color} size={25} />
+        component={ChatListScreen}
+        options={({ route, navigation }) => ({
+          tabBarButton: (props) => (
+            <TabBarItem
+              {...props}
+              iconName="comment"
+              label="ChatList"
+              isFocused={props.accessibilityState.selected}
+              onPress={() => navigation.navigate(route.name)}
+            />
           ),
-        }}
+        })}
       />
-
-        <AppStackScreen.Screen 
-            name="NotificationScreen"        
-            component={NotificationScreen}
-            options={{
-              tabBarIcon: ({color}) => (
-                <Icon name="user" color={color} size={25} />
-              ),
-            }}  
-          />
-              
-
-    </AppStackScreen.Navigator>
+      <Tab.Screen
+        name="NotificationScreen"
+        component={NotificationScreen}
+        options={({ route, navigation }) => ({
+          tabBarButton: (props) => (
+            <TabBarItem
+              {...props}
+              iconName="bell"
+              label="Notification"
+              isFocused={props.accessibilityState.selected}
+              onPress={() => navigation.navigate(route.name)}
+            />
+          ),
+        })}
+      />
+    </Tab.Navigator>
   );
 };
 
