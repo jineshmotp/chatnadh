@@ -1,21 +1,18 @@
 // src/Screens/LoginScreen/index.tsx
 
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet,ActivityIndicator, ImageBackground, Image, Animated, ScrollView, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
+import { View, ImageBackground, Image, Animated, ScrollView, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Input from '../../Components/Input';
 import Label from '../../Components/Label';
 import ButtonInput from '../../Components/ButtonInput';
 import { colors } from '../../Constants/colors';
-
-import { TextInput } from 'react-native';
+import styles from './styles';
 
 import { useDispatch, useSelector } from 'react-redux'
-import { login,checkLoginStatus } from '../../redux-actions/userActions';
+import { login } from '../../redux-actions/userActions';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-
-import Icon from 'react-native-vector-icons/FontAwesome';
 import LoadingScreen from '../../Components/LoadingScreen';
 
 const LoginScreen = () => {
@@ -83,13 +80,7 @@ const LoginScreen = () => {
     navigation.navigate('ForgotPasswordScreen');
   };
 
-  // useEffect(() => {
-  //   if (user) {
-  //     checkLoginStatus();
-  //   }
-  // }, [user, navigation]);
-    
-
+  
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -190,43 +181,5 @@ const LoginScreen = () => {
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  main_container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  containerTop: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  TopLogo: {
-    width: wp('40%'),
-    height: hp('15%'),
-    resizeMode: 'contain',
-  },
-  containerBottom: {
-    flex: 3,
-    justifyContent: 'center',
-    width: wp('100%'),
-    borderTopLeftRadius: wp('8%'),
-    borderTopRightRadius: wp('8%'),
-    alignItems: 'center',
-    padding: wp('5%'),
-    backgroundColor: 'white',
-  },
-  registerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-  },
-  registerLink: {
-    marginLeft: wp('1%'),
-  },
-  
-});
 
 export default LoginScreen;

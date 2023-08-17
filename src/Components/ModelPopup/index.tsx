@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Stylesheet, Modal } from 'react-native'
+import { Text, View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const ModelPopup = () => {
+
+const ModelPopup = ({isModalVisible,closeModal}) => {
 
 
   return (
     <View>
-         <Modal
+        <Modal
         visible={isModalVisible}
         transparent
         animationType="slide" // Use slide animation for modal
       >
         <TouchableOpacity
           style={styles.modalContainer}
-          onPress={() => setModalVisible(false)} // Hide the modal on overlay press
+          onPress={closeModal} // Hide the modal on overlay press
         >
           <View style={styles.modalContent}>
             <Text style={styles.modalOption}>Settings</Text>
@@ -27,8 +29,13 @@ const ModelPopup = () => {
   )
 }
 
-const styles = Stylesheet.create({
+const styles = StyleSheet.create({
   
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
+    justifyContent: 'flex-end', // Display modal at the bottom
+  },
   modalContent: {
     backgroundColor: 'white',
     width: wp('100%'),

@@ -6,6 +6,8 @@ import Label from '../../Components/Label';
 import ButtonInput from '../../Components/ButtonInput';
 import { colors } from '../../Constants/colors';
 
+import styles from './styles';
+
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 const ForgotPasswordScreen = () => {
@@ -105,41 +107,5 @@ const ForgotPasswordScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  main_container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  containerTop: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  TopLogo: {
-    width: wp('40%'),
-    height: hp('15%'),
-    resizeMode: 'contain',
-  },
-  containerBottom: {
-    flex: 3,
-    justifyContent: 'center',
-    width: wp('100%'),
-    borderTopLeftRadius: wp('8%'),
-    borderTopRightRadius: wp('8%'),
-    alignItems: 'center',
-    padding: wp('5%'),
-    backgroundColor: 'white',
-  },
-  registerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-  },
-  registerLink: {
-    marginLeft: wp('1%'),
-  },
-});
-
+ 
 export default ForgotPasswordScreen;
