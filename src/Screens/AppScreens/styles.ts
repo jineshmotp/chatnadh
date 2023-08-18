@@ -107,22 +107,10 @@ editButtonText: {
   fontWeight: 'bold',
   fontSize: hp('2%'),
 },
-logoutButton: {
-  paddingVertical: wp('3%'),
-  backgroundColor: '#e74c3c',
-  borderRadius: wp('3%'),
-  alignItems: 'center',
-},
-logoutButtonText: {
-  color: 'white',
-  fontWeight: 'bold',
-  fontSize: hp('2%'),
-},
-
 userDetails: {
   alignItems: 'center',
   marginVertical: hp('3%'),
-  marginBottom: hp('3%'),
+  marginBottom: hp('10%'),
 },
 detailLabel: {
   fontSize: hp('2%'),
