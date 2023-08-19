@@ -4,7 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { useNavigation } from '@react-navigation/native'; 
 
 interface ModalProps {  
-  isModalVisible: string; // Custom styles for the button label
+  isModalVisible: boolean; // Custom styles for the button label
   closeModal: () => void; // Function to execute on button press  
 }
 
@@ -13,13 +13,13 @@ const ModelPopup: React.FC<ModalProps> =({isModalVisible,closeModal}) => {
   const navigation = useNavigation();
   
   const handleSettingsPress = () => {
-    navigation.navigate('SettingsStack'); // Navigate to the SettingsStack
-    closeModal(); // Close the modal
+    closeModal(); // Close the modal first
+    navigation.navigate('SettingsStack');
   };
 
   const handleAboutPress = () => {
-    navigation.navigate('AboutStack'); // Navigate to the AboutStack
-    closeModal(); // Close the modal
+    closeModal(); // Close the modal first
+    navigation.navigate('AboutStack');
   };
 
   return (

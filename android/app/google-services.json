@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "123078711220",
+    "firebase_url": "https://mybook-14c19.firebaseio.com",
+    "project_id": "mybook-14c19",
+    "storage_bucket": "mybook-14c19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123078711220:android:7e6ec3f4024a89767c44e1",
+        "android_client_info": {
+          "package_name": "com.chatnadh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123078711220-goef776j43ibk91pv1t2aojok73ep1s4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkYZkXECPbgEZQessWGFTbgG-KTdvLYEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123078711220-goef776j43ibk91pv1t2aojok73ep1s4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

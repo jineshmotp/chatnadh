@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   containerBottom: {
-    flex: 6,
+    flex: 8,
     justifyContent: 'center',
     width: wp('100%'),
     borderTopLeftRadius: wp('8%'),
@@ -124,9 +124,58 @@ detailText: {
 
 
 
+//###########   Chatlist #############################################
 
-
-  
+ChatListCard: {
+  width: '100%',
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingVertical: hp('1%'),
+  paddingHorizontal: wp('2%'),
+  borderBottomWidth: wp(0.1),
+  borderBottomColor: colors.primary,
+},
+ChatListUserImg: {
+  width: wp('12%'),
+  height: wp('12%'),
+  borderRadius: wp('10%'),
+},
+ChatListUserInfo: {
+  flexDirection: 'row', // Set flexDirection to 'row' for horizontal layout
+  alignItems: 'center',
+},
+ChatListTextSection: {
+  flex: 1,
+  marginLeft: wp('2%'),
+},
+ChatListUserInfoText: {
+  flexDirection: 'row',
+  alignItems: 'center', // Align items vertically
+  justifyContent: 'space-between',
+  marginBottom: hp('0.5%'),
+},
+ChatListUserName: {
+  fontSize: wp('4.5%'),
+  color: colors.primary,
+  fontWeight: 'bold',
+  fontFamily: 'Lato-Regular',
+},
+ChatListPostTime: {
+  fontSize: wp('3.5%'),
+  color: colors.secondary,
+  fontFamily: 'Lato-Regular',
+  flex: 1, // Allow the time text to expand to the available space
+  textAlign: 'right', // Align the time text to the right
+},
+ChatListMessageText: {
+  fontSize: wp('3.5%'),
+  color: colors.tertiary,
+  marginTop: hp('0.2%'),
+  lineHeight: wp('4.5%'),  
+},
+flatListContentContainer: {
+  paddingBottom: hp('5.5%'), // Adjust the value as needed
+},
   });
   
   export default styles;

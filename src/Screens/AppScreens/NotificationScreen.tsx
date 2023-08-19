@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Animated, 
+  Text
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
@@ -43,7 +44,7 @@ const NotificationScreen = () => {
     <BackgroundImage>
       <View style={styles.containerTop}>
 
-      <Header openModal={openModal}  labeltxt="Conversations" pageidx={0}/>
+      <Header openModal={openModal}  labeltxt="Conversations" pageidx={0} chatuserimg={'0'} />
        
       </View>
 
@@ -55,7 +56,7 @@ const NotificationScreen = () => {
       >
 
                       
-
+      <Text style={styles.notificationText}>Notification</Text>
 
        
       </Animated.View>

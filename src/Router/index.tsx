@@ -1,5 +1,4 @@
-// src/Router/index.tsx
-import React, {useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -7,11 +6,15 @@ import LoadingScreen from '../Components/LoadingScreen';
 
 import AppStack from './AppStack';
 import AuthStack from './AuthStack';
+import SettingsStack from './SettingsStack'; 
+import AboutStack from './AboutStack'; 
+import ChatStack from './ChatStack';
 
 import { checkLoginStatus } from '../redux-actions/userActions';
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 
+const Stack = createNativeStackNavigator();
 
 const Router = () => {
   const dispatch = useDispatch();
@@ -22,13 +25,11 @@ const Router = () => {
   const userLogin = useSelector(state => state.userLogin);
   const { user } = userLogin;
 
-
   useEffect(() => {
     dispatch(checkLoginStatus());
   }, []);
 
   useEffect(() => {
-    // Dispatch the action using the dispatch function
     dispatch(checkLoginStatus())
       .then(isLoggedIn => {
         if (isLoggedIn) {
@@ -42,23 +43,21 @@ const Router = () => {
       .catch(error => {
         console.log('Error checking login status:', error);
       });
-  }, [dispatch]); // Make sure to include dispatch in the dependency array
+  }, [dispatch]);
 
-
-  if(loadinstack == false)
-  {
-    return (
-      <LoadingScreen/>
-
-    )
-
+  if (loadinstack === false) {
+    return <LoadingScreen />;
   }
 
-
   return (
-    <NavigationContainer >
+    <NavigationContainer>
       {user ? (
-        <AppStack  />
+        <Stack.Navigator headerMode="none">
+          <Stack.Screen name="AppStack" component={AppStack}  options={{ headerShown: false }}/>
+          <Stack.Screen name="SettingsStack" component={SettingsStack}  options={{ headerShown: false }}/>
+          <Stack.Screen name="AboutStack" component={AboutStack}  options={{ headerShown: false }} />
+          <Stack.Screen name="ChatStack" component={ChatStack}  options={{ headerShown: false }} />
+        </Stack.Navigator>
       ) : (
         <AuthStack />
       )}

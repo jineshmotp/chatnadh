@@ -66,7 +66,7 @@ const SettingsScreen = () => {
   return (
     <BackgroundImage>
       <View style={styles.containerTop}>
-        <Header openModal={openModal} labeltxt="Conversations" pageidx={0} />
+        <Header openModal={openModal} labeltxt="Conversations" pageidx={1} chatuserimg={'0'}  />
       </View>
 
       <Animated.View

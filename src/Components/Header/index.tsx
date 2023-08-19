@@ -2,21 +2,32 @@ import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { useNavigation } from '@react-navigation/native';
 interface HeaderProps {
   openModal: () => void; // Function to execute on button press
   labeltxt: string; // Button label
   pageidx:number;
+  chatuserimg:string;
 }
 
 
-const Header: React.FC<HeaderProps> =  ({ openModal, labeltxt, pageidx }) => {
+const Header: React.FC<HeaderProps> =  ({ openModal, labeltxt, pageidx,chatuserimg }) => {
+
+  const navigation = useNavigation();
+  
+  const backButton = () =>
+  {
+    navigation.navigate('AppStack');
+  }
+  
   const renderLogoOrBackButton = () => {
     if (pageidx === 1) {
       return (
-        <TouchableOpacity style={styles.backButton} onPress={openModal}>
-          <Icon name="arrow-left" size={hp('4%')} color="white" />
+        <TouchableOpacity onPress={backButton}  style={styles.logoutButton}>
+          {/* <Image source={require('../../Images/logo_white_back.png')} style={styles.logo} resizeMode="contain" /> */}
+          <Icon name="angle-left" size={hp('5%')} color="white" />
         </TouchableOpacity>
+        
       );
     } else {
       return (
@@ -25,16 +36,32 @@ const Header: React.FC<HeaderProps> =  ({ openModal, labeltxt, pageidx }) => {
     }
   };
 
+
+  const ChatImageCheck = () => {
+    if (chatuserimg !== '0' ) {
+      return (
+
+        <Image source={chatuserimg} style={styles.logouser} />
+       
+        
+      );
+    } else {
+      return (
+        <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={openModal}
+      >
+        <Icon name="ellipsis-v" size={hp('5%')} color="white" />
+      </TouchableOpacity>
+      );
+    }
+  };
+
   return (
     <View style={styles.header}>
       {renderLogoOrBackButton()}
       <Text style={styles.headerText}>{labeltxt}</Text>
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={openModal}
-      >
-        <Icon name="ellipsis-v" size={hp('4%')} color="white" />
-      </TouchableOpacity>
+      {ChatImageCheck()}
     </View>
   );
 };
@@ -48,11 +75,18 @@ const styles = StyleSheet.create({
     padding: wp('5%'),
   },
   logo: {
-    width: wp('10%'), // Responsive logo width
-    height: wp('10%'), // Responsive logo height
+    width: wp('10%'),
+    height: wp('10%'),
+  },
+  logouser: {
+    width: wp('10%'),
+    height: wp('10%'),
+    borderRadius:wp('20%'),
   },
   backButton: {
-    padding: 10,
+    padding: 0,
+    width: wp('10%'),
+    height: wp('10%'),
   },
   headerText: {
     color: 'white',
@@ -60,7 +94,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   logoutButton: {
-    padding: 10,
+    padding: 0,
   },
 });
 
