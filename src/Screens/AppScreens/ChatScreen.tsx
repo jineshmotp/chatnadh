@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,9 +12,12 @@ import Header  from '../../Components/Header';
 import styles from './styles';
 import BackgroundImage from '../../Components/BackgroundImage';
 
+import { GiftedChat } from 'react-native-gifted-chat'
+
 
 const ChatScreen = ({ route }) => {
   const { chatData } = route.params;
+  const [messages, setMessages] = useState([])
   const [fadeAnim] = useState(new Animated.Value(0));
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
   const [isContainerTopVisible, setContainerTopVisible] = useState(true); // State to manage containerTop visibility
@@ -36,7 +39,27 @@ const ChatScreen = ({ route }) => {
     }).start();
   }, [fadeAnim]);
 
-  
+  useEffect(() => {
+    setMessages([
+      {
+        _id: 1,
+        text: 'Hello developer',
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        },
+      },
+    ])
+  }, [])
+
+  const onSend = useCallback((messages = []) => {
+    setMessages(previousMessages =>
+      GiftedChat.append(previousMessages, messages),
+    )
+  }, [])
+
   return (
     <BackgroundImage>
        {isContainerTopVisible && (
@@ -53,11 +76,9 @@ const ChatScreen = ({ route }) => {
       >
 
      
-     
-      <Text style={styles.notificationText}>Chat Screen</Text>
-      </Animated.View>   
-
-      <ModelPopup isModalVisible={isModalVisible} closeModal={closeModal} />
+    
+      
+      </Animated.View> 
 
     </BackgroundImage>
   );

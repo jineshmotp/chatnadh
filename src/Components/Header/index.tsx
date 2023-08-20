@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> =  ({ openModal, labeltxt, pageidx,chatuseri
       );
     } else {
       return (
-        <Image source={require('../../Images/logo_white.png')} style={styles.logo} />
+        <Image source={require('../../Images/logo_white.png')} style={styles.headerlogo} />
       );
     }
   };
@@ -72,9 +72,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: wp('100%'),
-    padding: wp('5%'),
+    paddingLeft: wp('5%'),
+    paddingRight: wp('5%'),
+    paddingTop: wp('2%'),
+    paddingBottom: wp('2%'),
   },
-  logo: {
+  headerlogo: {
     width: wp('10%'),
     height: wp('10%'),
   },
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     borderRadius:wp('20%'),
   },
   backButton: {
-    padding: 0,
+    padding: wp('2%'),
     width: wp('10%'),
     height: wp('10%'),
   },
@@ -94,7 +97,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   logoutButton: {
-    padding: 0,
+    padding: wp('1%'),
   },
 });
 

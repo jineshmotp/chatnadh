@@ -174,8 +174,12 @@ ChatListMessageText: {
   lineHeight: wp('4.5%'),  
 },
 flatListContentContainer: {
-  paddingBottom: hp('5.5%'), // Adjust the value as needed
+  paddingBottom: hp('5.8%') > 800 ? hp('6.2%') : hp('6.4%'),
 },
+
+//##############################################3
+
+
   });
   
   export default styles;
