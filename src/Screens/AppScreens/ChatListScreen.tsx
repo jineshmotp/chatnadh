@@ -13,6 +13,7 @@ import Header  from '../../Components/Header';
 import styles from './styles';
 import BackgroundImage from '../../Components/BackgroundImage';
 import { useNavigation } from '@react-navigation/native';
+import ChatList from '../../Components/ChatList';
 
 const ChatListScreen = () => {
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -25,96 +26,85 @@ const ChatListScreen = () => {
   const Messages = [
     {
       id: '1',
-      userName: 'Nikhila Vimal',
-      userImg: require('../../Images/user/user-1.jpg'),
-      messageTime: '4 mins ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
-    },
+      picture:require('../../Images/user/user-1.jpg'),
+      username:"Nikhila Vimal",
+      bio: "My life",
+      lastMessage:"Hello How are you?",
+      time:"4:00 PM",
+      notification:3,
+      isBlocked:false,
+      isMuted:false,
+      hasStory:false,
+      onlineStatus:true,
+     },    
     {
       id: '2',
-      userName: 'Meenakshi Thambi',
-      userImg: require('../../Images/user/user-2.jpg'),
-      messageTime: '2 hours ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
-    },
+
+      picture:require('../../Images/user/user-2.jpg'),
+      username:"Meenakshi Thambi",
+      bio: "My life",
+      lastMessage:"Hello How are you?",
+      time:"5:00 PM",
+      notification:10,
+      isBlocked:false,
+      isMuted:false,
+      hasStory:true,
+      onlineStatus:true,
+     },
     {
       id: '3',
-      userName: 'Aparna Balamurali',
-      userImg: require('../../Images/user/user-3.jpg'),
-      messageTime: '1 hours ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
-    },
+
+      picture:require('../../Images/user/user-3.jpg'),
+      username:"Aparna Balamurali",
+      bio: "My life",
+      lastMessage:"Hello How are you?",
+      time:"6:00 PM",
+      notification:1,
+      isBlocked:false,
+      isMuted:false,
+      hasStory:false,
+      onlineStatus:true,
+     },
     {
       id: '4',
-      userName: 'Aparna Babu',
-      userImg: require('../../Images/user/user-4.jpg'),
-      messageTime: '1 day ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
+
+      picture:require('../../Images/user/user-4.jpg'),
+      username:"Aparna Babu",
+      bio: "My life",
+      lastMessage:"Hello How are you?",
+      time:"6:00 PM",
+      notification:1,
+      isBlocked:false,
+      isMuted:false,
+      hasStory:false,
+      onlineStatus:false,
     },
     {
       id: '5',
-      userName: 'Aditi Ravi',
-      userImg: require('../../Images/user/user-5.jpg'),
-      messageTime: '2 days ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
+      picture:require('../../Images/user/user-5.jpg'),
+      username:"Aditi Ravi",
+      bio: "My life",
+      lastMessage:"Hello How are you?",
+      time:"6:00 PM",
+      notification:0,
+      isBlocked:false,
+      isMuted:false,
+      hasStory:false,
+      onlineStatus:true,
     },
     {
       id: '6',
-      userName: 'Anu Sithara',
-      userImg: require('../../Images/user/user-6.jpg'),
-      messageTime: '2 days ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
-    },
-
-    {
-      id: '7',
-      userName: 'Jasnaya Jayadeesh',
-      userImg: require('../../Images/user/user-4.jpg'),
-      messageTime: '2 days ago',
-      messageText:'Hey there, this is my test for a post of my social app in React Native.',
-    },
-
-    {
-      id: '8',
-      userName: 'Hima R',
-      userImg: require('../../Images/user/user-3.jpg'),
-      messageTime: '2 days ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
-    },
-
-
-    {
-      id: '9',
-      userName: 'Deepthi D',
-      userImg: require('../../Images/user/user-2.jpg'),
-      messageTime: '2 days ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-      id: '10',
-      userName: 'Sharanya Sharu',
-      userImg: require('../../Images/user/user-1.jpg'),
-      messageTime: '2 days ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
-    },
-
-    {
-      id: '11',
-      userName: 'Mariben',
-      userImg: require('../../Images/user/user-2.jpg'),
-      messageTime: '2 days ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
-    },
+      picture:require('../../Images/user/user-6.jpg'),
+      username:"Anu Sithara",
+      bio: "My life",
+      lastMessage:"Hello How are you? hdsjksa adkadk as askdkasdk  asjdkaskdjasd kdkadk asj",
+      time:"6:00 PM",
+      notification:1,
+      isBlocked:false,
+      isMuted:false,
+      hasStory:false,
+      onlineStatus:true,
+    }
   ];
   
    
@@ -125,6 +115,10 @@ const ChatListScreen = () => {
 
   const openModal = () => {
     setModalVisible(true);
+  };
+
+  const gotoChatScreen = (item) => {
+    navigation.navigate('ChatStack', { chatData: item });
   };
 
   useEffect(() => {
@@ -140,7 +134,7 @@ const ChatListScreen = () => {
     <BackgroundImage>
        {isContainerTopVisible && (
         <View style={styles.containerTop}>
-          <Header openModal={openModal} labeltxt="Conversations" pageidx={0} chatuserimg={'0'} />
+          <Header openModal={openModal} labeltxt="Conversations" pageidx={0} chatuserimg={'0'}  />
         </View>
       )}
 
@@ -150,41 +144,18 @@ const ChatListScreen = () => {
           { opacity: fadeAnim },
         ]}
       >
+              
 
-                <FlatList 
+      <FlatList 
           data={Messages}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity  style={styles.ChatListCard} 
-            onPress={() => {
-              console.log('Navigating with item:', item);
-              navigation.navigate('ChatStack', { chatData: item });
-            }}
-            >
-              <View style={styles.ChatListUserInfo}>
-                <View >
-                  <Image source={item.userImg} style={styles.ChatListUserImg} />
-                </View>
-                <View style={styles.ChatListTextSection}>
-                  <View style={styles.ChatListUserInfoText}>
-                    <Text style={styles.ChatListUserName}>{item.userName}</Text>
-                    <Text style={styles.ChatListPostTime}>{item.messageTime}</Text>
-                  </View>
-                              <Text
-                      style={styles.ChatListMessageText}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      {item.messageText}
-                    </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+
+        <ChatList item={item} gotoChatScreen={gotoChatScreen} />
           )}
           contentContainerStyle={styles.flatListContentContainer} // Add this line
           
         />
-
      
      
       </Animated.View>   

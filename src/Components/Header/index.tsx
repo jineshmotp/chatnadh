@@ -1,67 +1,125 @@
 import React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Image,ImageSourcePropType } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+
 interface HeaderProps {
   openModal: () => void; // Function to execute on button press
   labeltxt: string; // Button label
-  pageidx:number;
-  chatuserimg:string;
+  pageidx: number;
+  chatuserimg: string | ImageSourcePropType;
+  onlinestatus:boolean;
 }
 
-
-const Header: React.FC<HeaderProps> =  ({ openModal, labeltxt, pageidx,chatuserimg }) => {
-
+const Header: React.FC<HeaderProps> = ({ openModal, labeltxt,onlinestatus, pageidx, chatuserimg }) => {
   const navigation = useNavigation();
-  
-  const backButton = () =>
-  {
+  const iconSize = hp('3%');
+  const iconSizeLR = hp('5%');
+  const backButton = () => {
     navigation.navigate('AppStack');
-  }
-  
-  const renderLogoOrBackButton = () => {
-    if (pageidx === 1) {
+  };
+
+  const renderLeftside = () => {
+    if (chatuserimg !== '0') {
       return (
-        <TouchableOpacity onPress={backButton}  style={styles.logoutButton}>
-          {/* <Image source={require('../../Images/logo_white_back.png')} style={styles.logo} resizeMode="contain" /> */}
-          <Icon name="angle-left" size={hp('5%')} color="white" />
+
+        <View style={styles.headerLeft} >
+        <TouchableOpacity onPress={backButton} style={styles.iconContainer}>
+          <Icon name="angle-left" size={iconSizeLR} color="white" style={{paddingRight: wp('5%')}} />
+          <Image source={chatuserimg} style={styles.logouser} />
+         
         </TouchableOpacity>
-        
+
+        <View style={styles.headerLeftText}>
+            <Text style={styles.headerText}>{labeltxt}</Text>
+
+            <Text style={styles.headersubText}>
+              {onlinestatus ? 'online' : 'offline'}
+            </Text>
+        </View>
+
+        </View>
+
+
+
       );
-    } else {
+    } 
+    else if (pageidx === 1) 
+    {
       return (
-        <Image source={require('../../Images/logo_white.png')} style={styles.headerlogo} />
+
+        <View style={styles.headerLeft} >
+        
+          <TouchableOpacity onPress={backButton} style={styles.iconContainer}>
+            <Icon name="angle-left" size={iconSizeLR} color="white"  />         
+          </TouchableOpacity>           
+
+          <View style={styles.headerLeftText}>
+              <Text style={styles.headerText}>{labeltxt}</Text>            
+          </View>        
+        
+        </View>
       );
+    }
+    else
+    {
+      return (
+        <View style={styles.headerLeft} >
+          <Image source={require('../../Images/logo_white.png')} style={styles.headerlogo} />
+          <View style={styles.headerLeftText}>
+              <Text style={styles.headerText}>{labeltxt}</Text>            
+          </View>
+       
+       </View >
+      )
     }
   };
 
-
-  const ChatImageCheck = () => {
-    if (chatuserimg !== '0' ) {
-      return (
-
-        <Image source={chatuserimg} style={styles.logouser} />
+  const renderRightside = () => {
+    if (chatuserimg !== '0') {
+      return (     
        
+       <View style={styles.iconContainer}>
+          
+          <TouchableOpacity style={styles.iconContainer}>
+            <Ionicons name="videocam" size={iconSize} color="white" />
+          </TouchableOpacity>
         
+
+          <TouchableOpacity style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
+            <Ionicons name="call" size={iconSize} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
+            <Icon name="ellipsis-v" size={iconSize} color="white" />
+          </TouchableOpacity>
+        </View>
+       
+
+
       );
     } else {
       return (
-        <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={openModal}
-      >
-        <Icon name="ellipsis-v" size={hp('5%')} color="white" />
-      </TouchableOpacity>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity style={styles.iconContainer}>
+            <Icon name="search" size={iconSize} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={openModal} style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
+            <Icon name="ellipsis-v" size={iconSize} color="white" />
+          </TouchableOpacity>
+        </View>
       );
     }
   };
 
   return (
     <View style={styles.header}>
-      {renderLogoOrBackButton()}
-      <Text style={styles.headerText}>{labeltxt}</Text>
-      {ChatImageCheck()}
+      {renderLeftside()}  
+
+      {renderRightside()}
     </View>
   );
 };
@@ -72,32 +130,51 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: wp('100%'),
-    paddingLeft: wp('5%'),
-    paddingRight: wp('5%'),
-    paddingTop: wp('2%'),
-    paddingBottom: wp('2%'),
+    paddingHorizontal: wp('5%'),
+    paddingTop: hp('2%'),
+    paddingBottom: hp('1%'),
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerLeftText: {
+    paddingLeft: hp('1%'),
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+
   headerlogo: {
-    width: wp('10%'),
-    height: wp('10%'),
+    width: wp('10%'), // Adjust the width as needed
+    height: wp('10%'), // Use the same height as the width to maintain aspect ratio
+    resizeMode: 'contain', // Use 'contain' for logo images
   },
   logouser: {
     width: wp('10%'),
     height: wp('10%'),
-    borderRadius:wp('20%'),
+    borderRadius: wp('20%'),
+    resizeMode: 'cover',
   },
-  backButton: {
-    padding: wp('2%'),
-    width: wp('10%'),
-    height: wp('10%'),
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',  
+    paddingRight:wp('0%'),
+  },
+  iconButton: {    
+    paddingRight: wp('5%'),
+    paddingLeft: wp('5%'),
   },
   headerText: {
     color: 'white',
-    fontSize: hp('3%'),
-    fontWeight: 'bold',
+    fontSize: hp('2.5%'),
+    textAlign:'left',
+    fontWeight: 'normal',
   },
-  logoutButton: {
-    padding: wp('1%'),
+  headersubText: {
+    color: 'white',
+    textAlign:'left',
+    fontSize: hp('1.8%'),
+    fontWeight: 'normal',
   },
 });
 

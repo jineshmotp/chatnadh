@@ -2,18 +2,17 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ChatListScreen from '../Screens/AppScreens/ChatListScreen';
 import NotificationScreen from '../Screens/AppScreens/NotificationScreen';
-import { View, Animated, Easing, Image } from 'react-native'; // Add Image import
+import { View, Animated, Easing, Image } from 'react-native';
 import TabBarItem from '../Components/TabBarItem';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../Constants/colors';
 
 const Tab = createBottomTabNavigator();
-  
+
 const AppStack = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
-        //console.log('Route Name:', route.name); // Add this line
         return {
           headerShown: false,
           tabBarStyle: {
@@ -36,13 +35,12 @@ const AppStack = () => {
               {...props}
               iconName="comment"
               label="ChatList"
-              isFocused={props.accessibilityState.selected}
+              isFocused={props.accessibilityState?.selected ?? false}
               onPress={() => navigation.navigate(route.name)}
             />
           ),
         })}
       />
-     
       <Tab.Screen
         name="NotificationScreen"
         component={NotificationScreen}
@@ -52,7 +50,7 @@ const AppStack = () => {
               {...props}
               iconName="bell"
               label="Notification"
-              isFocused={props.accessibilityState.selected}
+              isFocused={props.accessibilityState?.selected ?? false}
               onPress={() => navigation.navigate(route.name)}
             />
           ),

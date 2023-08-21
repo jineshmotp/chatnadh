@@ -44,7 +44,7 @@ const NotificationScreen = () => {
     <BackgroundImage>
       <View style={styles.containerTop}>
 
-      <Header openModal={openModal}  labeltxt="Conversations" pageidx={0} chatuserimg={'0'} />
+      <Header openModal={openModal}  labeltxt="Notifications" pageidx={0} chatuserimg={'0'} />
        
       </View>
 
