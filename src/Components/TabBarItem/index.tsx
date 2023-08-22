@@ -1,23 +1,33 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { colors } from '../../Constants/colors';
 
 interface ButtonInputProps {
-  iconName:string;
-  label: string; // Button label
-  isFocused?: boolean; // Custom styles for the button label  
-  onPress: () => void; // Function to execute on button press 
+  iconName: string;
+  label: string;
+  isFocused?: boolean;
+  onPress: () => void;
 }
 
-const TabBarItem = ({ iconName, label, isFocused, onPress }) => (
-  <TouchableOpacity onPress={onPress} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Icon name={iconName} color={isFocused ? colors.white : 'gray'} size={wp('6%')} />
-    <Text style={{ fontSize: wp('3%'), color: isFocused ? colors.white : 'gray', marginTop: hp('1%') }}>
-      {label}
-    </Text>
-  </TouchableOpacity>
-);
+const TabBarItem = ({ iconName, label, isFocused, onPress }) => {
+  const imageSource = isFocused ? emotionImages[`${iconName}_white`] : emotionImages[`${iconName}_gray`];
+
+  return (
+    <TouchableOpacity onPress={onPress} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Image source={imageSource} style={{ width: wp('6%'), height: wp('6%') }} />
+      <Text style={{ fontSize: wp('3%'), color: isFocused ? colors.white : 'gray', marginTop: hp('1%') }}>
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+const emotionImages = {
+  chat_white: require('../../Images/tabicons/chat_white.png'),
+  chat_gray: require('../../Images/tabicons/chat_gray.png'),
+  contact_white: require('../../Images/tabicons/contact_white.png'),
+  contact_gray: require('../../Images/tabicons/contact_gray.png'), 
+};
 
 export default TabBarItem;

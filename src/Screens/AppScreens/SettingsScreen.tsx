@@ -41,10 +41,14 @@ const SettingsScreen = () => {
   
   const gotoLogout = async () => {
     try {
-      await dispatch(logout()); // Await the logout action     
+      await dispatch(logout()); // Await the logout action   
+        
     } catch (error) {
       console.error('Logout failed:', error);
-      // Optionally, you could display an error message to the user
+      if (error.message === 'No user currently signed in.') {
+        // Handle the case where no user is signed in
+        console.log('User is not currently signed in.');
+      }
     }
   };
 

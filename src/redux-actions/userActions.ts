@@ -19,7 +19,7 @@ export const login = (email, password) => async (dispatch) => {
       uid: userCredential.user.uid,
       email: userCredential.user.email,
     };
-
+    await AsyncStorage.setItem('user', JSON.stringify(user));
     dispatch({ type: USER_LOGIN_SUCCESS, payload: user });
   } catch (error) {
     console.log("Authentication error:", error);
@@ -28,10 +28,12 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 export const logout = () => async (dispatch) => {
+  await AsyncStorage.removeItem('user');
   try {
    
     await auth.signOut();
     dispatch({ type: USER_LOGOUT });
+    await AsyncStorage.removeItem('user');
 
     return Promise.resolve(); // Resolve the promise if logout is successful
   } catch (error) {

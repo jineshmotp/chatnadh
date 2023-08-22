@@ -82,6 +82,7 @@ const RegisterScreen = () => {
             <Input label="Email" secure={false} iconName="envelope" />
             <Input label="Password" secure={true} iconName="lock" />
             <Input label="Re Enter Password" secure={true} iconName="lock" />
+            <Input label="About" secure={false} iconName="profile" />
 
             <ButtonInput
               styless={{ width: wp('80%'), backgroundColor: colors.primary }}

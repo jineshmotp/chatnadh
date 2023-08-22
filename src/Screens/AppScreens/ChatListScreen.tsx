@@ -37,20 +37,20 @@ const ChatListScreen = () => {
       hasStory:false,
       onlineStatus:true,
      },    
-    {
-      id: '2',
+    // {
+    //   id: '2',
 
-      picture:require('../../Images/user/user-2.jpg'),
-      username:"Meenakshi Thambi",
-      bio: "My life",
-      lastMessage:"Hello How are you?",
-      time:"5:00 PM",
-      notification:10,
-      isBlocked:false,
-      isMuted:false,
-      hasStory:true,
-      onlineStatus:true,
-     },
+    //   picture:require('../../Images/user/user-2.jpg'),
+    //   username:"Meenakshi Thambi",
+    //   bio: "My life",
+    //   lastMessage:"Hello How are you?",
+    //   time:"5:00 PM",
+    //   notification:10,
+    //   isBlocked:false,
+    //   isMuted:false,
+    //   hasStory:true,
+    //   onlineStatus:true,
+    //  },
     {
       id: '3',
 
@@ -65,20 +65,20 @@ const ChatListScreen = () => {
       hasStory:false,
       onlineStatus:true,
      },
-    {
-      id: '4',
+    // {
+    //   id: '4',
 
-      picture:require('../../Images/user/user-4.jpg'),
-      username:"Aparna Babu",
-      bio: "My life",
-      lastMessage:"Hello How are you?",
-      time:"6:00 PM",
-      notification:1,
-      isBlocked:false,
-      isMuted:false,
-      hasStory:false,
-      onlineStatus:false,
-    },
+    //   picture:require('../../Images/user/user-4.jpg'),
+    //   username:"Aparna Babu",
+    //   bio: "My life",
+    //   lastMessage:"Hello How are you?",
+    //   time:"6:00 PM",
+    //   notification:1,
+    //   isBlocked:false,
+    //   isMuted:false,
+    //   hasStory:false,
+    //   onlineStatus:false,
+    // },
     {
       id: '5',
       picture:require('../../Images/user/user-5.jpg'),
@@ -134,7 +134,7 @@ const ChatListScreen = () => {
     <BackgroundImage>
        {isContainerTopVisible && (
         <View style={styles.containerTop}>
-          <Header openModal={openModal} labeltxt="Conversations" pageidx={0} chatuserimg={'0'}  />
+          <Header openModal={openModal} chatsearch={true} labeltxt="Conversations" pageidx={0} chatuserimg={'0'}  />
         </View>
       )}
 

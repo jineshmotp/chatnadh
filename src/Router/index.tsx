@@ -18,36 +18,17 @@ const Stack = createNativeStackNavigator();
 
 const Router = () => {
   const dispatch = useDispatch();
-
-  const [logstatus, setLogstatus] = useState(false);
-  const [loadinstack, setLoadinstack] = useState(false);
-
   const userLogin = useSelector(state => state.userLogin);
-  const { user } = userLogin;
-
-  useEffect(() => {
-    dispatch(checkLoginStatus());
-  }, []);
+  const { user, isLoading } = userLogin;
 
   useEffect(() => {
     dispatch(checkLoginStatus())
-      .then(isLoggedIn => {
-        if (isLoggedIn) {
-          setLogstatus(true);
-          setLoadinstack(true);
-        } else {
-          setLogstatus(false);
-          setLoadinstack(true);
-        }
-      })
-      .catch(error => {
-        console.log('Error checking login status:', error);
-      });
   }, [dispatch]);
 
-  if (loadinstack === false) {
+  if (isLoading) {
     return <LoadingScreen />;
   }
+
 
   return (
     <NavigationContainer>

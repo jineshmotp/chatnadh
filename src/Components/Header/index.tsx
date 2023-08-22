@@ -7,13 +7,14 @@ import { useNavigation } from '@react-navigation/native';
 
 interface HeaderProps {
   openModal: () => void; // Function to execute on button press
+  chatsearch:boolean;
   labeltxt: string; // Button label
   pageidx: number;
   chatuserimg: string | ImageSourcePropType;
   onlinestatus:boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ openModal, labeltxt,onlinestatus, pageidx, chatuserimg }) => {
+const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinestatus, pageidx, chatuserimg }) => {
   const navigation = useNavigation();
   const iconSize = hp('3%');
   const iconSizeLR = hp('5%');
@@ -83,14 +84,14 @@ const Header: React.FC<HeaderProps> = ({ openModal, labeltxt,onlinestatus, pagei
        
        <View style={styles.iconContainer}>
           
-          <TouchableOpacity style={styles.iconContainer}>
+          {/* <TouchableOpacity style={styles.iconContainer}>
             <Ionicons name="videocam" size={iconSize} color="white" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         
 
-          <TouchableOpacity style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
+          {/* <TouchableOpacity style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
             <Ionicons name="call" size={iconSize} color="white" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
             <Icon name="ellipsis-v" size={iconSize} color="white" />
@@ -103,9 +104,13 @@ const Header: React.FC<HeaderProps> = ({ openModal, labeltxt,onlinestatus, pagei
     } else {
       return (
         <View style={styles.iconContainer}>
+          {chatsearch ? ( 
           <TouchableOpacity style={styles.iconContainer}>
             <Icon name="search" size={iconSize} color="white" />
           </TouchableOpacity>
+
+          ):null
+          }
 
           <TouchableOpacity onPress={openModal} style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
             <Icon name="ellipsis-v" size={iconSize} color="white" />
