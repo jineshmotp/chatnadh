@@ -22,6 +22,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 import moment from 'moment';
+import FaceEmotion from '../../Components/FaceEmotion';
 
 
 const ChatScreen = ({ route }) => {
@@ -48,7 +49,7 @@ const ChatScreen = ({ route }) => {
         timestamp: new Date('2023-08-21T10:30:00Z'),
         user: { id: 2, name: 'Opponent' },
         delivered: true,
-        faceemotion:'sad'
+        faceemotion:'sadness'
       },
       {
         id: 2,
@@ -56,7 +57,16 @@ const ChatScreen = ({ route }) => {
         timestamp: new Date('2023-08-21T10:35:00Z'),
         user: { id: 1, name: 'You' },
         delivered: true,
-        faceemotion:'happy'
+        faceemotion:'happiness'
+      },
+
+      {
+        id: 3,
+        text: 'Hey, I am doing well. How about you? എന്റെ ലൈഫ് ഇൽ ഇനി ഒരു relationship ഉണ്ടാവോന്നു അറിയില്ല. ഉണ്ടായാൽ തന്നെ അത് ശരീരത്തിന് വേണ്ടി മാത്രം ആകും.  കാരണം എനിക്ക് ഒരു പെണ്ണിനെ പ്രേമിക്കാൻ പോലും അറയില്ലെന്ന്  മനസ്സിലായി.. എന്താണ് എന്റെ തെറ്റ് എന്ന് പോലും എനിക്ക് അറിയില്ല..പറഞ്ഞിരുന്നെങ്കിൽ ഞാൻ അത് മാറ്റാണെങ്കിലും ശ്രമിച്ചേനെ... നിന്ടെ ദേഷ്യ പെടലുകൾ പോലെ ഉത്തരം കിട്ടാത്ത ഒരു ചോദ്യം ആയിട്ട് എന്നും മനസ്സിൽ ഇണ്ടാകും.. വെറുതെ എന്തിനാ ആ കുട്ടികളുടെ ശാപം വാങ്ങുന്നെ..',
+        timestamp: new Date('2023-08-21T10:35:00Z'),
+        user: { id: 1, name: 'You' },
+        delivered: true,
+        faceemotion:'happiness'
       },
       // Add more sample messages here
     ];
@@ -87,6 +97,7 @@ const ChatScreen = ({ route }) => {
     }
   };
 
+  
   const renderItem = ({ item }) => {
     const isUserMessage = item.user.id === 1;
     const deliveredIcon = item.delivered ? (
@@ -114,6 +125,10 @@ const ChatScreen = ({ route }) => {
             },
           ]}
         >
+
+            <FaceEmotion emotion={item.faceemotion} text={item.faceemotion} />
+          
+          
           <Text style={styles.messageText}>{item.text}</Text>
           <Text style={styles.timestampText}>
             {moment(item.timestamp).format('h:mm A')}
@@ -135,8 +150,7 @@ const ChatScreen = ({ route }) => {
 
          <View style={styles.containerBottomChat} >
 
-
-        
+       
             <FlatList
               ref={flatListRef}
               data={messages}

@@ -58,6 +58,15 @@ const ChatScreen = ({ route }) => {
         delivered: true,
         faceemotion:'happy'
       },
+
+      {
+        id: 3,
+        text: 'Hey, I am doing well. How about you?',
+        timestamp: new Date('2023-08-21T10:35:00Z'),
+        user: { id: 1, name: 'You' },
+        delivered: true,
+        faceemotion:'happy'
+      },
       // Add more sample messages here
     ];
 
