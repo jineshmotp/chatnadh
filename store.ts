@@ -1,49 +1,44 @@
 // ./store.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import thunk from 'redux-thunk'; // Import redux-thunk middleware
-import userLoginReducer from './src/redux-reducer/userReducer';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import {
+  userLoginReducer,
+  userRegisterReducer,
+} from './src/redux-reducer/userReducer';
 
 const rootReducer = combineReducers({
   userLogin: userLoginReducer,
+  userRegister: userRegisterReducer,
   // other reducers...
 });
 
-// Load initial state from AsyncStorage
-const loadInitialState = async () => {
-  try {
-    const storedState = await AsyncStorage.getItem('reduxState');
-    return JSON.parse(storedState) || {}; // Return parsed JSON or empty object
-  } catch (error) {
-    console.error('Error loading state from AsyncStorage:', error);
-    return {}; // Return empty object in case of error
-  }
+const middleware = [thunk];
+
+// Get user details from AsyncStorage
+const getUserDetails = async () => {
+  const userDetails = await AsyncStorage.getItem('user');
+  return JSON.parse(userDetails) || null;
 };
 
-// Save state to AsyncStorage whenever the store state changes
-const saveStateToStorage = (state) => {
-  try {
-    AsyncStorage.setItem('reduxState', JSON.stringify(state));
-  } catch (error) {
-    console.error('Error saving state to AsyncStorage:', error);
-  }
-};
-
-// Load initial state before creating the store
-const storePromise = loadInitialState().then(initialState => {
-  const store = createStore(
-    rootReducer,
-    initialState, // Provide the initial state
-    applyMiddleware(thunk) // Apply redux-thunk middleware
-  );
-
-  // Subscribe to store changes and save state to AsyncStorage
-  store.subscribe(() => {
-    const state = store.getState();
-    saveStateToStorage(state);
-  });
-
-  return store; // Return the store from the promise
+// Async function to get initial state
+const getInitialState = async () => ({
+  userLogin: { user: await getUserDetails() },
+  // other initial state properties...
 });
 
-export default storePromise;
+// Create the store using initial state
+const initializeStore = async () => {
+  const initialState = await getInitialState();
+  const store = createStore(
+    rootReducer,
+    initialState,
+    composeWithDevTools(applyMiddleware(...middleware))
+  );
+  return store;
+};
+
+export default initializeStore;
+
+

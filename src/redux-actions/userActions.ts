@@ -1,11 +1,17 @@
 // src/redux-reducer/userActions.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import database from '@react-native-firebase/database';
 // src/redux-actions/userActions.js
 import { 
   USER_LOGIN_REQUEST, 
   USER_LOGIN_SUCCESS, 
   USER_LOGIN_FAIL, 
-  USER_LOGOUT 
+  USER_LOGOUT,
+  
+  USER_REGISTER_REQUEST,
+  USER_REGISTER_FAIL,
+  USER_REGISTER_SUCCESS,
+
 } from '../redux-constants/userConstants';
 import { auth } from '../config/firebase';
 
@@ -55,5 +61,22 @@ export const checkLoginStatus = () => async (dispatch) => { // Wrap the action c
   } catch (error) {
     console.log('Error reading user data from AsyncStorage:', error);
     throw error;
+  }
+};
+
+
+
+export const register = (data) => async (dispatch) => {
+  dispatch({ type: USER_REGISTER_REQUEST });
+
+  try {
+    await database()
+      .ref('/users/' + data.id)
+      .set(data);
+    
+    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+  } catch (error) {
+    console.log("Database error:", error);
+    dispatch({ type: USER_REGISTER_FAIL, payload: error.message });
   }
 };

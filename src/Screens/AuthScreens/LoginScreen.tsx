@@ -132,7 +132,7 @@ const LoginScreen = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
           >
-            <Label textval="WELCOME TO CHATNADH" styless={{ marginTop: hp('0%'), marginBottom: hp('3%') }} />
+            <Label textval="LOGIN" styless={{ marginTop: hp('0%'), marginBottom: hp('3%') }} />
 
              <Input 
             label="Email" 

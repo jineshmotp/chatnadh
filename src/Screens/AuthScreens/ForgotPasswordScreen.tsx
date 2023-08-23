@@ -19,9 +19,36 @@ const ForgotPasswordScreen = () => {
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
+
+  const [password, setPassword] = useState(''); 
+  const [repassword, setrePassword] = useState('');   
+  const [errorMsg, seterrorMsg] = useState('');
+
+  const handlePasswordChange = (text) => {
+    setPassword(text);
+    seterrorMsg(''); // Clear any previous error messages
+  };
+
+  const handlerePasswordChange = (text) => {
+    setrePassword(text);
+    seterrorMsg(''); // Clear any previous error messages
+  };
+
+
   const handleButtonPress = () => {
-    // Logic to execute when the button is pressed
-    console.log('Button pressed!');
+
+    if (!password || !repassword) {
+      seterrorMsg('Please fill in all fields.');
+    } else if (password !== repassword) {
+      seterrorMsg('Passwords do not match.');
+    } else if (password.length < 8) {
+      seterrorMsg('Password must be at least 8 characters.');
+    }
+    else
+    {
+      navigation.navigate('LoginScreen');
+    }
+   
   };
 
   const gotoLogin = () => {
@@ -79,9 +106,9 @@ const ForgotPasswordScreen = () => {
           >
             <Label textval="FORGOT PASSWORD" styless={{ marginTop: hp('0%'), marginBottom: hp('3%') }} />
             
-            <Input label="Email" secure={false} iconName="envelope" />
-            <Input label="New Password" secure={true} iconName="lock" />
-            <Input label="Re Enter New Password" secure={true} iconName="lock" />
+            
+            <Input label="New Password" secure={true} iconName="lock" onChangeText={handlePasswordChange} iconNametwo="eye"  />
+            <Input label="Re Enter New Password" secure={true} iconName="lock" onChangeText={handlerePasswordChange} iconNametwo="eye"  />
 
             <ButtonInput
               styless={{ width: wp('80%'), backgroundColor: colors.primary }}
@@ -90,6 +117,12 @@ const ForgotPasswordScreen = () => {
               onPress={handleButtonPress}
               label="UPDATE PASSWORD"
             />
+
+          {errorMsg && (
+            <View >
+              <Label textval={errorMsg} styless={{ color: 'red', marginBottom: hp('2%'), marginTop: hp('2%'),fontSize: wp('3.8%') }} />
+            </View>
+          )}
 
             <View style={styles.registerContainer}>
               <Label

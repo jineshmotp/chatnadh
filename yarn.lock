@@ -6371,6 +6371,11 @@
     "react-freeze" "^1.0.0"
     "warn-once" "^0.1.0"
 
+"react-native-simple-toast@^3.0.1":
+  "integrity" "sha512-G1iUHqvhA4Obacol+fz1MKTeHDGyDFGXvnmAxYrUNBkTOA9/yaVpZBjoWfpnYXIlYtrCOcz6ll/B8nUJg4PPDA=="
+  "resolved" "https://registry.npmjs.org/react-native-simple-toast/-/react-native-simple-toast-3.0.1.tgz"
+  "version" "3.0.1"
+
 "react-native-typing-animation@0.1.7":
   "integrity" "sha512-4H3rF9M+I2yAZpYJcY0Mb29TXkn98QK12rrKSY6LZj1BQD9NNmRZuNXzwX4XHapsIz+N/J8M3p27FOQPbfzqeg=="
   "resolved" "https://registry.npmjs.org/react-native-typing-animation/-/react-native-typing-animation-0.1.7.tgz"
@@ -6389,7 +6394,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", "react-native@>=0.35", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.59", "react-native@>=0.61.0", "react-native@0.72.3":
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", "react-native@>=0.35", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.59", "react-native@>=0.61.0", "react-native@>=0.71.0", "react-native@0.72.3":
   "integrity" "sha512-QqISi+JVmCssNP2FlQ4MWhlc4O/I00MRE1/GClvyZ8h/6kdsyk/sOirkYdZqX3+DrJfI3q+OnyMnsyaXIQ/5tQ=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.72.3.tgz"
   "version" "0.72.3"
@@ -6509,12 +6514,17 @@
     "source-map" "~0.6.1"
     "tslib" "^2.0.1"
 
+"redux-devtools-extension@^2.13.9":
+  "integrity" "sha512-cNJ8Q/EtjhQaZ71c8I9+BPySIBVEKssbPpskBfsXqb8HJ002A3KRVHfeRzwRo6mGPqsm7XuHTqNSNeS1Khig0A=="
+  "resolved" "https://registry.npmjs.org/redux-devtools-extension/-/redux-devtools-extension-2.13.9.tgz"
+  "version" "2.13.9"
+
 "redux-thunk@^2.4.2":
   "integrity" "sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q=="
   "resolved" "https://registry.npmjs.org/redux-thunk/-/redux-thunk-2.4.2.tgz"
   "version" "2.4.2"
 
-"redux@^4", "redux@^4 || ^5.0.0-beta.0", "redux@^4.2.1":
+"redux@^3.1.0 || ^4.0.0", "redux@^4", "redux@^4 || ^5.0.0-beta.0", "redux@^4.2.1":
   "integrity" "sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w=="
   "resolved" "https://registry.npmjs.org/redux/-/redux-4.2.1.tgz"
   "version" "4.2.1"

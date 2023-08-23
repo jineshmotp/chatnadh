@@ -4,7 +4,12 @@ import {
   USER_LOGIN_REQUEST, 
   USER_LOGIN_SUCCESS, 
   USER_LOGIN_FAIL, 
-  USER_LOGOUT 
+  USER_LOGOUT,
+
+  USER_REGISTER_REQUEST,
+  USER_REGISTER_FAIL,
+  USER_REGISTER_SUCCESS,
+
 } from '../redux-constants/userConstants';
 
 const initialState = {
@@ -13,7 +18,7 @@ const initialState = {
   error: null,
 };
 
-const userLoginReducer = (state = initialState, action) => {
+export const userLoginReducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return { ...state, isLoading: true, error: null };
@@ -30,4 +35,18 @@ const userLoginReducer = (state = initialState, action) => {
   }
 };
 
-export default userLoginReducer;
+export const userRegisterReducer = (state = { }, action) => {
+
+  switch (action.type){
+      case USER_REGISTER_REQUEST:
+          return { isLoading:true}
+      
+      case USER_REGISTER_SUCCESS:
+          return { isLoading:false, user:action.payload}
+
+      case USER_REGISTER_FAIL:
+          return { isLoading:false, error:action.payload}
+      default:
+          return state  
+  }
+}

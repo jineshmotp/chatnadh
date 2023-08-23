@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
-import storePromise from './store'; // Import the store promise
+import initializeStore from './store'; // Import the modified initializeStore function
 import Router from './src/Router';
 
 const App: React.FC = () => {
   const [resolvedStore, setResolvedStore] = useState(null);
 
   useEffect(() => {
-    storePromise.then(store => {
-      setResolvedStore(store);
-    });
+    const resolveStore = async () => {
+      const storeInstance = await initializeStore();
+      setResolvedStore(storeInstance);
+    };
+
+    resolveStore();
   }, []);
 
   if (!resolvedStore) {
