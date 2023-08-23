@@ -53,14 +53,11 @@ const LoginScreen = () => {
     return emailRegex.test(email);
   };
 
- 
-
-  
-  const gotoLogin = async() => {
    
-    console.log(email+' '+password);
-    seterrorMsg('');
-    if (email === "" || password === "") {
+    
+  const gotoLogin = async() => {   
+  
+    if (!email || !password) {
       //seterrorMsg('Please Enter valid Email/Password');
       
       Toast.showWithGravity(
@@ -100,9 +97,10 @@ const LoginScreen = () => {
      
       try {       
         await dispatch(login(data));
-                               
+
+                                       
       } catch (error) {
-        seterrorMsg(error.message);
+       
           Toast.showWithGravity(
             error.message,
             Toast.LONG,
@@ -120,6 +118,24 @@ const LoginScreen = () => {
   const gotoForgotPassword = () => {
     navigation.navigate('ForgotPasswordScreen');
   };
+
+  // const restoreCredentials = async () => {
+  //   try {
+  //     const savedEmail = await AsyncStorage.getItem('savedEmail');
+  //     const savedPassword = await AsyncStorage.getItem('savedPassword');
+
+  //     console.log('values :' + savedEmail + ' ' + savedPassword);
+
+  //     setEmail(savedEmail || '');       // Set email state
+  //     setPassword(savedPassword || ''); // Set password state
+  //   } catch (error) {
+  //     console.log('Error reading saved credentials from AsyncStorage:', error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   restoreCredentials();
+  // }, []);
 
     
   useEffect(() => {

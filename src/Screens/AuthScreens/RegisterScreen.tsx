@@ -26,7 +26,7 @@ const RegisterScreen = () => {
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-  const [name,setName]= useState();
+  const [name,setName]= useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(''); 
   const [repassword, setrePassword] = useState(''); 
