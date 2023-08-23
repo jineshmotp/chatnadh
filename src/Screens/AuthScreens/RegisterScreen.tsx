@@ -187,7 +187,7 @@ const RegisterScreen = () => {
             <Label textval="REGISTER" styless={{ marginTop: hp('0%'), marginBottom: hp('3%') }} />
 
             <Input label="Name" secure={false} iconName="user" onChangeText={handleNameChange} />
-            <Input label="Email" secure={false} iconName="envelope" onChangeText={handleEmailChange} />
+            <Input label="Email" secure={false} emailtype={true} iconName="envelope" onChangeText={handleEmailChange} />
             <Input label="Password" secure={true} iconName="lock" onChangeText={handlePasswordChange} />
             <Input label="Re Enter Password" secure={true} iconName="lock" onChangeText={handlerePasswordChange}/>
             <Input label="About" secure={false} iconName="info" onChangeText={handleAboutChange} />

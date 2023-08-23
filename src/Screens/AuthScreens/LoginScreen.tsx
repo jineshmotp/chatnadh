@@ -16,9 +16,16 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import LoadingScreen from '../../Components/LoadingScreen';
 import BackgroundImage from '../../Components/BackgroundImage';
 
+import Toast from 'react-native-simple-toast';
+import uuid from 'react-native-uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 const LoginScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, seterrorMsg] = useState('');
@@ -54,23 +61,56 @@ const LoginScreen = () => {
     console.log(email+' '+password);
     seterrorMsg('');
     if (email === "" || password === "") {
-      seterrorMsg('Please Enter valid Email/Password');
-    } else if (!isValidEmail(email)) {
-      seterrorMsg('Please Enter a valid Email');
-    } else if (password.length < 8) {
-      seterrorMsg('Password must be at least 8 characters');
+      //seterrorMsg('Please Enter valid Email/Password');
+      
+      Toast.showWithGravity(
+        'Please Enter valid Email/Password', 
+        Toast.LONG,
+        Toast.BOTTOM,       
+      );   
+
+    } 
+    else if (!isValidEmail(email)) 
+    {
+      //seterrorMsg('Please Enter a valid Email');
+      Toast.showWithGravity(
+        'Please Enter a valid Email', 
+        Toast.LONG,
+        Toast.BOTTOM,       
+      );
+    } 
+    else if (password.length < 8) 
+    {
+      //seterrorMsg('Password must be at least 8 characters');
+      Toast.showWithGravity(
+        'Password must be at least 8 characters', 
+        Toast.LONG,
+        Toast.BOTTOM,       
+      );
     } 
     
     else {
-      try {
-        await dispatch(login(email, password));
-        seterrorMsg(''); // Clear error message if everything is valid                          
+
+
+      let data = {
+        id: uuid.v4(),       
+        emailId: email,
+        password: password,
+      };
+     
+      try {       
+        await dispatch(login(data));
+                               
       } catch (error) {
         seterrorMsg(error.message);
-      }      
-      
+          Toast.showWithGravity(
+            error.message,
+            Toast.LONG,
+            Toast.BOTTOM,
+          );
+          
+      }
     }
-
   };
 
   const gotoRegister = () => {
@@ -81,7 +121,7 @@ const LoginScreen = () => {
     navigation.navigate('ForgotPasswordScreen');
   };
 
-  
+    
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -136,6 +176,7 @@ const LoginScreen = () => {
 
              <Input 
             label="Email" 
+            emailtype={true}
             secure={false} 
             iconName="envelope"
             onChangeText={handleEmailChange}

@@ -16,28 +16,54 @@ import {
 import { auth } from '../config/firebase';
 
 // Async action creator using Redux Thunk
-export const login = (email, password) => async (dispatch) => {
+export const login = (data) => async (dispatch) => {
+
+    
   dispatch({ type: USER_LOGIN_REQUEST });
 
   try {
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    const user = {
-      uid: userCredential.user.uid,
-      email: userCredential.user.email,
-    };
+    // Query the Firebase Realtime Database to get user details
+    const snapshot = await database()
+      .ref('/users/')
+      .orderByChild('emailId')
+      .equalTo(data.emailId)
+      .once('value');
+
+    const userArray = snapshot.val();
+
+    if (!userArray) {
+      throw new Error('User not found');
+    }
+
+    // Find the user based on email
+    const userId = Object.keys(userArray)[0]; // Assuming there's only one user with this email
+
+    const user = userArray[userId];
+
+    // Check if the password matches
+    if (user.password !== data.password) {
+      throw new Error('Invalid password');
+    }
+    
+    // Store the user data in AsyncStorage
     await AsyncStorage.setItem('user', JSON.stringify(user));
+       
     dispatch({ type: USER_LOGIN_SUCCESS, payload: user });
   } catch (error) {
-    console.log("Authentication error:", error);
+    console.log('Authentication error:', error);
     dispatch({ type: USER_LOGIN_FAIL, payload: error.message });
+
+    // Rethrow the error to be caught by the calling code (e.g., login screen)
+    throw error;
   }
 };
 
+
 export const logout = () => async (dispatch) => {
-  await AsyncStorage.removeItem('user');
+  
   try {
    
-    await auth.signOut();
+    //await auth.signOut();
     dispatch({ type: USER_LOGOUT });
     await AsyncStorage.removeItem('user');
 

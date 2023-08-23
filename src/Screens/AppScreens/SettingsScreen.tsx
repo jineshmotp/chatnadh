@@ -82,8 +82,8 @@ const SettingsScreen = () => {
         <View style={styles.userInfoContainer}>
           <Image source={userImage} style={styles.userImage} />
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>{user.uid}</Text>
-            <Text style={styles.userEmail}>{user.email}</Text>
+            <Text style={styles.userName}>{user.id}</Text>
+            <Text style={styles.userEmail}>{user.emailId}</Text>
           </View>
           <TouchableOpacity style={styles.editButton}>
             <Text style={styles.editButtonText}>Edit</Text>

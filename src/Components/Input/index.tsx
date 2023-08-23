@@ -6,13 +6,14 @@ import { colors } from '../../Constants/colors';
 
 interface InputProps {
   label: string;
+  emailtype:boolean;
   secure?: boolean; // Make secure prop optional
   iconName: string; // Corrected prop name to camelCase
   iconNametwo: string; // Corrected prop name to camelCase
   onChangeText?: (text: string) => void; // Add this prop
 }
 
-const Input: FunctionComponent<InputProps> = ({ label, secure, iconName,iconNametwo,onChangeText }) => {
+const Input: FunctionComponent<InputProps> = ({ label,emailtype, secure, iconName,iconNametwo,onChangeText }) => {
  
   const [isPasswordVisible, setPasswordVisible] = useState(!secure);
 
@@ -27,7 +28,8 @@ const Input: FunctionComponent<InputProps> = ({ label, secure, iconName,iconName
       </View>
       <View style={styles.inputWrapper}>
         <TextInput
-          placeholder={label}          
+          placeholder={label}   
+          keyboardType= {emailtype ? 'email-address': 'default'}       
           style={styles.input}
           secureTextEntry={!isPasswordVisible}
           theme={{ colors: { primary: 'transparent' } }}
