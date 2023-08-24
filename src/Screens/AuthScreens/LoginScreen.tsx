@@ -9,6 +9,8 @@ import ButtonInput from '../../Components/ButtonInput';
 import { colors } from '../../Constants/colors';
 import styles from './styles';
 
+import { USER_LOGIN_SUCCESS }from '../../redux-constants/userConstants';
+
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../redux-actions/userActions';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -35,7 +37,7 @@ const LoginScreen = () => {
  
   const dispatch = useDispatch()
   const userLogin = useSelector(state => state.userLogin)
-  const {user,isLoading,error } = userLogin
+  const {user, isLoading, error } = userLogin
 
 
   const handleEmailChange = (text) => {
@@ -55,61 +57,56 @@ const LoginScreen = () => {
 
    
     
-  const gotoLogin = async() => {   
-  
+  const gotoLogin = async () => {
     if (!email || !password) {
-      //seterrorMsg('Please Enter valid Email/Password');
-      
       Toast.showWithGravity(
-        'Please Enter valid Email/Password', 
+        'Please Enter valid Email/Password',
         Toast.LONG,
-        Toast.BOTTOM,       
-      );   
-
-    } 
-    else if (!isValidEmail(email)) 
-    {
-      //seterrorMsg('Please Enter a valid Email');
-      Toast.showWithGravity(
-        'Please Enter a valid Email', 
-        Toast.LONG,
-        Toast.BOTTOM,       
+        Toast.BOTTOM
       );
-    } 
-    else if (password.length < 8) 
-    {
-      //seterrorMsg('Password must be at least 8 characters');
+    } else if (!isValidEmail(email)) {
       Toast.showWithGravity(
-        'Password must be at least 8 characters', 
+        'Please Enter a valid Email',
         Toast.LONG,
-        Toast.BOTTOM,       
+        Toast.BOTTOM
       );
-    } 
-    
-    else {
-
-
+    } else if (password.length < 8) {
+      Toast.showWithGravity(
+        'Password must be at least 8 characters',
+        Toast.LONG,
+        Toast.BOTTOM
+      );
+    } else {
       let data = {
-        id: uuid.v4(),       
+        id: uuid.v4(),
         emailId: email,
         password: password,
       };
-     
-      try {       
+  
+      try {
         await dispatch(login(data));
 
-                                       
-      } catch (error) {
-       
-          Toast.showWithGravity(
-            error.message,
-            Toast.LONG,
-            Toast.BOTTOM,
-          );
-          
+        
+        
+
+      } catch (catchError) { // Rename the variable here
+        // Display the error message from the Redux state
+        Toast.showWithGravity(
+          error.message, // Access the error message directly from the Redux state
+          Toast.LONG,
+          Toast.BOTTOM
+        );
       }
     }
   };
+
+  useEffect(() => {
+
+    console.log('load value :',isLoading);
+
+ },[isLoading,dispatch]);
+
+ 
 
   const gotoRegister = () => {
     navigation.navigate('RegisterScreen');
@@ -119,24 +116,26 @@ const LoginScreen = () => {
     navigation.navigate('ForgotPasswordScreen');
   };
 
-  // const restoreCredentials = async () => {
-  //   try {
-  //     const savedEmail = await AsyncStorage.getItem('savedEmail');
-  //     const savedPassword = await AsyncStorage.getItem('savedPassword');
 
-  //     console.log('values :' + savedEmail + ' ' + savedPassword);
 
-  //     setEmail(savedEmail || '');       // Set email state
-  //     setPassword(savedPassword || ''); // Set password state
-  //   } catch (error) {
-  //     console.log('Error reading saved credentials from AsyncStorage:', error);
-  //   }
-  // };
+  useEffect(() => {
 
-  // useEffect(() => {
-  //   restoreCredentials();
-  // }, []);
 
+    if(error != null)
+    {
+
+      console.log(error);
+
+        Toast.showWithGravity(
+          error, 
+          Toast.LONG,
+          Toast.BOTTOM
+        );
+
+    }
+   
+     
+    }, [dispatch,isLoading,error]);
     
   useEffect(() => {
     Animated.parallel([
@@ -168,12 +167,7 @@ const LoginScreen = () => {
     };
   }, []);
 
-  if (isLoading) {
-    return (
-      <LoadingScreen />
-    )
-  }
-
+ 
   return (
     <BackgroundImage>
       {!isKeyboardVisible && (

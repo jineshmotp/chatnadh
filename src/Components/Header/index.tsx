@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinest
         <View style={styles.headerLeft} >
         <TouchableOpacity onPress={backButton} style={styles.iconContainer}>
           <Icon name="angle-left" size={iconSizeLR} color="white" style={{paddingRight: wp('5%')}} />
-          <Image source={chatuserimg} style={styles.logouser} />
+          <Image source={{ uri: chatuserimg }}  style={styles.logouser} />
          
         </TouchableOpacity>
 

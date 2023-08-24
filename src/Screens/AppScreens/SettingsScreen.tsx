@@ -15,7 +15,12 @@ import { colors } from '../../Constants/colors';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../redux-actions/userActions';
+import { useNavigation } from '@react-navigation/native';
 
+import LoadingScreen from '../../Components/LoadingScreen';
+import Toast from 'react-native-simple-toast';
+
+import { StackActions } from '@react-navigation/native';
 
 const userImage = require('../../Images/chatnadh_logo.png'); // Replace with your user image asset
 
@@ -24,10 +29,11 @@ const SettingsScreen = () => {
   const [translateYAnim] = useState(new Animated.Value(30));
   const [isModalVisible, setModalVisible] = useState(false);
 
+  const navigation = useNavigation();
   const dispatch = useDispatch()
+    
   const userLogin = useSelector(state => state.userLogin)
-  const {user,isLoading,error } = userLogin
-
+  const { user, isLoading, error } = userLogin
 
   const closeModal = () => {
     setModalVisible(false);
@@ -41,17 +47,26 @@ const SettingsScreen = () => {
   
   const gotoLogout = async () => {
     try {
-      await dispatch(logout()); // Await the logout action   
-        
+      await dispatch(logout());
+          
     } catch (error) {
       console.error('Logout failed:', error);
-      if (error.message === 'No user currently signed in.') {
-        // Handle the case where no user is signed in
-        console.log('User is not currently signed in.');
-      }
+
+      Toast.showWithGravity(
+        error.message, // Access the error message directly from the Redux state
+        Toast.LONG,
+        Toast.BOTTOM
+      );
+
     }
   };
+ 
+  useEffect(() => {
 
+    console.log('Settigs isloading :',isLoading);
+
+  });
+  
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -66,6 +81,11 @@ const SettingsScreen = () => {
       }),
     ]).start();
   }, [fadeAnim, translateYAnim]);
+
+  //  if (Logoutloading) {
+  //   return <LoadingScreen />;
+  // }
+
 
   return (
     <BackgroundImage>

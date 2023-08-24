@@ -4,11 +4,15 @@ import {
   USER_LOGIN_REQUEST, 
   USER_LOGIN_SUCCESS, 
   USER_LOGIN_FAIL, 
-  USER_LOGOUT,
-
+  
   USER_REGISTER_REQUEST,
   USER_REGISTER_FAIL,
   USER_REGISTER_SUCCESS,
+
+  USER_LOGOUT_REQUEST,
+  USER_LOGOUT_SUCCESS,
+  USER_LOGOUT_FAIL,
+  USER_LOGOUT
 
 } from '../redux-constants/userConstants';
 
@@ -21,15 +25,17 @@ const initialState = {
 export const userLoginReducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
-      return { ...state, isLoading: true, error: null };
-    case USER_LOGIN_SUCCESS:
-      AsyncStorage.setItem('user', JSON.stringify(action.payload)); // Store user data
+      return { ...state, isLoading: false, error: null };
+    case USER_LOGIN_SUCCESS:       
       return { ...state, user: action.payload, isLoading: false, error: null };
     case USER_LOGIN_FAIL:
       return { ...state, user:null, isLoading: false, error: action.payload,  };
-    case USER_LOGOUT:
-      AsyncStorage.removeItem('user'); // Remove user data
-      return { ...state, user: null };
+    case USER_LOGOUT_REQUEST:      
+      return { ...state, isLoading: true };
+    case USER_LOGOUT_SUCCESS:       
+      return { ...state, isLoading: false };
+      case USER_LOGOUT:       
+      return { ...state, isLoading: false, user: null };
     default:
       return state;
   }

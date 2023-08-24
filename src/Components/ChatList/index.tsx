@@ -30,7 +30,7 @@ const ChatList: FunctionComponent<ChatListProps> = ({ item, gotoChatScreen }) =>
           />
         <View style={styles.ChatListImageSection}>
                     <Image
-              source={item.picture}
+              source={{ uri: item.picture }} 
               style={[
                 styles.ChatListUserImg,
                 { borderColor: item.onlineStatus ? colors.primary : colors.white }

@@ -125,7 +125,6 @@ const RegisterScreen = () => {
         Toast.BOTTOM,       
       );
 
-
       }      
     }
    

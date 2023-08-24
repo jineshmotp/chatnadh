@@ -6,6 +6,10 @@ import {
   USER_LOGIN_REQUEST, 
   USER_LOGIN_SUCCESS, 
   USER_LOGIN_FAIL, 
+  
+  USER_LOGOUT_REQUEST,
+  USER_LOGOUT_SUCCESS,
+  USER_LOGOUT_FAIL,
   USER_LOGOUT,
   
   USER_REGISTER_REQUEST,
@@ -17,12 +21,8 @@ import { auth } from '../config/firebase';
 
 // Async action creator using Redux Thunk
 export const login = (data) => async (dispatch) => {
-
-    
-  dispatch({ type: USER_LOGIN_REQUEST });
-
+  
   try {
-    // Query the Firebase Realtime Database to get user details
     const snapshot = await database()
       .ref('/users/')
       .orderByChild('emailId')
@@ -30,48 +30,45 @@ export const login = (data) => async (dispatch) => {
       .once('value');
 
     const userArray = snapshot.val();
+    dispatch({ type: USER_LOGIN_REQUEST });
+    
+
+    const userId = Object.keys(userArray)[0];
+    const user = userArray[userId];
 
     if (!userArray) {
       throw new Error('User not found');
     }
-
-    // Find the user based on email
-    const userId = Object.keys(userArray)[0]; // Assuming there's only one user with this email
-
-    const user = userArray[userId];
-
-    // Check if the password matches
-    if (user.password !== data.password) {
+    else if (user.password !== data.password) 
+    {
       throw new Error('Invalid password');
     }
+
+    else
+    {
+      dispatch({ type: USER_LOGIN_REQUEST });
+    }
+
     
-    // Store the user data in AsyncStorage
     await AsyncStorage.setItem('user', JSON.stringify(user));
-       
     dispatch({ type: USER_LOGIN_SUCCESS, payload: user });
   } catch (error) {
-    console.log('Authentication error:', error);
     dispatch({ type: USER_LOGIN_FAIL, payload: error.message });
-
-    // Rethrow the error to be caught by the calling code (e.g., login screen)
-    throw error;
   }
 };
 
 
 export const logout = () => async (dispatch) => {
-  
+  //dispatch({ type: USER_LOGOUT_REQUEST });
+  console.log('USER_LOGOUT_REQUEST');
   try {
-   
-    //await auth.signOut();
-    dispatch({ type: USER_LOGOUT });
     await AsyncStorage.removeItem('user');
-
+    //dispatch({ type: USER_LOGOUT_SUCCESS });
+    dispatch({ type: USER_LOGOUT });
     return Promise.resolve(); // Resolve the promise if logout is successful
   } catch (error) {
     return Promise.reject(error); // Reject the promise if logout fails
   }
-
 };
 
 export const checkLoginStatus = () => async (dispatch) => { // Wrap the action creator in an async function
@@ -92,15 +89,33 @@ export const checkLoginStatus = () => async (dispatch) => { // Wrap the action c
 
 
 
-export const register = (data) => async (dispatch) => {
-  dispatch({ type: USER_REGISTER_REQUEST });
+// export const register = (data) => async (dispatch) => {
+//   try {
+//     await database()
+//       .ref('/users/' + data.id)
+//       .set(data);
+//     dispatch({ type: USER_REGISTER_REQUEST });
+//     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+//   } catch (error) {
+//     console.log("Database error:", error);
+//     dispatch({ type: USER_REGISTER_FAIL, payload: error.message });
+//   }
+// };
 
+
+export const register = (data) => async (dispatch) => {
   try {
-    await database()
-      .ref('/users/' + data.id)
-      .set(data);
-    
-    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+    // Check if a user with the same email already exists
+    const snapshot = await database().ref('/users').orderByChild('email').equalTo(data.emailId).once('value');
+    if (snapshot.exists()) {
+      // User with the same email already exists
+      dispatch({ type: USER_REGISTER_FAIL, payload: 'User with the same email already exists' });
+    } else {
+      // User does not exist, proceed with registration
+      dispatch({ type: USER_REGISTER_REQUEST });
+      await database().ref('/users/' + data.id).set(data);      
+      dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+    }
   } catch (error) {
     console.log("Database error:", error);
     dispatch({ type: USER_REGISTER_FAIL, payload: error.message });

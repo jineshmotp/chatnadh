@@ -6,11 +6,13 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   userLoginReducer,
   userRegisterReducer,
+  //userLogoutReducer
 } from './src/redux-reducer/userReducer';
 
 const rootReducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
+ // userLogout: userLogoutReducer
   // other reducers...
 });
 

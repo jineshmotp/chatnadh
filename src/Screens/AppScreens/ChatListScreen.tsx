@@ -15,6 +15,8 @@ import BackgroundImage from '../../Components/BackgroundImage';
 import { useNavigation } from '@react-navigation/native';
 import ChatList from '../../Components/ChatList';
 
+import data from '../../data/messages';
+
 const ChatListScreen = () => {
   const [fadeAnim] = useState(new Animated.Value(0));
   const [translateYAnim] = useState(new Animated.Value(0)); // Adjust the initial value
@@ -22,92 +24,6 @@ const ChatListScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
   const [isContainerTopVisible, setContainerTopVisible] = useState(true); // State to manage containerTop visibility
   const navigation = useNavigation();
-
-  const Messages = [
-    {
-      id: '1',
-      picture:require('../../Images/user/user-1.jpg'),
-      username:"Nikhila Vimal",
-      bio: "My life",
-      lastMessage:"Hello How are you?",
-      time:"4:00 PM",
-      notification:3,
-      isBlocked:false,
-      isMuted:false,
-      hasStory:false,
-      onlineStatus:true,
-     },    
-    // {
-    //   id: '2',
-
-    //   picture:require('../../Images/user/user-2.jpg'),
-    //   username:"Meenakshi Thambi",
-    //   bio: "My life",
-    //   lastMessage:"Hello How are you?",
-    //   time:"5:00 PM",
-    //   notification:10,
-    //   isBlocked:false,
-    //   isMuted:false,
-    //   hasStory:true,
-    //   onlineStatus:true,
-    //  },
-    {
-      id: '3',
-
-      picture:require('../../Images/user/user-3.jpg'),
-      username:"Aparna Balamurali",
-      bio: "My life",
-      lastMessage:"Hello How are you?",
-      time:"6:00 PM",
-      notification:1,
-      isBlocked:false,
-      isMuted:false,
-      hasStory:false,
-      onlineStatus:true,
-     },
-    // {
-    //   id: '4',
-
-    //   picture:require('../../Images/user/user-4.jpg'),
-    //   username:"Aparna Babu",
-    //   bio: "My life",
-    //   lastMessage:"Hello How are you?",
-    //   time:"6:00 PM",
-    //   notification:1,
-    //   isBlocked:false,
-    //   isMuted:false,
-    //   hasStory:false,
-    //   onlineStatus:false,
-    // },
-    {
-      id: '5',
-      picture:require('../../Images/user/user-5.jpg'),
-      username:"Aditi Ravi",
-      bio: "My life",
-      lastMessage:"Hello How are you?",
-      time:"6:00 PM",
-      notification:0,
-      isBlocked:false,
-      isMuted:false,
-      hasStory:false,
-      onlineStatus:true,
-    },
-    {
-      id: '6',
-      picture:require('../../Images/user/user-6.jpg'),
-      username:"Anu Sithara",
-      bio: "My life",
-      lastMessage:"Hello How are you? hdsjksa adkadk as askdkasdk  asjdkaskdjasd kdkadk asj",
-      time:"6:00 PM",
-      notification:1,
-      isBlocked:false,
-      isMuted:false,
-      hasStory:false,
-      onlineStatus:true,
-    }
-  ];
-  
-   
   
   const closeModal = () => {
     setModalVisible(false);
@@ -147,7 +63,7 @@ const ChatListScreen = () => {
               
 
       <FlatList 
-          data={Messages}
+          data={data}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
 
