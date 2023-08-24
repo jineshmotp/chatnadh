@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import ChatList from '../../Components/ChatList';
 
 import data from '../../data/messages';
+import { useDispatch, useSelector } from 'react-redux'
 
 const ChatListScreen = () => {
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -24,6 +25,10 @@ const ChatListScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
   const [isContainerTopVisible, setContainerTopVisible] = useState(true); // State to manage containerTop visibility
   const navigation = useNavigation();
+
+  const dispatch = useDispatch()
+  const userLogin = useSelector(state => state.userLogin)
+  const {user, isLoading, error } = userLogin
   
   const closeModal = () => {
     setModalVisible(false);
@@ -50,7 +55,7 @@ const ChatListScreen = () => {
     <BackgroundImage>
        {isContainerTopVisible && (
         <View style={styles.containerTop}>
-          <Header openModal={openModal} chatsearch={true} labeltxt="Conversations" pageidx={0} chatuserimg={'0'}  />
+          <Header openModal={openModal} chatsearch={true} labeltxt={user.name} pageidx={0} chatuserimg={'0'}  />
         </View>
       )}
 

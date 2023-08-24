@@ -4,6 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux'
 
 interface HeaderProps {
   openModal: () => void; // Function to execute on button press
@@ -15,15 +16,76 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinestatus, pageidx, chatuserimg }) => {
+ 
+ 
+  const dispatch = useDispatch()
+  const userLogin = useSelector(state => state.userLogin)
+  const {user, isLoading, error } = userLogin
+ 
   const navigation = useNavigation();
   const iconSize = hp('3%');
   const iconSizeLR = hp('5%');
   const backButton = () => {
-    navigation.navigate('AppStack');
+    navigation.goBack();
   };
 
   const renderLeftside = () => {
-    if (chatuserimg !== '0') {
+    
+    if (pageidx === 0) {
+
+      return (
+        <View style={styles.headerLeft} >
+           <Image source={{ uri: user.img }}  style={styles.logouser} />
+          <View style={styles.headerLeftText}>
+              <Text style={styles.headerText}>{labeltxt}</Text>            
+          </View>
+       
+       </View >
+      )
+
+
+    }
+
+
+    else if (pageidx === 1) {
+
+      return (
+        <View style={styles.headerLeft} >
+           <Image source={{ uri: user.img }}  style={styles.logouser} />
+          <View style={styles.headerLeftText}>
+              <Text style={styles.headerText}>{labeltxt}</Text>            
+          </View>
+       
+       </View >
+      )
+
+
+    }
+
+
+    else if (pageidx === 2) {
+
+      return (
+
+        <View style={styles.headerLeft} >
+        
+          <TouchableOpacity onPress={backButton} style={styles.iconContainer}>
+           
+            <Icon name="angle-left" size={iconSizeLR} color="white"  />         
+          </TouchableOpacity>           
+
+          <View style={styles.headerLeftText}>
+              <Text style={styles.headerText}>{labeltxt}</Text>            
+          </View>        
+        
+        </View>
+      );
+
+
+    }
+
+
+    else if (pageidx === 3) {
       return (
 
         <View style={styles.headerLeft} >
@@ -47,28 +109,12 @@ const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinest
 
       );
     } 
-    else if (pageidx === 1) 
-    {
-      return (
-
-        <View style={styles.headerLeft} >
-        
-          <TouchableOpacity onPress={backButton} style={styles.iconContainer}>
-            <Icon name="angle-left" size={iconSizeLR} color="white"  />         
-          </TouchableOpacity>           
-
-          <View style={styles.headerLeftText}>
-              <Text style={styles.headerText}>{labeltxt}</Text>            
-          </View>        
-        
-        </View>
-      );
-    }
+   
     else
     {
       return (
         <View style={styles.headerLeft} >
-          <Image source={require('../../Images/logo_white.png')} style={styles.headerlogo} />
+           <Image source={{ uri: user.img }}  style={styles.logouser} />
           <View style={styles.headerLeftText}>
               <Text style={styles.headerText}>{labeltxt}</Text>            
           </View>
@@ -79,15 +125,43 @@ const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinest
   };
 
   const renderRightside = () => {
-    if (chatuserimg !== '0') {
-      return (     
-       
-       <View style={styles.iconContainer}>
-          
+
+    if (pageidx === 0 || pageidx === 1) {
+
+      return (
+          <View style={styles.iconContainer}>
+        
+          <TouchableOpacity style={styles.iconContainer}>
+            <Icon name="search" size={iconSize} color="white" />
+          </TouchableOpacity>
+        
+          <TouchableOpacity onPress={openModal} style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
+            <Icon name="ellipsis-v" size={iconSize} color="white" />
+          </TouchableOpacity>
+        </View>
+      )
+
+      }
+
+    else if (pageidx === 2) {
+
+      return (
+
+        <View style={styles.iconContainer}>     
+        <TouchableOpacity onPress={openModal} style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
+          <Icon name="ellipsis-v" size={iconSize} color="white" />
+        </TouchableOpacity>
+      </View>
+      )
+    }
+
+    else {
+
+      return (
+      <View style={styles.iconContainer}>          
           {/* <TouchableOpacity style={styles.iconContainer}>
             <Ionicons name="videocam" size={iconSize} color="white" />
-          </TouchableOpacity> */}
-        
+          </TouchableOpacity> */}        
 
           {/* <TouchableOpacity style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
             <Ionicons name="call" size={iconSize} color="white" />
@@ -96,28 +170,12 @@ const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinest
           <TouchableOpacity style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
             <Icon name="ellipsis-v" size={iconSize} color="white" />
           </TouchableOpacity>
-        </View>
-       
+         <TouchableOpacity/>
+    </View>
+      )
 
-
-      );
-    } else {
-      return (
-        <View style={styles.iconContainer}>
-          {chatsearch ? ( 
-          <TouchableOpacity style={styles.iconContainer}>
-            <Icon name="search" size={iconSize} color="white" />
-          </TouchableOpacity>
-
-          ):null
-          }
-
-          <TouchableOpacity onPress={openModal} style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>
-            <Icon name="ellipsis-v" size={iconSize} color="white" />
-          </TouchableOpacity>
-        </View>
-      );
     }
+  
   };
 
   return (

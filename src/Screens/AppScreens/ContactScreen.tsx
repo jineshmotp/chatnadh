@@ -9,6 +9,7 @@ import styles from './styles';
 import Header from '../../Components/Header';
 import ModelPopup from '../../Components/ModelPopup';
 import BackgroundImage from '../../Components/BackgroundImage';
+import { useDispatch, useSelector } from 'react-redux'
 
 const ContactScreen = () => {
   const navigation = useNavigation();
@@ -16,6 +17,9 @@ const ContactScreen = () => {
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
   
+  const dispatch = useDispatch()
+  const userLogin = useSelector(state => state.userLogin)
+  const {user, isLoading, error } = userLogin
   
   const closeModal = () => {
     setModalVisible(false);
@@ -44,7 +48,7 @@ const ContactScreen = () => {
     <BackgroundImage>
       <View style={styles.containerTop}>
 
-      <Header openModal={openModal}  chatsearch={true} labeltxt="Notifications" pageidx={0} chatuserimg={'0'} />
+      <Header openModal={openModal}  chatsearch={true} labeltxt={user.name} pageidx={1} chatuserimg={'0'} />
        
       </View>
 

@@ -36,7 +36,7 @@ const AboutScreen = () => {
   return (
     <BackgroundImage>
       <View style={styles.containerTop}>
-        <Header openModal={openModal} labeltxt="About Us" pageidx={1} chatuserimg={'0'}  />
+        <Header openModal={openModal} labeltxt="About Us" pageidx={2} chatuserimg={'0'}  />
       </View>
 
       <Animated.View

@@ -20,7 +20,6 @@ import { useNavigation } from '@react-navigation/native';
 import LoadingScreen from '../../Components/LoadingScreen';
 import Toast from 'react-native-simple-toast';
 
-import { StackActions } from '@react-navigation/native';
 
 const userImage = require('../../Images/chatnadh_logo.png'); // Replace with your user image asset
 
@@ -90,7 +89,7 @@ const SettingsScreen = () => {
   return (
     <BackgroundImage>
       <View style={styles.containerTop}>
-        <Header openModal={openModal} labeltxt="Settings" pageidx={1} chatuserimg={'0'}  />
+        <Header openModal={openModal} labeltxt="Settings" pageidx={2} chatuserimg={'0'}  />
       </View>
 
       <Animated.View
@@ -100,9 +99,9 @@ const SettingsScreen = () => {
         ]}
       >
         <View style={styles.userInfoContainer}>
-          <Image source={userImage} style={styles.userImage} />
+          <Image source={{uri : user.img }} style={styles.userImage} />
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>{user.id}</Text>
+            <Text style={styles.userName}>{user.name}</Text>
             <Text style={styles.userEmail}>{user.emailId}</Text>
           </View>
           <TouchableOpacity style={styles.editButton}>

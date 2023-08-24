@@ -145,7 +145,7 @@ const ChatScreen = ({ route }) => {
     <BackgroundImage>
       
         <View style={styles.containerTop}>
-          <Header openModal={openModal} labeltxt={chatData.username} onlinestatus={chatData.onlineStatus} pageidx={1} chatuserimg={chatData.picture} />
+          <Header openModal={openModal} labeltxt={chatData.username} onlinestatus={chatData.onlineStatus} pageidx={3} chatuserimg={chatData.picture} />
         </View>  
 
          <View style={styles.containerBottomChat} >
