@@ -42,11 +42,10 @@ const NotificationScreen = () => {
 
   return (
     <BackgroundImage>
-      <View style={styles.containerTop}>
+      {/* <View style={styles.containerTop}> 
+      </View> */}
 
       <Header openModal={openModal}  labeltxt="Notifications" pageidx={0} chatuserimg={'0'} />
-       
-      </View>
 
       <Animated.View
         style={[

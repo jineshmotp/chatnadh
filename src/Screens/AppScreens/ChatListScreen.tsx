@@ -43,26 +43,36 @@ const ChatListScreen = () => {
   };
 
   useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: false, // Use JavaScript animation driver
-    }).start();
-  }, [fadeAnim]);
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateYAnim, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, translateYAnim]);
 
   
   return (
     <BackgroundImage>
-       {isContainerTopVisible && (
+       {/* {isContainerTopVisible && (
         <View style={styles.containerTop}>
-          <Header openModal={openModal} chatsearch={true} labeltxt={user.name} pageidx={0} chatuserimg={'0'}  />
+          
         </View>
-      )}
+      )} */}
+
+
+      <Header openModal={openModal} chatsearch={true} labeltxt={user.name} pageidx={0}  />
 
       <Animated.View
         style={[
-          styles.containerBottom,
-          { opacity: fadeAnim },
+          styles.containerBottomContact,
+          { opacity: fadeAnim, transform: [{ translateY: translateYAnim }] },
         ]}
       >
               

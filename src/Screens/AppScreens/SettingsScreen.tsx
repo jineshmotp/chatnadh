@@ -88,9 +88,10 @@ const SettingsScreen = () => {
 
   return (
     <BackgroundImage>
-      <View style={styles.containerTop}>
-        <Header openModal={openModal} labeltxt="Settings" pageidx={2} chatuserimg={'0'}  />
-      </View>
+      {/* <View style={styles.containerTop}>        
+      </View> */}
+
+      <Header openModal={openModal} labeltxt="Settings" pageidx={2} />
 
       <Animated.View
         style={[

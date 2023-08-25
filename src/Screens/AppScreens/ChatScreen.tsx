@@ -144,9 +144,12 @@ const ChatScreen = ({ route }) => {
   return (
     <BackgroundImage>
       
-        <View style={styles.containerTop}>
-          <Header openModal={openModal} labeltxt={chatData.username} onlinestatus={chatData.onlineStatus} pageidx={3} chatuserimg={chatData.picture} />
-        </View>  
+        {/* <View style={styles.containerTop}>
+          
+        </View>   */}
+
+<Header openModal={openModal} labeltxt={chatData.username} onlinestatus={chatData.onlineStatus} pageidx={3} chatuserimg={chatData.picture} />
+
 
          <View style={styles.containerBottomChat} >
 

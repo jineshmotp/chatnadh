@@ -25,6 +25,17 @@ const styles = StyleSheet.create({
     padding: wp('5%'),
     backgroundColor: colors.white,
   },
+
+  containerBottomContact: {
+    flex: 8,
+    justifyContent: 'center',
+    width: wp('100%'),
+    borderTopLeftRadius: wp('8%'),
+    borderTopRightRadius: wp('8%'),
+    alignItems: 'center',
+    padding: wp('5%'),
+    backgroundColor: colors.white,
+  },
   notificationText: {
     fontSize: hp('2.5%'),
   },
