@@ -36,7 +36,7 @@ const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({ openModal, on
 
 const styles = StyleSheet.create({
     searchInputContainer: {
-        minHeight: hp('8%'),
+        minHeight: hp('10%'),
         flexDirection: 'row',
         alignItems: 'center',
         borderBottomWidth: 1,

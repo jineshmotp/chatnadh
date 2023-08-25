@@ -10,7 +10,7 @@ import styles from './styles';
 
 import BackgroundImage from '../../Components/BackgroundImage';
 
-import { register } from '../../redux-actions/userActions';
+import { register,resetdata } from '../../redux-actions/userActions';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -97,25 +97,30 @@ const RegisterScreen = () => {
     }
     else
     {
-      
-      let data = {
-        id: uuid.v4(),
-        name: name,
-        emailId: email,
-        password: password,
-        about: about,
-        img : "https://t3.ftcdn.net/jpg/00/77/33/88/360_F_77338842_r1TSwo2urwuwEm8n03uCocyg1NkPgoFN.jpg"
-      };
+        const currentDate = new Date();
+        const timestamp = currentDate.getTime(); // Get the Unix timestamp in milliseconds
+
+        let data = {
+          id: uuid.v4(),
+          name: name,
+          emailId: email,
+          password: password,
+          about: about,
+          lastMessage: '',
+          time: '',
+          notification: 0,
+          hasStory: false,
+          onlineStatus: true,
+          accountactivation: timestamp, // Store the timestamp instead of the Date object
+          img: "https://t3.ftcdn.net/jpg/00/77/33/88/360_F_77338842_r1TSwo2urwuwEm8n03uCocyg1NkPgoFN.jpg"
+        };
 
       try {
         await dispatch(register(data));
 
-        Toast.showWithGravity(
-          'Registration done successfully', 
-          Toast.LONG,
-          Toast.BOTTOM,       
-        );           
-        navigation.navigate('LoginScreen');
+        console.log('error : ',error);
+              
+        
       } catch (error) {
        // seterrorMsg(error.message);
 
@@ -139,6 +144,41 @@ const RegisterScreen = () => {
     console.log('Button pressed!');
   };
 
+
+
+  useEffect(() => {
+
+  
+  const loadfunction = async() => {
+
+    if (isLoading) {
+      // Show loading indicator if needed
+    } else if (error) {
+      // Show error message if registration failed
+      Toast.showWithGravity(
+        error,
+        Toast.LONG,
+        Toast.BOTTOM
+      );
+    } else if (user) {
+      // Registration success, show success message or navigate to another screen
+      Toast.showWithGravity(
+        'Registration successful!',
+        Toast.LONG,
+        Toast.BOTTOM
+      );
+
+      await dispatch(resetdata());      
+      navigation.navigate('LoginScreen');
+    }
+
+  };
+
+  loadfunction();
+
+  }, [isLoading, error, user, navigation]);
+
+
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -154,7 +194,7 @@ const RegisterScreen = () => {
     ]).start();
   }, [fadeAnim, translateYAnim]);
 
-  useEffect(() => {
+  useEffect(() => {  
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardVisible(true);
     });
@@ -187,8 +227,8 @@ const RegisterScreen = () => {
 
             <Input label="Name" secure={false} iconName="user" onChangeText={handleNameChange} />
             <Input label="Email" secure={false} emailtype={true} iconName="envelope" onChangeText={handleEmailChange} />
-            <Input label="Password" secure={true} iconName="lock" onChangeText={handlePasswordChange} />
-            <Input label="Re Enter Password" secure={true} iconName="lock" onChangeText={handlerePasswordChange}/>
+            <Input label="Password" secure={true} iconName="lock" iconNametwo="eye"  onChangeText={handlePasswordChange} />
+            <Input label="Re Enter Password" secure={true} iconName="lock" iconNametwo="eye"  onChangeText={handlerePasswordChange}/>
             <Input label="About" secure={false} iconName="info" onChangeText={handleAboutChange} />
 
             <ButtonInput

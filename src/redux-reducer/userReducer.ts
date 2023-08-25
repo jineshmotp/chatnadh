@@ -8,6 +8,8 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_FAIL,
   USER_REGISTER_SUCCESS,
+  USER_REGISTER_RESET,
+
 
   USER_LOGOUT_REQUEST,
   USER_LOGOUT_SUCCESS,
@@ -19,6 +21,7 @@ import {
 const initialState = {
   user: null,
   isLoading: false,
+  buttonLoading:false,
   error: null,
 };
 
@@ -45,13 +48,16 @@ export const userRegisterReducer = (state = { }, action) => {
 
   switch (action.type){
       case USER_REGISTER_REQUEST:
-          return { isLoading:true}
+          return { isLoading:false}
       
       case USER_REGISTER_SUCCESS:
           return { isLoading:false, user:action.payload}
 
       case USER_REGISTER_FAIL:
           return { isLoading:false, error:action.payload}
+
+      case USER_REGISTER_RESET:
+          return { isLoading:false, error:null, user:null}
       default:
           return state  
   }

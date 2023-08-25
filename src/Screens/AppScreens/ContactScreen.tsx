@@ -23,8 +23,6 @@ const ContactScreen = () => {
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
 
-  const [isKeyboardOpen, setKeyboardOpen] = useState(false);
-
   const dispatch = useDispatch()
   const userLogin = useSelector(state => state.userLogin)
   const {user, isLoading, error } = userLogin
@@ -45,20 +43,7 @@ const ContactScreen = () => {
     
   };
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardOpen(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardOpen(false);
-    });
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-    
+   
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -77,24 +62,6 @@ const ContactScreen = () => {
   return (
     <BackgroundImage>
 
-
-
-      {/* <View style={styles.containerTop}> */}
-
-      {/* <KeyboardAvoidingView    
-    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}
-  > */}
-
-     
-      {/* <View style={styles.containerTop}> 
-        <Header openModal={openModal}  chatsearch={true} labeltxt={user.name} pageidx={1}  isKeyboardOpen={isKeyboardOpen} />
-      </View> */}
-
-     {/* </KeyboardAvoidingView>
-      </View> */}
-
-      
       <ContactScreenHeader openModal={openModal} onSearch={gotoSearch} />
 
       <Animated.View

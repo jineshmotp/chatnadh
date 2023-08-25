@@ -215,7 +215,7 @@ const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinest
 
 const styles = StyleSheet.create({
   header: {
-    minHeight: hp('8%'),
+    minHeight: hp('10%'),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

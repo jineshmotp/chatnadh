@@ -15,6 +15,7 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_FAIL,
   USER_REGISTER_SUCCESS,
+  USER_REGISTER_RESET,
 
 } from '../redux-constants/userConstants';
 import { auth } from '../config/firebase';
@@ -87,37 +88,34 @@ export const checkLoginStatus = () => async (dispatch) => { // Wrap the action c
   }
 };
 
-
-
-// export const register = (data) => async (dispatch) => {
-//   try {
-//     await database()
-//       .ref('/users/' + data.id)
-//       .set(data);
-//     dispatch({ type: USER_REGISTER_REQUEST });
-//     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-//   } catch (error) {
-//     console.log("Database error:", error);
-//     dispatch({ type: USER_REGISTER_FAIL, payload: error.message });
-//   }
-// };
-
-
 export const register = (data) => async (dispatch) => {
   try {
     // Check if a user with the same email already exists
-    const snapshot = await database().ref('/users').orderByChild('email').equalTo(data.emailId).once('value');
+    const snapshot = await database().ref('/users').orderByChild('emailId').equalTo(data.emailId).once('value');
+    
     if (snapshot.exists()) {
-      // User with the same email already exists
-      dispatch({ type: USER_REGISTER_FAIL, payload: 'User with the same email already exists' });
-    } else {
-      // User does not exist, proceed with registration
+      throw new Error('User with the same email already exists');
+    }
+    else
+    {
       dispatch({ type: USER_REGISTER_REQUEST });
       await database().ref('/users/' + data.id).set(data);      
-      dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
     }
+    
+    
+    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+    
+    
   } catch (error) {
     console.log("Database error:", error);
     dispatch({ type: USER_REGISTER_FAIL, payload: error.message });
   }
 };
+
+
+export const resetdata = () => async (dispatch) => {
+
+  dispatch({ type: USER_REGISTER_RESET });
+
+};
+

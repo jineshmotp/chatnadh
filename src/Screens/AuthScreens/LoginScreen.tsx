@@ -119,53 +119,46 @@ const LoginScreen = () => {
 
 
   useEffect(() => {
-
-
     if(error != null)
     {
-
       console.log(error);
-
         Toast.showWithGravity(
           error, 
           Toast.LONG,
           Toast.BOTTOM
         );
-
-    }
-   
-     
+    }      
     }, [dispatch,isLoading,error]);
     
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000, // Adjust the duration as needed
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateYAnim, {
-        toValue: 0,
-        duration: 1000, // Adjust the duration as needed
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, translateYAnim]);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardVisible(true);
-    });
-
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardVisible(false);
-    });
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+    useEffect(() => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000, // Adjust the duration as needed
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateYAnim, {
+          toValue: 0,
+          duration: 1000, // Adjust the duration as needed
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, [fadeAnim, translateYAnim]);
+  
+    useEffect(() => {  
+      const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+        setKeyboardVisible(true);
+      });
+  
+      const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+        setKeyboardVisible(false);
+      });
+  
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []);
 
  
   return (
