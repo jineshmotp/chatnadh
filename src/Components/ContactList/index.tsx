@@ -25,7 +25,7 @@ const ContactList: FunctionComponent<ContactListProps> = ({ item, gotoChatScreen
                   
         <View style={styles.ChatListImageSection}>
           <Image
-              source={{ uri: item.picture }} 
+              source={{ uri: item.img }} 
               style={[
                 styles.ChatListUserImg,
                 { borderColor: item.onlineStatus ? colors.primary : colors.white }
@@ -34,12 +34,12 @@ const ContactList: FunctionComponent<ContactListProps> = ({ item, gotoChatScreen
         </View>
       <View style={styles.ChatListTextSection}>
         <View style={styles.ChatListUserInfoText}>
-          <Text style={styles.ChatListUserName}>{item.username}</Text>
+          <Text style={styles.ChatListUserName}>{item.name}</Text>
           {/* <Text style={styles.ChatListPostTime}>{item.time}</Text> */}
         </View>
         <View style={styles.ChatListUserInfoText}>
           <Text style={styles.ChatListMessageText} numberOfLines={1} ellipsizeMode="tail">
-            {item.bio}
+            {item.about}
           </Text>
                     
         </View>

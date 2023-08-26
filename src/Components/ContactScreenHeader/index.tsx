@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, TextInput,StyleSheet,TouchableOpacity,Text,Platform,KeyboardAvoidingView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -6,13 +6,14 @@ import { colors } from '../../Constants/colors';
 
 
 interface ContactScreenHeaderProps {
-  openModal: () => void;
-  onSearch: () => void;
+ 
+  onSearch: (searchQuery: string) => void;
 }
 
-const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({ openModal, onSearch }) => {
+const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({  onSearch }) => {
   const iconSize = hp('3%');
 
+ 
   return (
     <KeyboardAvoidingView
     style={styles.headerLeft}
@@ -26,7 +27,8 @@ const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({ openModal, on
             <TextInput
               style={styles.searchInput}
               placeholder="Search"
-              placeholderTextColor="white"                  
+              placeholderTextColor="white"  
+              onChangeText={onSearch}                
             />
           </View>      
    

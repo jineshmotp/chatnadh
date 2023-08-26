@@ -5,10 +5,10 @@ import {
   CONTACT_LIST_RESET
  } from  './chatConstants'
 
-const initialState = {
-  chatcontacts: null,
+ const initialState = {
+  chatcontacts: [], 
   chatisLoading: false,
-  chatbuttonLoading:false,
+  chatbuttonLoading: false,
   chaterror: null,
 };
 

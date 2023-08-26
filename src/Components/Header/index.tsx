@@ -9,6 +9,7 @@ import { colors } from '../../Constants/colors';
 
 interface HeaderProps {
   openModal: () => void; // Function to execute on button press
+  gotoContactScreen:() => void;
   chatsearch:boolean;
   labeltxt: string; // Button label
   pageidx: number;
@@ -17,7 +18,7 @@ interface HeaderProps {
   isKeyboardOpen:boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinestatus, pageidx, chatuserimg, isKeyboardOpen }) => {
+const Header: React.FC<HeaderProps> = ({ openModal,gotoContactScreen,chatsearch, labeltxt,onlinestatus, pageidx, chatuserimg, isKeyboardOpen }) => {
  
  
   const dispatch = useDispatch()
@@ -143,8 +144,8 @@ const Header: React.FC<HeaderProps> = ({ openModal,chatsearch, labeltxt,onlinest
       return (
           <View style={styles.iconContainer}>
         
-          <TouchableOpacity style={styles.iconContainer}>
-            <Icon name="search" size={iconSize} color="white" />
+          <TouchableOpacity style={styles.iconContainer} onPress={gotoContactScreen} >
+            <Icon name="search"  size={iconSize} color="white" />
           </TouchableOpacity>
         
           <TouchableOpacity onPress={openModal} style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>

@@ -42,6 +42,10 @@ const ChatListScreen = () => {
     navigation.navigate('ChatStack', { chatData: item });
   };
 
+  const gotoContactScreen = () => {
+    navigation.navigate('ContactScreen');
+  };
+
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -67,7 +71,7 @@ const ChatListScreen = () => {
       )} */}
 
 
-      <Header openModal={openModal} chatsearch={true} labeltxt={user.name} pageidx={0}  />
+      <Header openModal={openModal} gotoContactScreen={gotoContactScreen} chatsearch={true} labeltxt={user.name} pageidx={0}  />
 
       <Animated.View
         style={[

@@ -12,20 +12,24 @@ import {
 
 // Async action creator using Redux Thunk
 export const getallContacts = (user) => async (dispatch) => {
-  
+  dispatch({ type: CONTACT_LIST_REQUEST });
   try {
     const snapshot = await database()
-      .ref('/users/')   
+      .ref('/users/')
       .once('value');
 
-    const userArray = snapshot.val();
-    dispatch({ type: CONTACT_LIST_REQUEST });
-    
-    const userId = Object.keys(userArray)[0];
-    const user = userArray[userId];
-       
-    await AsyncStorage.setItem('chatcontacts', JSON.stringify(user));
-    dispatch({ type: CONTACT_LIST_SUCCESS, payload:  chatcontacts });
+    const userObject = snapshot.val();
+
+    // Convert the user object into an array of users
+    const userArray = Object.values(userObject);
+
+    // Filter out the user with the specific id
+    const filteredUsers = userArray.filter(u => u.id !== user.id);
+
+    // Store the filtered user array in AsyncStorage
+    await AsyncStorage.setItem('chatcontacts', JSON.stringify(filteredUsers));
+
+    dispatch({ type: CONTACT_LIST_SUCCESS, payload: filteredUsers });
   } catch (error) {
     dispatch({ type: CONTACT_LIST_FAIL, payload: error.message });
   }
