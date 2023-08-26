@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet,ActivityIndicator,View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { colors } from '../../Constants/colors';
@@ -12,11 +12,23 @@ interface ButtonInputProps {
   label: string; // Button label
 }
 
-const ButtonInput: React.FC<ButtonInputProps> = ({ styless, contentStyle, labelStyle, onPress, label }) => {
+const ButtonInput: React.FC<ButtonInputProps> = ({ styless, contentStyle, labelStyle, onPress, label,buttonLoading }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, styless, contentStyle]}>
-      <Text style={[styles.buttonLabel, labelStyle]}>{label}</Text>
-   </TouchableOpacity>
+    <View> 
+       {!buttonLoading ? (
+      <TouchableOpacity onPress={onPress} style={[styles.button, styless, contentStyle]}>
+          <Text style={[styles.buttonLabel, labelStyle]}>{label}</Text>
+      </TouchableOpacity>
+        ):
+        (
+
+          <View style={[styles.button, styless, contentStyle]}>
+           <ActivityIndicator /> 
+          </View>
+          
+        )
+        }
+   </View>
   );
 };
 

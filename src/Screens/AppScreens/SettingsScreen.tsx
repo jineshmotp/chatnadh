@@ -14,7 +14,7 @@ import ButtonInput from '../../Components/ButtonInput';
 import { colors } from '../../Constants/colors';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../../redux-actions/userActions';
+import { logout } from '../../Redux/userActions';
 import { useNavigation } from '@react-navigation/native';
 
 import LoadingScreen from '../../Components/LoadingScreen';

@@ -9,10 +9,9 @@ import ButtonInput from '../../Components/ButtonInput';
 import { colors } from '../../Constants/colors';
 import styles from './styles';
 
-import { USER_LOGIN_SUCCESS }from '../../redux-constants/userConstants';
 
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '../../redux-actions/userActions';
+import { login,loginbuttonload,loginbuttonreset } from '../../Redux/userActions';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 import LoadingScreen from '../../Components/LoadingScreen';
@@ -37,7 +36,7 @@ const LoginScreen = () => {
  
   const dispatch = useDispatch()
   const userLogin = useSelector(state => state.userLogin)
-  const {user, isLoading, error } = userLogin
+  const {user, isLoading, error, buttonLoading } = userLogin
 
 
   const handleEmailChange = (text) => {
@@ -58,6 +57,7 @@ const LoginScreen = () => {
    
     
   const gotoLogin = async () => {
+    
     if (!email || !password) {
       Toast.showWithGravity(
         'Please Enter valid Email/Password',
@@ -77,6 +77,7 @@ const LoginScreen = () => {
         Toast.BOTTOM
       );
     } else {
+     
       let data = {
         id: uuid.v4(),
         emailId: email,
@@ -85,10 +86,8 @@ const LoginScreen = () => {
   
       try {
         await dispatch(login(data));
-
         
-        
-
+               
       } catch (catchError) { // Rename the variable here
         // Display the error message from the Redux state
         Toast.showWithGravity(
@@ -119,6 +118,9 @@ const LoginScreen = () => {
 
 
   useEffect(() => {
+
+  const buttonloadchange = async() =>
+  {  
     if(error != null)
     {
       console.log(error);
@@ -127,7 +129,12 @@ const LoginScreen = () => {
           Toast.LONG,
           Toast.BOTTOM
         );
-    }      
+        //await dispatch(loginbuttonreset());
+    }    
+  };
+
+  buttonloadchange();
+         
     }, [dispatch,isLoading,error]);
     
     useEffect(() => {
@@ -203,6 +210,7 @@ const LoginScreen = () => {
               labelStyle={{ fontSize: hp('2.5%'), color: colors.white, fontWeight: 'bold' }}
               onPress={gotoLogin}
               label="LOGIN"
+              buttonLoading={buttonLoading}
             />
 
           {errorMsg && (

@@ -10,7 +10,7 @@ import styles from './styles';
 
 import BackgroundImage from '../../Components/BackgroundImage';
 
-import { register,resetdata } from '../../redux-actions/userActions';
+import { register,resetdata } from '../../Redux/userActions';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux'
 

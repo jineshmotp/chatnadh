@@ -7,11 +7,15 @@ import {
   userLoginReducer,
   userRegisterReducer,
   //userLogoutReducer
-} from './src/redux-reducer/userReducer';
+} from './src/Redux/userReducer';
+
+import { getallContactsReducer } from './src/Redux/chatReducer'
+
 
 const rootReducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
+  getallContacts:getallContactsReducer
  // userLogout: userLogoutReducer
   // other reducers...
 });

@@ -1,11 +1,14 @@
 // src/redux-reducer/userActions.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import database from '@react-native-firebase/database';
-// src/redux-actions/userActions.js
+
 import { 
   USER_LOGIN_REQUEST, 
   USER_LOGIN_SUCCESS, 
   USER_LOGIN_FAIL, 
+
+  USER_LOGOIN_BUTTON_LOADING,
+  USER_LOGOIN_BUTTON_RESET,
   
   USER_LOGOUT_REQUEST,
   USER_LOGOUT_SUCCESS,
@@ -17,7 +20,7 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_RESET,
 
-} from '../redux-constants/userConstants';
+} from './userConstants';
 import { auth } from '../config/firebase';
 
 // Async action creator using Redux Thunk
@@ -40,15 +43,15 @@ export const login = (data) => async (dispatch) => {
     if (!userArray) {
       throw new Error('User not found');
     }
-    else if (user.password !== data.password) 
+    if (user.password !== data.password) 
     {
       throw new Error('Invalid password');
     }
 
-    else
-    {
-      dispatch({ type: USER_LOGIN_REQUEST });
-    }
+    // else
+    // {
+    //   dispatch({ type: USER_LOGIN_REQUEST });
+    // }
 
     
     await AsyncStorage.setItem('user', JSON.stringify(user));
@@ -56,6 +59,19 @@ export const login = (data) => async (dispatch) => {
   } catch (error) {
     dispatch({ type: USER_LOGIN_FAIL, payload: error.message });
   }
+};
+
+
+export const loginbuttonload = () => async (dispatch) => {
+
+  dispatch({ type: USER_LOGOIN_BUTTON_LOADING });
+
+};
+
+export const loginbuttonreset = () => async (dispatch) => {
+
+  dispatch({ type: USER_LOGOIN_BUTTON_RESET });
+
 };
 
 

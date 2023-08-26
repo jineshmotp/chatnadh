@@ -10,7 +10,7 @@ import SettingsStack from './SettingsStack';
 import AboutStack from './AboutStack'; 
 import ChatStack from './ChatStack';
 
-import { checkLoginStatus } from '../redux-actions/userActions';
+import { checkLoginStatus } from '../Redux/userActions';
 
 import { useDispatch, useSelector } from 'react-redux';
 
