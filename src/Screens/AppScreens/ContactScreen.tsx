@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import ContactList from '../../Components/ContactList';
 import ContactScreenHeader from '../../Components/ContactScreenHeader';
 
-import { getallContacts } from '../../Redux/chatActions';
+import { getallContacts,createChatTable } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
 
 const ContactScreen = () => {
@@ -56,7 +56,12 @@ const ContactScreen = () => {
   };
 
   const gotoChatScreen = (item) => {
-    navigation.navigate('ChatStack', { chatData: item });
+
+    
+
+
+
+    //navigation.navigate('ChatStack', { chatData: item });
   };
 
   const handleSearch = (query) => {

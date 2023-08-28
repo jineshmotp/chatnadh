@@ -9,14 +9,19 @@ import {
   //userLogoutReducer
 } from './src/Redux/userReducer';
 
-import { getallContactsReducer } from './src/Redux/chatReducer'
+import { 
+  getallContactsReducer, 
+  getchatListReducer,
+  createChatTableReducer
+} from './src/Redux/chatReducer'
 
 
 const rootReducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-  getallContacts:getallContactsReducer
- // userLogout: userLogoutReducer
+  getallContacts:getallContactsReducer,
+  getchatList :getchatListReducer,
+  createChatTable:createChatTableReducer
   // other reducers...
 });
 
