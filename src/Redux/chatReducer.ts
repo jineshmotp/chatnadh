@@ -18,11 +18,17 @@ import {
  } from  './chatConstants'
 
  const initialState = {
-  chatcontacts: [],
-  chatlist:[], 
+  chatcontacts: [],  
   chatisLoading: false,
-  chatbuttonLoading: false,
+  
   chaterror: null,
+
+  createChatTableLoading:false,
+  createChatTableerror:null,
+
+
+  chatlist:[],
+  chatbuttonLoading: false, 
 };
 
 export const getallContactsReducer = (state = initialState, action) => {
@@ -42,17 +48,17 @@ export const getallContactsReducer = (state = initialState, action) => {
   }
 };
 
-export const createChatTableReducer = (state={}, action) => {
+export const createChatTableReducer = (state = initialState, action) => {
   switch (action.type) {
     case CHAT_TABLE_REQUEST:
-      return { ...state, chatisLoading: true, chaterror: null };    
+      return { ...state, createChatTableLoading: false, createChatTableerror: null };    
     case CHAT_TABLE_SUCCESS:       
-      return { ...state, chatisLoading: false, chaterror: null };
+      return { ...state, createChatTableLoading: true, createChatTableerror: null };
     case CHAT_TABLE_FAIL:
-      return { ...state, chatisLoading: false, chaterror: action.payload,  };
+      return { ...state, createChatTableLoading: false, createChatTableerror: action.payload,  };
     
     case CHAT_TABLE_RESET:
-      return { ...state, chatisLoading: false,chaterror: null  };
+      return { ...state, createChatTableLoading: true,createChatTableerror: null  };
   
     default:
       return state;

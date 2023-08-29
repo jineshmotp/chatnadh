@@ -48,25 +48,43 @@ export const getallContacts = (user) => async (dispatch) => {
 };
 
 
-export const createChatTable = (data) => async (dispatch) => {
+export const createChatTable = (moreUserData, moreOpponentData) => async (dispatch) => {
   dispatch({ type: CHAT_TABLE_REQUEST });
   try {
+    // Check if a user with the same email already exists
+    const userSnapshot = await database().ref('/chats').orderByChild('chatId').equalTo(moreUserData.chatId).once('value');
+    const opponentSnapshot = await database().ref('/chats').orderByChild('chatId').equalTo(moreOpponentData.chatId).once('value');
+    let flag = 0;
 
-    
-  
+    if (!userSnapshot.exists()) {
+      await database().ref('/chats/' + moreUserData.chatId).set(moreUserData);
+    } else {
+      // Update moreUserData on the same chatId
+      await database().ref('/chats/' + moreUserData.chatId).update(moreUserData);
+    }
 
-    // Store the filtered user array in AsyncStorage
-    //await AsyncStorage.setItem('chatcontacts', JSON.stringify(filteredUsers));
+    if (!opponentSnapshot.exists()) {
+      flag = 1;
+      await database().ref('/chats/' + moreOpponentData.chatId).set(moreOpponentData);
+    } else {
+      flag = 1;
+      // Update moreOpponentData on the same chatId
+      await database().ref('/chats/' + moreOpponentData.chatId).update(moreOpponentData);
+    }
 
-    dispatch({ type: CHAT_TABLE_SUCCESS });
+    if (flag === 1) {
+      dispatch({ type: CHAT_TABLE_SUCCESS });
+    }
   } catch (error) {
     dispatch({ type: CHAT_TABLE_FAIL, payload: error.message });
   }
 };
 
+export const resetChatTable = () => async (dispatch) => {
 
+  dispatch({ type: CHAT_TABLE_RESET });
 
-
+};
 
 export const getchatList = (data) => async (dispatch) => {
   dispatch({ type: CHAT_LIST_REQUEST });

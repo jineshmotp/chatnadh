@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import ContactList from '../../Components/ContactList';
 import ContactScreenHeader from '../../Components/ContactScreenHeader';
 
-import { getallContacts,createChatTable } from '../../Redux/chatActions';
+import { getallContacts,createChatTable, resetChatTable } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
 
 const ContactScreen = () => {
@@ -26,11 +26,13 @@ const ContactScreen = () => {
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectchat, setSelectchat] = useState('');
   const [filteredContacts, setFilteredContacts] = useState([]);
 
 
   const dispatch = useDispatch()
   const {user, isLoading, error } = useSelector(state => state.userLogin)
+  const { createChatTableLoading, createChatTableerror } = useSelector(state => state.createChatTable)
   const { chatcontacts, chatisLoading, chaterror } = useSelector(state => state.getallContacts);
   
 
@@ -57,9 +59,35 @@ const ContactScreen = () => {
 
   const gotoChatScreen = (item) => {
 
+    setSelectchat(item);
+
+    let participants = [];
+  
+    participants.push(user.id);
+    participants.push(item.id);
     
+    const chatIdFromUser = `${user.id}_${item.id}`;
+    const chatIdFromOpponent = `${item.id}_${user.id}`;
 
+    let moreUserData = {
+      chatId : chatIdFromUser,
+      participants:participants,
+      lastMessage: "",
+      lastMessageTime: ""
+     }
 
+     let moreOpponentData = {
+      chatId : chatIdFromOpponent,
+      participants: participants,
+      lastMessage: "",
+      lastMessageTime: ""
+     }
+    
+    
+  
+    console.log(moreUserData);
+    dispatch(createChatTable(moreUserData,moreOpponentData));
+    //setSelectchat(item);
 
     //navigation.navigate('ChatStack', { chatData: item });
   };
@@ -69,8 +97,22 @@ const ContactScreen = () => {
   };
 
 
-  
+  useEffect(() => {
 
+    if(!createChatTableLoading)
+    {
+      dispatch(resetChatTable());
+      navigation.navigate('ChatStack', { chatData: selectchat });
+    }   
+    
+  }, [dispatch,createChatTableLoading]);
+
+  // if(!createChatTableLoading)
+  // {
+  //   return (
+  //     <LoadingScreen />
+  //   )
+  // }
    
   useEffect(() => {
     Animated.parallel([

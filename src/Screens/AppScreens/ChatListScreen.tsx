@@ -46,6 +46,8 @@ const ChatListScreen = () => {
     navigation.navigate('ContactScreen');
   };
 
+  
+
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
