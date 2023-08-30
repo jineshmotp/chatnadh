@@ -34,7 +34,7 @@ const ContactScreen = () => {
 
   const dispatch = useDispatch()
   const {user, isLoading, error } = useSelector(state => state.userLogin)
-  const { createChatTableLoading, createChatTabledata,createChatTableerror } = useSelector(state => state.createChatTable)
+  const { createChatTableLoading, createChatTableerror } = useSelector(state => state.createChatTable)
   const { chatcontacts, chatisLoading, chaterror } = useSelector(state => state.getallContacts);
    
   
@@ -46,7 +46,7 @@ const ContactScreen = () => {
     setModalVisible(true);
   };
 
-  const gotoChatScreen = async (item) => {
+  const gotoChatScreen = (item) => {
     setListclickLoading(true);
     setSelectchat(item);
 
@@ -75,9 +75,9 @@ const ContactScreen = () => {
       notification:0,
       emotion:""
      }  
-  
-  dispatch(createChatTable(moreUserData, moreOpponentData));
- 
+     //console.log(moreUserData);
+     dispatch(createChatTable(moreUserData,moreOpponentData));
+
   };
 
   const handleSearch = (query) => {
@@ -99,22 +99,20 @@ const ContactScreen = () => {
 
 
   useEffect(() => {
-    if (createChatTableLoading) {
+     
+    console.log('outside if ', createChatTableLoading)
+    if(createChatTableLoading)
+    {
       setListclickLoading(false);
-
-      console.log('createchattabedata : ',createChatTabledata);
-                
-      navigation.navigate('ChatStack', {
-        chatUser: selectchat,
-        featchChatResult: createChatTabledata
-      });
+      console.log('inside if ', createChatTableLoading)      
+      navigation.navigate('ChatStack', { chatData: selectchat });
+      
+    }   
     
-    }
+  }, [dispatch,createChatTableLoading]);
 
-
-  }, [dispatch, createChatTableLoading]);
-
-    
+  
+   
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {

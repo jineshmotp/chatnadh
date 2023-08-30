@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Image, StyleSheet, Animated } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const LoadingScreen = () => {
   const opacity = useRef(new Animated.Value(0)).current;
@@ -38,16 +39,17 @@ const LoadingScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   image: {
-    width: 100,
-    height: 100,
+    width: wp('25%'), // 40% of screen width
+    height: wp('25%'), // 40% of screen width
   },
-});
+};
 
 export default LoadingScreen;

@@ -5,10 +5,10 @@ import ChatScreen from '../Screens/AppScreens/ChatScreen';
 const Stack = createNativeStackNavigator();
 
 const ChatStack = ({ route }) => {
-  const { chatData } = route.params;
+  const { chatUser, featchChatResult } = route.params;
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ChatScreen" component={ChatScreen} initialParams={{ chatData }} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} initialParams={{ chatUser, featchChatResult }} />
    
     </Stack.Navigator>
   );

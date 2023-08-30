@@ -13,6 +13,16 @@ import {
   CHAT_TABLE_RESET,
   CHAT_TABLE_FAIL,
 
+  CHAT_CREATE_REQUEST,
+  CHAT_CREATE_SUCCESS,
+  CHAT_CREATE_RESET,
+  CHAT_CREATE_FAIL,
+
+  CHAT_FEATCH_REQUEST,
+  CHAT_FEATCH_SUCCESS,
+  CHAT_FEATCH_RESET,
+  CHAT_FEATCH_FAIL,
+
 
   CHAT_LIST_REQUEST,
   CHAT_LIST_SUCCESS,
@@ -54,26 +64,25 @@ export const createChatTable = (moreUserData, moreOpponentData) => async (dispat
     // Check if a user with the same email already exists
     const userSnapshot = await database().ref('/chats').orderByChild('chatId').equalTo(moreUserData.chatId).once('value');
     const opponentSnapshot = await database().ref('/chats').orderByChild('chatId').equalTo(moreOpponentData.chatId).once('value');
-    let flag = 0;
-
-    if (!userSnapshot.exists()) {
-      await database().ref('/chats/' + moreUserData.chatId).set(moreUserData);
-    } else {
-      // Update moreUserData on the same chatId
-      await database().ref('/chats/' + moreUserData.chatId).update(moreUserData);
-    }
 
     if (!opponentSnapshot.exists()) {
-      flag = 1;
       await database().ref('/chats/' + moreOpponentData.chatId).set(moreOpponentData);
-    } else {
-      flag = 1;
+    } else {      
       // Update moreOpponentData on the same chatId
       await database().ref('/chats/' + moreOpponentData.chatId).update(moreOpponentData);
     }
 
-    if (flag === 1) {
-      dispatch({ type: CHAT_TABLE_SUCCESS });
+    if (!userSnapshot.exists()) {
+      await database().ref('/chats/' + moreUserData.chatId).set(moreUserData);
+      dispatch({ type: CHAT_TABLE_SUCCESS ,payload: null});
+    } else {
+      await database().ref('/chats/' + moreUserData.chatId).update(moreUserData);
+
+      // Fetch messages using featchChat and return the result
+      const featchChatResult = await dispatch(featchChat(moreUserData));
+
+     // Dispatch CHAT_TABLE_SUCCESS along with the featchChatResult
+      dispatch({ type: CHAT_TABLE_SUCCESS, payload: featchChatResult });
     }
   } catch (error) {
     dispatch({ type: CHAT_TABLE_FAIL, payload: error.message });
@@ -85,28 +94,58 @@ export const resetChatTable = () => async (dispatch) => {
   dispatch({ type: CHAT_TABLE_RESET });
 
 };
+//######################################################################
 
-export const getchatList = (data) => async (dispatch) => {
-  dispatch({ type: CHAT_LIST_REQUEST });
+
+export const featchChat = (moreUserData) => async (dispatch) => {
+  dispatch({ type: CHAT_FEATCH_REQUEST });
   try {
-    const snapshot = await database()
-      .ref('/chats/')
-      .once('value');
-
-    const userObject = snapshot.val();
-
-    // Convert the user object into an array of users
-    const userArray = Object.values(userObject);
-
-    // Filter out the user with the specific id
-    const filteredUsers = userArray.filter(u => u.id !== user.id);
-
-    // Store the filtered user array in AsyncStorage
-    await AsyncStorage.setItem('chatcontacts', JSON.stringify(filteredUsers));
-
-    dispatch({ type: CHAT_LIST_SUCCESS, payload: filteredUsers });
+    // Fetch messages from Firebase based on chatId and time
+    const messagesRef = database.ref('messages').orderByChild('chatId').equalTo(moreUserData.chatId).limitToLast(10);
+    messagesRef.on('value', (snapshot) => {
+      const messagesData = snapshot.val();
+      if (messagesData) {
+        const messages = Object.values(messagesData);
+        // Sort messages by timestamp (assuming timestamp is a valid key in the messages)
+        messages.sort((a, b) => a.timestamp - b.timestamp);
+        
+        // Dispatch action with fetched messages
+        dispatch({ type: CHAT_FEATCH_SUCCESS, payload: messages }); // Pass messages as payload
+      } else {
+        // No messages found
+        dispatch({ type: CHAT_FEATCH_SUCCESS, payload: [] });
+      }
+    });
   } catch (error) {
-    dispatch({ type: CHAT_LIST_FAIL, payload: error.message });
+    dispatch({ type: CHAT_FEATCH_FAIL, payload: error.message });
   }
 };
 
+export const resetfeatchChat = () => async (dispatch) => {
+
+  dispatch({ type: CHAT_FEATCH_RESET });
+
+};
+
+//##################################################################
+
+export const createChat = (data) => async (dispatch) => {
+  dispatch({ type: CHAT_CREATE_REQUEST });
+  try {
+
+
+    
+        dispatch({ type: CHAT_CREATE_SUCCESS });
+      
+   
+  } catch (error) {
+    dispatch({ type: CHAT_CREATE_FAIL, payload: error.message });
+  }
+};
+
+
+export const resetcreateChat = () => async (dispatch) => {
+
+  dispatch({ type: CHAT_CREATE_RESET });
+
+};

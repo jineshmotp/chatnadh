@@ -20,13 +20,21 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { resetChatTable } from '../../Redux/chatActions';
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native';
 
 import moment from 'moment';
 import FaceEmotion from '../../Components/FaceEmotion';
 
 
 const ChatScreen = ({ route }) => {
-  const { chatData } = route.params;
+
+  const { chatUser, featchChatResult } = route.params;
+  //const { chatData } = route.params;
+
+  const navigation = useNavigation();
+  const dispatch = useDispatch()
   
    const [messages, setMessages] = useState([]);
    const [inputMessage, setInputMessage] = useState('');
@@ -39,6 +47,13 @@ const ChatScreen = ({ route }) => {
   const openModal = () => {
     setModalVisible(true);
   };
+
+
+  useEffect(() => {
+       dispatch(resetChatTable());   
+  }, []);
+
+
 
   useEffect(() => {
     // Sample messages for the user and the opponent
@@ -114,6 +129,8 @@ const ChatScreen = ({ route }) => {
         },
         ]}
       >
+
+        
         <View
           style={[
             styles.messageBubble,
@@ -148,11 +165,11 @@ const ChatScreen = ({ route }) => {
           
         </View>   */}
 
-<Header openModal={openModal} labeltxt={chatData.name} onlinestatus={chatData.onlineStatus} pageidx={3} chatuserimg={chatData.img} />
+<Header openModal={openModal} labeltxt={chatUser.name} onlinestatus={chatUser.onlineStatus} pageidx={3} chatuserimg={chatUser.img} />
 
 
          <View style={styles.containerBottomChat} >
-
+         <Text style={{color:'black'}}>Test</Text>
        
             <FlatList
               ref={flatListRef}
