@@ -26,11 +26,11 @@ import { useNavigation } from '@react-navigation/native';
 
 import moment from 'moment';
 import FaceEmotion from '../../Components/FaceEmotion';
-
+import uuid from 'react-native-uuid';
 
 const ChatScreen = ({ route }) => {
 
-  const { chatUser, featchChatResult } = route.params;
+  const { chatUser, featchChatResult, moreUserData, moreOpponentData } = route.params;
   //const { chatData } = route.params;
 
   const navigation = useNavigation();
@@ -104,6 +104,40 @@ const ChatScreen = ({ route }) => {
     setMessages([...messages, newMessage]);
     setInputMessage('');
     scrollToBottom();
+
+
+
+    let participants = [];
+  
+    participants.push(user.id);
+    participants.push(item.id);
+    
+    const chatIdFromUser = `${user.id}_${item.id}`;
+    const chatIdFromOpponent = `${item.id}_${user.id}`;
+
+    let moreUserData = {
+      chatId : chatIdFromUser,
+      participants:participants,
+      lastMessage: "",
+      lastMessageTime: "",
+      notification:0,
+      emotion:""
+     }
+
+     let moreOpponentData = {
+      chatId : chatIdFromOpponent,
+      participants: participants,
+      lastMessage: "",
+      lastMessageTime: "",
+      notification:0,
+      emotion:""
+     }  
+
+
+
+
+
+
   };
 
   const scrollToBottom = () => {
@@ -169,7 +203,7 @@ const ChatScreen = ({ route }) => {
 
 
          <View style={styles.containerBottomChat} >
-         <Text style={{color:'black'}}>Test</Text>
+         <Text style={{color:'black'}}>{moreUserData.chatId}</Text>
        
             <FlatList
               ref={flatListRef}

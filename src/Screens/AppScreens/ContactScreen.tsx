@@ -22,7 +22,9 @@ import { getallContacts,createChatTable, resetChatTable } from '../../Redux/chat
 import LoadingScreen from '../../Components/LoadingScreen';
 
 const ContactScreen = () => {
+
   const navigation = useNavigation();
+
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
@@ -31,13 +33,49 @@ const ContactScreen = () => {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [listclickLoading, setListclickLoading] = useState(false);
 
+  const [moreUserData, setMoreUserData] = useState({
+    chatId: "",
+    participants: [],
+    lastMessage: "",
+    lastMessageTime: "",
+    notification: 0,
+    emotion: ""
+  });
+
+  const [moreOpponentData, setMoreOpponentData] = useState({
+    chatId: "",
+    participants: [],
+    lastMessage: "",
+    lastMessageTime: "",
+    notification: 0,
+    emotion: ""
+  });
+
 
   const dispatch = useDispatch()
   const {user, isLoading, error } = useSelector(state => state.userLogin)
   const { createChatTableLoading, createChatTabledata,createChatTableerror } = useSelector(state => state.createChatTable)
   const { chatcontacts, chatisLoading, chaterror } = useSelector(state => state.getallContacts);
    
-  
+  // Function to update moreUserData
+  const updateMoreUserData = (newData) => {
+    setMoreUserData(prevData => ({
+      ...prevData,
+      ...newData
+    }));
+  };
+
+ 
+  const updateMoreOpponentData = (newData) => {
+    setMoreOpponentData(prevData => ({
+      ...prevData,
+      ...newData
+    }));
+  };
+
+
+
+
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -58,7 +96,7 @@ const ContactScreen = () => {
     const chatIdFromUser = `${user.id}_${item.id}`;
     const chatIdFromOpponent = `${item.id}_${user.id}`;
 
-    let moreUserData = {
+    let moreUserData1 = {
       chatId : chatIdFromUser,
       participants:participants,
       lastMessage: "",
@@ -67,7 +105,7 @@ const ContactScreen = () => {
       emotion:""
      }
 
-     let moreOpponentData = {
+     let moreOpponentData1 = {
       chatId : chatIdFromOpponent,
       participants: participants,
       lastMessage: "",
@@ -75,8 +113,11 @@ const ContactScreen = () => {
       notification:0,
       emotion:""
      }  
+
+     updateMoreUserData(moreUserData1);
+     updateMoreOpponentData(moreOpponentData1);
   
-  dispatch(createChatTable(moreUserData, moreOpponentData));
+  dispatch(createChatTable(moreUserData1, moreOpponentData1));
  
   };
 
@@ -106,7 +147,9 @@ const ContactScreen = () => {
                 
       navigation.navigate('ChatStack', {
         chatUser: selectchat,
-        featchChatResult: createChatTabledata
+        featchChatResult: createChatTabledata,
+        moreUserData:moreUserData,
+        moreOpponentData:moreOpponentData
       });
     
     }
