@@ -13,7 +13,8 @@ import {
   getallContactsReducer, 
   getchatListReducer,
   createChatTableReducer,
-  featchChatReducer
+  featchChatReducer,
+  createChatReducer
 } from './src/Redux/chatReducer'
 
 
@@ -23,6 +24,8 @@ const rootReducer = combineReducers({
   getallContacts:getallContactsReducer,
   getchatList :getchatListReducer,
   createChatTable:createChatTableReducer,
+
+  createChat:createChatReducer,
   featchChat:featchChatReducer
   // other reducers...
 });

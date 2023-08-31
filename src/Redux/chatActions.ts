@@ -36,22 +36,27 @@ import {
 export const getallContacts = (user) => async (dispatch) => {
   dispatch({ type: CONTACT_LIST_REQUEST });
   try {
-    const snapshot = await database()
-      .ref('/users/')
-      .once('value');
+    const contactsRef = database().ref('/users/');
+    
+    // Set up a listener for real-time data updates
+    contactsRef.on('value', (snapshot) => {
+      const userObject = snapshot.val();
 
-    const userObject = snapshot.val();
+      // Convert the user object into an array of users
+      const userArray = Object.values(userObject);
 
-    // Convert the user object into an array of users
-    const userArray = Object.values(userObject);
+      // Filter out the user with the specific id
+      const filteredUsers = userArray.filter(u => u.id !== user.id);
 
-    // Filter out the user with the specific id
-    const filteredUsers = userArray.filter(u => u.id !== user.id);
+      // Store the filtered user array in AsyncStorage
+      AsyncStorage.setItem('chatcontacts', JSON.stringify(filteredUsers));
 
-    // Store the filtered user array in AsyncStorage
-    await AsyncStorage.setItem('chatcontacts', JSON.stringify(filteredUsers));
+      // Dispatch the updated contacts array
+      dispatch({ type: CONTACT_LIST_SUCCESS, payload: filteredUsers });
+    });
 
-    dispatch({ type: CONTACT_LIST_SUCCESS, payload: filteredUsers });
+    // Return a function to unsubscribe when needed
+    return () => contactsRef.off();
   } catch (error) {
     dispatch({ type: CONTACT_LIST_FAIL, payload: error.message });
   }
@@ -61,7 +66,7 @@ export const getallContacts = (user) => async (dispatch) => {
 export const createChatTable = (moreUserData, moreOpponentData) => async (dispatch) => {
   dispatch({ type: CHAT_TABLE_REQUEST });
   try {
-    // Check if a user with the same email already exists
+    
     const userSnapshot = await database().ref('/chats').orderByChild('chatId').equalTo(moreUserData.chatId).once('value');
     const opponentSnapshot = await database().ref('/chats').orderByChild('chatId').equalTo(moreOpponentData.chatId).once('value');
 
@@ -129,9 +134,38 @@ export const resetfeatchChat = () => async (dispatch) => {
 
 //##################################################################
 
-export const createChat = (data) => async (dispatch) => {
+export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChatData,moreOpponentMessageData) => async (dispatch) => {
   dispatch({ type: CHAT_CREATE_REQUEST });
+  
+ 
   try {
+
+    const userChatRef = database().ref('/chats/' + moreUserChatData.chatId);
+    const userChatSnapshot = await userChatRef.once('value');
+    if (userChatSnapshot.exists()) {
+      await userChatRef.update({
+        lastMessage: moreUserChatData.lastMessage,
+        lastMessageTime: (moreUserChatData.lastMessageTime).toISOString(), 
+        emotion:moreUserChatData.emotion,
+        notification:moreUserChatData.notification
+      });
+    }
+
+     // Update last message and last message time for the opponent's chat
+     const opponentChatRef = database().ref('/chats/' + moreOpponentChatData.chatId);
+     const opponentChatSnapshot = await opponentChatRef.once('value');
+     if (opponentChatSnapshot.exists()) {
+       await opponentChatRef.update({
+         lastMessage: moreOpponentChatData.lastMessage,
+         lastMessageTime: (moreOpponentChatData.lastMessageTime).toISOString(), 
+         emotion:moreOpponentChatData.emotion,
+         notification:moreOpponentChatData.notification,
+       });
+     }
+    
+    
+    await database().ref('/messages/'+moreUserMessageData.messageId).set(moreUserMessageData);
+    await database().ref('/messages/'+moreOpponentMessageData.messageId).set(moreOpponentMessageData);
 
 
     

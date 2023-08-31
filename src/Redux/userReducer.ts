@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { 
   USER_LOGIN_REQUEST, 
   USER_LOGIN_SUCCESS, 
+  USER_DATA_UPDATED,
   USER_LOGIN_FAIL, 
 
   USER_LOGOIN_BUTTON_LOADING,
@@ -32,7 +33,8 @@ export const userLoginReducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return { ...state, isLoading: false, error: null };    
-    case USER_LOGIN_SUCCESS:       
+    case USER_LOGIN_SUCCESS:  
+    case USER_DATA_UPDATED:      
       return { ...state, user: action.payload, isLoading: false, error: null };
     case USER_LOGIN_FAIL:
       return { ...state, user:null, isLoading: false, error: action.payload,  };

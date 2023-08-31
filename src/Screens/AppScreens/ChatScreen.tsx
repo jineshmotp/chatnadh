@@ -20,7 +20,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { resetChatTable } from '../../Redux/chatActions';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native';
 
@@ -28,17 +27,26 @@ import moment from 'moment';
 import FaceEmotion from '../../Components/FaceEmotion';
 import uuid from 'react-native-uuid';
 
+import { getallContacts,createChatTable, resetChatTable,createChat } from '../../Redux/chatActions';
+import LoadingScreen from '../../Components/LoadingScreen';
+
+
 const ChatScreen = ({ route }) => {
 
   const { chatUser, featchChatResult, moreUserData, moreOpponentData } = route.params;
   //const { chatData } = route.params;
 
   const navigation = useNavigation();
-  const dispatch = useDispatch()
+
   
    const [messages, setMessages] = useState([]);
    const [inputMessage, setInputMessage] = useState('');
+   const [faceemotion, setFaceemotion] = useState('happiness');
    const flatListRef = useRef();
+
+   const dispatch = useDispatch()
+  const userLogin = useSelector(state => state.userLogin)
+  const {user, isLoading, error } = userLogin
   
   const closeModal = () => {
     setModalVisible(false);
@@ -91,6 +99,8 @@ const ChatScreen = ({ route }) => {
 
 
   const onSend = () => {
+
+
     if (inputMessage.trim() === '') return;
 
     const newMessage = {
@@ -106,38 +116,44 @@ const ChatScreen = ({ route }) => {
     scrollToBottom();
 
 
-
-    let participants = [];
-  
-    participants.push(user.id);
-    participants.push(item.id);
-    
-    const chatIdFromUser = `${user.id}_${item.id}`;
-    const chatIdFromOpponent = `${item.id}_${user.id}`;
-
-    let moreUserData = {
-      chatId : chatIdFromUser,
-      participants:participants,
-      lastMessage: "",
-      lastMessageTime: "",
-      notification:0,
-      emotion:""
+    let moreUserChatData = {      
+      chatId : moreUserData.chatId,
+      participants:moreUserData.participants,
+      lastMessage: inputMessage,
+      lastMessageTime: new Date(),
+      notification:moreUserData.notification,
+      emotion:faceemotion
      }
 
-     let moreOpponentData = {
-      chatId : chatIdFromOpponent,
-      participants: participants,
-      lastMessage: "",
-      lastMessageTime: "",
-      notification:0,
-      emotion:""
+     let moreUserMessageData = {
+      messageId:uuid.v4(),
+      chatId : moreUserData.chatId, 
+      senderId:user.id,
+      content:inputMessage,
+      timestamp:new Date(),
+      emotion:  faceemotion 
+     }
+
+     let moreOpponentChatData = {     
+      chatId : moreOpponentData.chatId,
+      participants: moreUserData.participants,
+      lastMessage: inputMessage,
+      lastMessageTime: new Date(),
+      notification:(moreUserData.notification + 1),
+      emotion:faceemotion
+     }  
+    
+
+     let moreOpponentMessageData = {
+      messageId:uuid.v4(),
+      chatId : moreOpponentData.chatId,
+      senderId:user.id,
+      content:inputMessage,
+      timestamp:new Date(),
+      emotion:  faceemotion 
      }  
 
-
-
-
-
-
+     dispatch(createChat(moreUserChatData,moreUserMessageData,moreOpponentChatData,moreOpponentMessageData));   
   };
 
   const scrollToBottom = () => {

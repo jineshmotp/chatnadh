@@ -10,7 +10,7 @@ import SettingsStack from './SettingsStack';
 import AboutStack from './AboutStack'; 
 import ChatStack from './ChatStack';
 
-import { checkLoginStatus } from '../Redux/userActions';
+import { checkLoginStatus,initializeUserDataListener  } from '../Redux/userActions';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -23,6 +23,12 @@ const Router = () => {
 
   useEffect(() => {
     dispatch(checkLoginStatus())
+
+    if (user) {
+      dispatch(initializeUserDataListener()); // Set up the listener if user is logged in
+    }
+
+
   }, [dispatch]);
 
   if (isLoading) {

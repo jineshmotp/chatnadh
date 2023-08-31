@@ -14,11 +14,10 @@ import Header from '../../Components/Header';
 import ModelPopup from '../../Components/ModelPopup';
 import BackgroundImage from '../../Components/BackgroundImage';
 import { useDispatch, useSelector } from 'react-redux'
-// import data from '../../data/messages';
 import ContactList from '../../Components/ContactList';
 import ContactScreenHeader from '../../Components/ContactScreenHeader';
 
-import { getallContacts,createChatTable, resetChatTable } from '../../Redux/chatActions';
+import { getallContacts,createChatTable } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
 
 const ContactScreen = () => {

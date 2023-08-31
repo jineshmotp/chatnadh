@@ -5,6 +5,7 @@ import database from '@react-native-firebase/database';
 import { 
   USER_LOGIN_REQUEST, 
   USER_LOGIN_SUCCESS, 
+  USER_DATA_UPDATED,
   USER_LOGIN_FAIL, 
 
   USER_LOGOIN_BUTTON_LOADING,
@@ -23,7 +24,28 @@ import {
 } from './userConstants';
 import { auth } from '../config/firebase';
 
-// Async action creator using Redux Thunk
+
+
+export const initializeUserDataListener = () => async (dispatch, getState) => { 
+  const user = getState().userLogin.user;
+
+  if (user) {
+    const userRef = database().ref(`/users/${user.id}`);
+    
+    // Set up a listener for real-time data updates
+    userRef.on('value', (snapshot) => {
+      const userData = snapshot.val();
+      dispatch({ type: 'USER_DATA_UPDATED', payload: userData });
+
+      // Save the updated data to AsyncStorage
+      AsyncStorage.setItem('user', JSON.stringify(userData));
+    });
+
+    // Return a function to unsubscribe when needed
+    return () => userRef.off();
+  }
+};
+
 export const login = (data) => async (dispatch) => {
   
   try {
@@ -47,15 +69,10 @@ export const login = (data) => async (dispatch) => {
     {
       throw new Error('Invalid password');
     }
-
-    // else
-    // {
-    //   dispatch({ type: USER_LOGIN_REQUEST });
-    // }
-
-    
+        
     await AsyncStorage.setItem('user', JSON.stringify(user));
     dispatch({ type: USER_LOGIN_SUCCESS, payload: user });
+    dispatch(initializeUserDataListener());
   } catch (error) {
     dispatch({ type: USER_LOGIN_FAIL, payload: error.message });
   }
