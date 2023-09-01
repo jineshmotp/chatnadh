@@ -45,7 +45,9 @@ import {
   featchChaterror:null,
 
 
-  chatlist:[],
+  chatList:[],
+  chatListLoading:false,
+  chatListerror:false,
   chatbuttonLoading: false, 
 };
 
@@ -85,14 +87,14 @@ export const createChatTableReducer = (state = initialState, action) => {
 
 export const createChatReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CHAT_FEATCH_REQUEST:
+    case CHAT_CREATE_REQUEST:
       return { ...state, createChatLoading: false, createChaterror: null };    
-    case CHAT_FEATCH_SUCCESS:       
+    case CHAT_CREATE_SUCCESS:       
       return { ...state, createChatLoading: true, createChaterror: null };
-    case CHAT_FEATCH_FAIL:
+    case CHAT_CREATE_FAIL:
       return { ...state, createChatLoading: false, createChaterror: action.payload,  };
     
-    case CHAT_FEATCH_RESET:
+    case CHAT_CREATE_RESET:
       return { ...state, createChatLoading: false,createChaterror: null  };
   
     default:
@@ -120,17 +122,17 @@ export const featchChatReducer = (state = initialState, action) => {
 };
 
 
-export const getchatListReducer = (state={}, action) => {
+export const featchChatListReducer = (state={}, action) => {
   switch (action.type) {
     case CHAT_LIST_REQUEST:
-      return { ...state, chatisLoading: true, chaterror: null };    
+      return { ...state, chatListLoading: true, chatListerror: null };    
     case CHAT_LIST_SUCCESS:       
-      return { ...state, chatlist: action.payload, chatisLoading: false, chaterror: null };
+      return { ...state, chatList: action.payload, chatListLoading: false, chatListerror: null };
     case CHAT_LIST_FAIL:
-      return { ...state, chatlist:null, chatisLoading: false, chaterror: action.payload,  };
+      return { ...state, chatList:null, chatListLoading: false, chatListerror: action.payload,  };
     
     case CHAT_LIST_RESET:
-      return { ...state, chatbuttonLoading:false, chatlist: null,chaterror: null, chatisLoading: false, };
+      return { ...state, chatbuttonLoading:false, chatList: null,chatListerror: null, chatListLoading: false, };
   
     default:
       return state;

@@ -18,6 +18,10 @@ import ChatList from '../../Components/ChatList';
 import data from '../../data/messages';
 import { useDispatch, useSelector } from 'react-redux'
 
+import { featchChatList } from '../../Redux/chatActions';
+import LoadingScreen from '../../Components/LoadingScreen';
+
+
 const ChatListScreen = () => {
   const [fadeAnim] = useState(new Animated.Value(0));
   const [translateYAnim] = useState(new Animated.Value(0)); // Adjust the initial value
@@ -30,6 +34,10 @@ const ChatListScreen = () => {
   const userLogin = useSelector(state => state.userLogin)
   const {user, isLoading, error } = userLogin
   
+  const featchChatLists = useSelector(state => state.featchChatLists)
+  const {chatList, chatListLoading, chatListerror } = featchChatLists
+
+
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -46,23 +54,27 @@ const ChatListScreen = () => {
     navigation.navigate('ContactScreen');
   };
 
-  
+  useEffect(() => {
+       dispatch(featchChatList(user));   
+  }, []);
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateYAnim, {
-        toValue: 0,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, translateYAnim]);
+   if(chatList)
+   {
+    console.log('\n\n ',chatList)
+    console.log('\n\nchatswithopponents :',chatList.chatsWithOpponents[0])
+    console.log('\n\nchatswithopponents img :',chatList.chatsWithOpponents[0].opponent.img)
+    console.log('\n\nfilteredChats :',chatList.filteredChats)
+   }
+}, [dispatch,chatList]);
 
+    
+  if(chatListLoading)
+  {
+    return(
+      <LoadingScreen />
+    )
+  }
   
   return (
     <BackgroundImage>
@@ -75,16 +87,10 @@ const ChatListScreen = () => {
 
       <Header openModal={openModal} gotoContactScreen={gotoContactScreen} chatsearch={true} labeltxt={user.name} pageidx={0}  />
 
-      <Animated.View
-        style={[
-          styles.containerBottomContact,
-          { opacity: fadeAnim, transform: [{ translateY: translateYAnim }] },
-        ]}
-      >
+      <Animated.View style={styles.containerBottomContact}  >
               
-
       <FlatList 
-          data={data}
+          data={chatList}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
 

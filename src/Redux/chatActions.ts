@@ -183,3 +183,50 @@ export const resetcreateChat = () => async (dispatch) => {
   dispatch({ type: CHAT_CREATE_RESET });
 
 };
+
+//#########################################################################
+
+
+export const featchChatList = (user) => async (dispatch) => {
+  dispatch({ type: CHAT_LIST_REQUEST });
+  try {
+    const chatsRef = database().ref('/chats');
+    
+    // Set up a listener for real-time data updates
+    chatsRef.orderByChild('chatId').startAt(`${user.id}_`).endAt(`${user.id}_\uf8ff`).on('value', async (snapshot) => {
+      const chatsData = snapshot.val();
+      
+      if (!chatsData) {
+        dispatch({ type: CHAT_LIST_SUCCESS, payload: { filteredChats: [], chatsWithOpponents: [] } });
+        return;
+      }
+
+      const filteredChats = Object.values(chatsData);
+      const chatsWithOpponents = await Promise.all(filteredChats.map(async (chat) => {
+        const opponentId = chat.chatId.split('_').find(id => id !== user.id);
+        const opponentSnapshot = await database().ref(`/users/${opponentId}`).once('value');
+        const opponentDetails = opponentSnapshot.val();
+        
+        return {
+          ...chat,
+          opponent: opponentDetails
+        };
+      }));
+
+      // Dispatch the updated chat list with opponent details and filteredChats
+      dispatch({ type: CHAT_LIST_SUCCESS, payload: { filteredChats, chatsWithOpponents } });
+    });
+
+    // Return a function to unsubscribe when needed
+    return () => chatsRef.off();
+  } catch (error) {
+    dispatch({ type: CHAT_LIST_FAIL, payload: error.message });
+  }
+};
+
+
+export const resetfeatchChatList = () => async (dispatch) => {
+
+  dispatch({ type: CHAT_LIST_RESET });
+
+};
