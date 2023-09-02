@@ -9,6 +9,7 @@ export const colors = {
     tertiary:'#1f085f',
     background: '#29292b',
     chat_background: '#e3e3e3',
+    transparent:'transparent',
     text: '#000000',
         // Add more colors as needed
   } as const;

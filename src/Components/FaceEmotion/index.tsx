@@ -24,7 +24,8 @@ const FaceEmotion = ({ emotion, text }) => {
   return (
     <View style={styles.emotionView}>
       <Image source={imageSource} style={styles.emotionEmoji} />
-      <Text style={styles.messageText}>{text}</Text>
+      < Text style={styles.messageText}>{text}</Text>
+      
     </View>
   );
 };

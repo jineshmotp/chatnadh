@@ -14,10 +14,10 @@ import {
   CHAT_CREATE_RESET,
   CHAT_CREATE_FAIL,
 
-  CHAT_FEATCH_REQUEST,
-  CHAT_FEATCH_SUCCESS,
-  CHAT_FEATCH_RESET,
-  CHAT_FEATCH_FAIL,
+  CHAT_FETCH_REQUEST,
+  CHAT_FETCH_SUCCESS,
+  CHAT_FETCH_RESET,
+  CHAT_FETCH_FAIL,
   
   CHAT_LIST_REQUEST,
   CHAT_LIST_SUCCESS,
@@ -41,8 +41,8 @@ import {
   createChatLoading:false,
   createChaterror:null,
 
-  featchChatLoading:false,
-  featchChaterror:null,
+  fetchChatLoading:false,
+  fetchChaterror:null,
 
 
   chatList:[],
@@ -104,17 +104,17 @@ export const createChatReducer = (state = initialState, action) => {
 
 
 
-export const featchChatReducer = (state = initialState, action) => {
+export const fetchChatReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CHAT_FEATCH_REQUEST:
-      return { ...state, featchChatLoading: false, featchChaterror: null };    
-    case CHAT_FEATCH_SUCCESS:       
-      return { ...state, featchChatLoading: true, featchChaterror: null };
-    case CHAT_FEATCH_FAIL:
-      return { ...state, featchChatLoading: false, featchChaterror: action.payload,  };
+    case CHAT_FETCH_REQUEST:
+      return { ...state, fetchChatLoading: true, fetchChaterror: null };    
+    case CHAT_FETCH_SUCCESS:       
+      return { ...state, fetchChatLoading: false, fetchChaterror: null };
+    case CHAT_FETCH_FAIL:
+      return { ...state, fetchChatLoading: false, fetchChaterror: action.payload,  };
     
-    case CHAT_FEATCH_RESET:
-      return { ...state, featchChatLoading: false,featchChaterror: null  };
+    case CHAT_FETCH_RESET:
+      return { ...state, fetchChatLoading: false,fetchChaterror: null  };
   
     default:
       return state;
@@ -122,7 +122,7 @@ export const featchChatReducer = (state = initialState, action) => {
 };
 
 
-export const featchChatListReducer = (state={}, action) => {
+export const fetchChatListReducer = (state={}, action) => {
   switch (action.type) {
     case CHAT_LIST_REQUEST:
       return { ...state, chatListLoading: true, chatListerror: null };    

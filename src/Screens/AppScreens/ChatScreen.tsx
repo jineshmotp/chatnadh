@@ -27,13 +27,13 @@ import moment from 'moment';
 import FaceEmotion from '../../Components/FaceEmotion';
 import uuid from 'react-native-uuid';
 
-import { getallContacts,createChatTable, resetChatTable,createChat } from '../../Redux/chatActions';
+import { resetcreateChatTable,createChat } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
 
 
 const ChatScreen = ({ route }) => {
 
-  const { chatUser, featchChatResult, moreUserData, moreOpponentData } = route.params;
+  const { chatUser, fetchChatResult, moreUserData, moreOpponentData } = route.params;
   //const { chatData } = route.params;
 
   const navigation = useNavigation();
@@ -58,7 +58,7 @@ const ChatScreen = ({ route }) => {
 
 
   useEffect(() => {
-       dispatch(resetChatTable());   
+       dispatch(resetcreateChatTable());   
   }, []);
 
 

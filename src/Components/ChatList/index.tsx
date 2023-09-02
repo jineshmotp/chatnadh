@@ -4,59 +4,92 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import { colors } from '../../Constants/colors';
 
+import FaceEmotion from '../FaceEmotion';
+
 interface ChatListProps {
   item: {
-    id: string;
-    username: string;
-    picture: any; // or specify the correct image type
-    time: string;
+    chatId: string;
+    emotion: string;
     lastMessage: string;
-    onlineStatus: boolean;
-    hasStory: boolean;
+    lastMessageTime: string;
     notification: number;
+    opponent: {
+      about: string;
+      emailId: string;
+      hasStory: boolean;
+      id: string;
+      img: string;
+      name: string;
+      notification: number;
+      onlineStatus: boolean;
+      password: string;
+      time: string;
+    };
   };
   gotoChatScreen: () => void;
 }
 
+const formatDate = (timestamp) => {
+  const currentTime = new Date();
+  const messageTime = new Date(timestamp);
+  const timeDiffHours = (currentTime - messageTime) / (1000 * 60 * 60);
+
+  if (timeDiffHours < 24) {
+    // Less than 24 hours ago, display the time
+    const options = { hour: '2-digit', minute: '2-digit' };
+    return messageTime.toLocaleTimeString('en-US', options);
+  } else if (timeDiffHours <= 48) {
+    // Between 24 and 48 hours ago, display "Yesterday"
+    return 'Yesterday';
+  } else {
+    // More than 48 hours ago, display the date as "MM/DD/YYYY"
+    const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+    return messageTime.toLocaleDateString('en-US', options);
+  }
+};
+
 const ChatList: FunctionComponent<ChatListProps> = ({ item, gotoChatScreen }) => {
+  const formattedTime = formatDate(item.lastMessageTime);
+
   return (
     <TouchableOpacity style={styles.ChatListCard} onPress={() => gotoChatScreen(item)}>
-    <View style={styles.ChatListUserInfo}>
-      
-              <IconOcticons
-            name={item.onlineStatus ? "dot-fill" : "dot"} // Use ternary operator for conditional name
-            size={hp('5%')}
-            color={item.onlineStatus ? 'green' : 'red'} // Green if online, red if offline
-          />
+      <View style={styles.ChatListUserInfo}>
+        <IconOcticons
+          name={item.opponent.onlineStatus ? "dot-fill" : "dot"}
+          size={hp('5%')}
+          color={item.opponent.onlineStatus ? 'green' : 'red'}
+        />
         <View style={styles.ChatListImageSection}>
-                    <Image
-              source={{ uri: item.picture }} 
-              style={[
-                styles.ChatListUserImg,
-                { borderColor: item.onlineStatus ? colors.primary : colors.white }
-              ]}
-            />
+          <Image
+            source={{ uri: item.opponent.img }}
+            style={[
+              styles.ChatListUserImg,
+              { borderColor: item.opponent.hasStory ? colors.primary : colors.transparent }
+            ]}
+          />
         </View>
-      <View style={styles.ChatListTextSection}>
-        <View style={styles.ChatListUserInfoText}>
-          <Text style={styles.ChatListUserName}>{item.username}</Text>
-          <Text style={styles.ChatListPostTime}>{item.time}</Text>
-        </View>
-        <View style={styles.ChatListUserInfoText}>
-          <Text style={styles.ChatListMessageText} numberOfLines={1} ellipsizeMode="tail">
-            {item.lastMessage}
-          </Text>
-          {item.notification !=0 && (
-            <Text style={styles.ChatListNotification}>{item.notification}</Text>
-          )}
-          
+        <View style={styles.ChatListTextSection}>
+          <View style={styles.ChatListUserInfoText}>
+            <Text style={styles.ChatListUserName}>{item.opponent.name}</Text>
+            <Text style={styles.ChatListPostTime}>{formattedTime}</Text>
+          </View>
+          <View style={styles.ChatListUserInfoText}>
+            <Text style={styles.ChatListMessageText} numberOfLines={1} ellipsizeMode="tail">
+                        
+              {item.lastMessage}
+                 
+            </Text>
+
+            {/* <Text style={styles.ChatListMessageText} numberOfLines={1} ellipsizeMode="tail">
+               <FaceEmotion emotion={item.emotion} text={item.emotion} val={1} />                          
+             </Text> */}
+            {item.opponent.notification !== 0 && (
+              <Text style={styles.ChatListNotification}>{item.opponent.notification}</Text>
+            )}
+          </View>
         </View>
       </View>
-    </View>
-  </TouchableOpacity>
-
-
-
+    </TouchableOpacity>
   );
 };
 

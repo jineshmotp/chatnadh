@@ -18,7 +18,7 @@ import ChatList from '../../Components/ChatList';
 import data from '../../data/messages';
 import { useDispatch, useSelector } from 'react-redux'
 
-import { featchChatList } from '../../Redux/chatActions';
+import { fetchChatList } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
 
 
@@ -28,14 +28,17 @@ const ChatListScreen = () => {
   const [scrollOffset, setScrollOffset] = useState(0); // Track scroll offset
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
   const [isContainerTopVisible, setContainerTopVisible] = useState(true); // State to manage containerTop visibility
+  
+  const [chatListData, setChatListData] = useState([]); // Merged chat list data
+  
   const navigation = useNavigation();
 
   const dispatch = useDispatch()
   const userLogin = useSelector(state => state.userLogin)
   const {user, isLoading, error } = userLogin
   
-  const featchChatLists = useSelector(state => state.featchChatLists)
-  const {chatList, chatListLoading, chatListerror } = featchChatLists
+  const fetchChatLists = useSelector(state => state.fetchChatLists)
+  const {chatList, chatListLoading, chatListerror } = fetchChatLists
 
 
   const closeModal = () => {
@@ -55,18 +58,24 @@ const ChatListScreen = () => {
   };
 
   useEffect(() => {
-       dispatch(featchChatList(user));   
+       dispatch(fetchChatList(user));   
   }, []);
 
   useEffect(() => {
-   if(chatList)
-   {
-    console.log('\n\n ',chatList)
-    console.log('\n\nchatswithopponents :',chatList.chatsWithOpponents[0])
-    console.log('\n\nchatswithopponents img :',chatList.chatsWithOpponents[0].opponent.img)
-    console.log('\n\nfilteredChats :',chatList.filteredChats)
-   }
-}, [dispatch,chatList]);
+    if (chatList) {
+      //console.log('\n\n', chatList);
+      // Merge opponent details with filtered chats
+      const mergedChatList = chatList.filteredChats.map((chat) => {
+        const opponent = chatList.opponentDetails.find(
+          (opponent) => opponent.id !== user.id
+        );
+        return { ...chat, opponent };
+      });
+      setChatListData(mergedChatList);
+      //console.log('value : ',mergedChatList);
+    }
+  }, [dispatch, chatList]);
+  
 
     
   if(chatListLoading)
@@ -78,19 +87,13 @@ const ChatListScreen = () => {
   
   return (
     <BackgroundImage>
-       {/* {isContainerTopVisible && (
-        <View style={styles.containerTop}>
-          
-        </View>
-      )} */}
-
-
+     
       <Header openModal={openModal} gotoContactScreen={gotoContactScreen} chatsearch={true} labeltxt={user.name} pageidx={0}  />
 
       <Animated.View style={styles.containerBottomContact}  >
               
       <FlatList 
-          data={chatList}
+          data={chatListData}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
 

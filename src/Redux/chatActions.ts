@@ -18,10 +18,10 @@ import {
   CHAT_CREATE_RESET,
   CHAT_CREATE_FAIL,
 
-  CHAT_FEATCH_REQUEST,
-  CHAT_FEATCH_SUCCESS,
-  CHAT_FEATCH_RESET,
-  CHAT_FEATCH_FAIL,
+  CHAT_FETCH_REQUEST,
+  CHAT_FETCH_SUCCESS,
+  CHAT_FETCH_RESET,
+  CHAT_FETCH_FAIL,
 
 
   CHAT_LIST_REQUEST,
@@ -64,71 +64,80 @@ export const getallContacts = (user) => async (dispatch) => {
 
 
 export const createChatTable = (moreUserData, moreOpponentData) => async (dispatch) => {
+  console.log('createChatTable action started', moreUserData, moreOpponentData);
   dispatch({ type: CHAT_TABLE_REQUEST });
   try {
-    
-    const userSnapshot = await database().ref('/chats').orderByChild('chatId').equalTo(moreUserData.chatId).once('value');
-    const opponentSnapshot = await database().ref('/chats').orderByChild('chatId').equalTo(moreOpponentData.chatId).once('value');
+    const userSnapshot = await database()
+      .ref('/chats')
+      .orderByChild('chatId')
+      .equalTo(moreUserData.chatId)
+      .once('value');
+    const opponentSnapshot = await database()
+      .ref('/chats')
+      .orderByChild('chatId')
+      .equalTo(moreOpponentData.chatId)
+      .once('value');
 
     if (!opponentSnapshot.exists()) {
+      //console.log('opponent if check works');
       await database().ref('/chats/' + moreOpponentData.chatId).set(moreOpponentData);
-    } else {      
-      // Update moreOpponentData on the same chatId
-      await database().ref('/chats/' + moreOpponentData.chatId).update(moreOpponentData);
     }
 
     if (!userSnapshot.exists()) {
+     // console.log('user if check works');
       await database().ref('/chats/' + moreUserData.chatId).set(moreUserData);
-      dispatch({ type: CHAT_TABLE_SUCCESS ,payload: null});
+      dispatch({ type: CHAT_TABLE_SUCCESS, payload: null });
     } else {
-      await database().ref('/chats/' + moreUserData.chatId).update(moreUserData);
-
-      // Fetch messages using featchChat and return the result
-      const featchChatResult = await dispatch(featchChat(moreUserData));
-
-     // Dispatch CHAT_TABLE_SUCCESS along with the featchChatResult
-      dispatch({ type: CHAT_TABLE_SUCCESS, payload: featchChatResult });
+      //console.log('user else check works', moreUserData.chatId);
+      const fetchChatResult = await dispatch(fetchChat(moreUserData));
+      console.log(fetchChatResult); 
+      dispatch({ type: CHAT_TABLE_SUCCESS, payload: fetchChatResult });
     }
   } catch (error) {
     dispatch({ type: CHAT_TABLE_FAIL, payload: error.message });
   }
 };
 
-export const resetChatTable = () => async (dispatch) => {
+export const resetcreateChatTable = () => async (dispatch) => {
 
   dispatch({ type: CHAT_TABLE_RESET });
 
 };
+
+
 //######################################################################
 
 
-export const featchChat = (moreUserData) => async (dispatch) => {
-  dispatch({ type: CHAT_FEATCH_REQUEST });
-  try {
-    // Fetch messages from Firebase based on chatId and time
-    const messagesRef = database.ref('messages').orderByChild('chatId').equalTo(moreUserData.chatId).limitToLast(10);
-    messagesRef.on('value', (snapshot) => {
-      const messagesData = snapshot.val();
-      if (messagesData) {
-        const messages = Object.values(messagesData);
-        // Sort messages by timestamp (assuming timestamp is a valid key in the messages)
-        messages.sort((a, b) => a.timestamp - b.timestamp);
-        
-        // Dispatch action with fetched messages
-        dispatch({ type: CHAT_FEATCH_SUCCESS, payload: messages }); // Pass messages as payload
-      } else {
-        // No messages found
-        dispatch({ type: CHAT_FEATCH_SUCCESS, payload: [] });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: CHAT_FEATCH_FAIL, payload: error.message });
-  }
+export const fetchChat = (moreUserData) => async (dispatch) => {
+  console.log('fetchChat action started', moreUserData);
+  dispatch({ type: CHAT_FETCH_REQUEST });
+
+  return new Promise((resolve, reject) => {
+    try {
+      const messagesRef = database().ref('messages').orderByChild('chatId').equalTo(moreUserData.chatId).limitToLast(10);
+      messagesRef.on('value', (snapshot) => {
+        console.log('Received data from Firebase:', snapshot.val());
+        const messagesData = snapshot.val();
+        if (messagesData) {
+          const messages = Object.values(messagesData);
+          messages.sort((a, b) => a.timestamp - b.timestamp);
+          dispatch({ type: CHAT_FETCH_SUCCESS, payload: messages });
+          resolve(messages); // Resolve the promise with the fetched data
+        } else {
+          dispatch({ type: CHAT_FETCH_SUCCESS, payload: [] });
+          resolve([]); // Resolve with an empty array if no messages are found
+        }
+      });
+    } catch (error) {
+      dispatch({ type: CHAT_FETCH_FAIL, payload: error.message });
+      reject(error); // Reject the promise in case of an error
+    }
+  });
 };
 
-export const resetfeatchChat = () => async (dispatch) => {
+export const resetfetchChat = () => async (dispatch) => {
 
-  dispatch({ type: CHAT_FEATCH_RESET });
+  dispatch({ type: CHAT_FETCH_RESET });
 
 };
 
@@ -187,46 +196,53 @@ export const resetcreateChat = () => async (dispatch) => {
 //#########################################################################
 
 
-export const featchChatList = (user) => async (dispatch) => {
+export const fetchChatList = (user) => async (dispatch) => {
   dispatch({ type: CHAT_LIST_REQUEST });
   try {
     const chatsRef = database().ref('/chats');
-    
+
     // Set up a listener for real-time data updates
-    chatsRef.orderByChild('chatId').startAt(`${user.id}_`).endAt(`${user.id}_\uf8ff`).on('value', async (snapshot) => {
-      const chatsData = snapshot.val();
-      
-      if (!chatsData) {
-        dispatch({ type: CHAT_LIST_SUCCESS, payload: { filteredChats: [], chatsWithOpponents: [] } });
-        return;
-      }
+    chatsRef
+      .orderByChild('chatId')
+      .startAt(`${user.id}_`)
+      .endAt(`${user.id}_\uf8ff`)
+      .on('value', (snapshot) => {
+        const chatsData = snapshot.val();
 
-      const filteredChats = Object.values(chatsData);
-      const chatsWithOpponents = await Promise.all(filteredChats.map(async (chat) => {
-        const opponentId = chat.chatId.split('_').find(id => id !== user.id);
-        const opponentSnapshot = await database().ref(`/users/${opponentId}`).once('value');
-        const opponentDetails = opponentSnapshot.val();
-        
-        return {
-          ...chat,
-          opponent: opponentDetails
-        };
-      }));
+        if (!chatsData) {
+          dispatch({
+            type: CHAT_LIST_SUCCESS,
+            payload: { filteredChats: [], chatsWithOpponents: [] },
+          });
+          return;
+        }
 
-      // Dispatch the updated chat list with opponent details and filteredChats
-      dispatch({ type: CHAT_LIST_SUCCESS, payload: { filteredChats, chatsWithOpponents } });
-    });
+        const filteredChats = Object.values(chatsData);
+
+        //console.log('filtersdChats ',filteredChats)
+
+        // Extract opponent details for each chat
+        const chatsWithOpponents = filteredChats.map(async (chat) => {
+          const opponentId = chat.chatId.split('_').find((id) => id !== user.id);
+          const opponentSnapshot = await database()
+            .ref(`/users/${opponentId}`)
+            .once('value');
+          return opponentSnapshot.val();
+        });
+
+        // Wait for all opponent details promises to resolve
+        Promise.all(chatsWithOpponents).then((opponents) => {
+          //console.log('opponents ',opponents)
+          dispatch({
+            type: CHAT_LIST_SUCCESS,
+            payload: { filteredChats, opponentDetails: opponents },
+          });
+        });
+      });
 
     // Return a function to unsubscribe when needed
     return () => chatsRef.off();
   } catch (error) {
     dispatch({ type: CHAT_LIST_FAIL, payload: error.message });
   }
-};
-
-
-export const resetfeatchChatList = () => async (dispatch) => {
-
-  dispatch({ type: CHAT_LIST_RESET });
-
 };

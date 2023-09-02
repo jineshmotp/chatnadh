@@ -142,11 +142,11 @@ const ContactScreen = () => {
     if (createChatTableLoading) {
       setListclickLoading(false);
 
-      console.log('createchattabedata : ',createChatTabledata);
+      console.log('value returned');
                 
       navigation.navigate('ChatStack', {
         chatUser: selectchat,
-        featchChatResult: createChatTabledata,
+        fetchChatResult: createChatTabledata,
         moreUserData:moreUserData,
         moreOpponentData:moreOpponentData
       });
