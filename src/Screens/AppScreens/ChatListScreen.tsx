@@ -72,7 +72,7 @@ const ChatListScreen = () => {
         return { ...chat, opponent };
       });
       setChatListData(mergedChatList);
-      //console.log('value : ',mergedChatList);
+      console.log('value : ',mergedChatList);
     }
   }, [dispatch, chatList]);
   
@@ -94,7 +94,7 @@ const ChatListScreen = () => {
               
       <FlatList 
           data={chatListData}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.chatId}
           renderItem={({ item }) => (
 
         <ChatList item={item} gotoChatScreen={gotoChatScreen} />

@@ -142,7 +142,7 @@ const ContactScreen = () => {
     if (createChatTableLoading) {
       setListclickLoading(false);
 
-      console.log('value returned');
+      //console.log('value returned');
                 
       navigation.navigate('ChatStack', {
         chatUser: selectchat,
@@ -200,7 +200,7 @@ const ContactScreen = () => {
           data={filteredContacts}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
-            <ContactList item={item} gotoChatScreen={gotoChatScreen}  />
+            <ContactList item={item}  gotoChatScreen={gotoChatScreen}  />
           )}
           contentContainerStyle={styles.flatListContentContainer}
         />

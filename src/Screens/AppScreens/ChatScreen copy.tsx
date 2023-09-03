@@ -58,7 +58,6 @@ const ChatScreen = ({ route }) => {
 
 
   useEffect(() => {
-    console.log(fetchChatResult);
        dispatch(resetcreateChatTable());   
   }, []);
 

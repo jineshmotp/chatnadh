@@ -64,7 +64,7 @@ export const getallContacts = (user) => async (dispatch) => {
 
 
 export const createChatTable = (moreUserData, moreOpponentData) => async (dispatch) => {
-  console.log('createChatTable action started', moreUserData, moreOpponentData);
+  //console.log('createChatTable action started', moreUserData, moreOpponentData);
   dispatch({ type: CHAT_TABLE_REQUEST });
   try {
     const userSnapshot = await database()
@@ -90,7 +90,7 @@ export const createChatTable = (moreUserData, moreOpponentData) => async (dispat
     } else {
       //console.log('user else check works', moreUserData.chatId);
       const fetchChatResult = await dispatch(fetchChat(moreUserData));
-      console.log(fetchChatResult); 
+      //console.log(fetchChatResult); 
       dispatch({ type: CHAT_TABLE_SUCCESS, payload: fetchChatResult });
     }
   } catch (error) {
@@ -109,14 +109,14 @@ export const resetcreateChatTable = () => async (dispatch) => {
 
 
 export const fetchChat = (moreUserData) => async (dispatch) => {
-  console.log('fetchChat action started', moreUserData);
+  //console.log('fetchChat action started', moreUserData);
   dispatch({ type: CHAT_FETCH_REQUEST });
 
   return new Promise((resolve, reject) => {
     try {
       const messagesRef = database().ref('messages').orderByChild('chatId').equalTo(moreUserData.chatId).limitToLast(10);
       messagesRef.on('value', (snapshot) => {
-        console.log('Received data from Firebase:', snapshot.val());
+        //console.log('Received data from Firebase:', snapshot.val());
         const messagesData = snapshot.val();
         if (messagesData) {
           const messages = Object.values(messagesData);
