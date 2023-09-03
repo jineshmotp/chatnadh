@@ -41,6 +41,7 @@ import {
   createChatLoading:false,
   createChaterror:null,
 
+  fetchChatData : [],
   fetchChatLoading:false,
   fetchChaterror:null,
 
@@ -107,14 +108,14 @@ export const createChatReducer = (state = initialState, action) => {
 export const fetchChatReducer = (state = initialState, action) => {
   switch (action.type) {
     case CHAT_FETCH_REQUEST:
-      return { ...state, fetchChatLoading: true, fetchChaterror: null };    
+      return { ...state, fetchChatLoading: true,fetchChatData:null, fetchChaterror: null };    
     case CHAT_FETCH_SUCCESS:       
-      return { ...state, fetchChatLoading: false, fetchChaterror: null };
+      return { ...state, fetchChatLoading: false, fetchChatData:action.payload, fetchChaterror: null };
     case CHAT_FETCH_FAIL:
-      return { ...state, fetchChatLoading: false, fetchChaterror: action.payload,  };
+      return { ...state, fetchChatLoading: false, fetchChatData:null, fetchChaterror: action.payload,  };
     
     case CHAT_FETCH_RESET:
-      return { ...state, fetchChatLoading: false,fetchChaterror: null  };
+      return { ...state, fetchChatLoading: false,fetchChatData:null, fetchChaterror: null  };
   
     default:
       return state;

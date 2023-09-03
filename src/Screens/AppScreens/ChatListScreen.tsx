@@ -72,7 +72,7 @@ const ChatListScreen = () => {
         return { ...chat, opponent };
       });
       setChatListData(mergedChatList);
-      console.log('value : ',mergedChatList);
+      //console.log('value : ',mergedChatList);
     }
   }, [dispatch, chatList]);
   

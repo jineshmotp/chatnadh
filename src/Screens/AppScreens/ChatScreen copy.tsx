@@ -58,44 +58,50 @@ const ChatScreen = ({ route }) => {
 
 
   useEffect(() => {
+    setMessages(fetchChatResult);
+}, [fetchChatResult]);
+
+
+
+  useEffect(() => {
        dispatch(resetcreateChatTable());   
   }, []);
 
 
 
-  useEffect(() => {
-    // Sample messages for the user and the opponent
-    const initialMessages = [
-      {
-        id: 1,
-        text: "Hello! How's it going?",
-        timestamp: new Date('2023-08-21T10:30:00Z'),
-        user: { id: 2, name: 'Opponent' },
-        delivered: true,
-        faceemotion:'sadness'
-      },
-      {
-        id: 2,
-        text: 'Hey, I am doing well. How about you?',
-        timestamp: new Date('2023-08-21T10:35:00Z'),
-        user: { id: 1, name: 'You' },
-        delivered: true,
-        faceemotion:'happiness'
-      },
+  // useEffect(() => {
+  //   // Sample messages for the user and the opponent
+  //   const initialMessages = [
+  //     {
+  //       id: 1,
+  //       text: "Hello! How's it going?",
+  //       timestamp: new Date('2023-08-21T10:30:00Z'),
+  //       user: { id: 2, name: 'Opponent' },
+  //       delivered: true,
+  //       faceemotion:'sadness'
+  //     },
+  //     {
+  //       id: 2,
+  //       text: 'Hey, I am doing well. How about you?',
+  //       timestamp: new Date('2023-08-21T10:35:00Z'),
+  //       user: { id: 1, name: 'You' },
+  //       delivered: true,
+  //       faceemotion:'happiness'
+  //     },
 
-      {
-        id: 3,
-        text: 'Hey, I am doing well. How about you? ',
-        timestamp: new Date('2023-08-21T10:35:00Z'),
-        user: { id: 1, name: 'You' },
-        delivered: true,
-        faceemotion:'happiness'
-      },
-      // Add more sample messages here
-    ];
+  //     {
+  //       id: 3,
+  //       text: 'Hey, I am doing well. How about you? ',
+  //       timestamp: new Date('2023-08-21T10:35:00Z'),
+  //       user: { id: 1, name: 'You' },
+  //       delivered: true,
+  //       faceemotion:'happiness'
+  //     },
+  //     // Add more sample messages here
+  //   ];
 
-    setMessages(initialMessages);
-  }, []);
+  //   setMessages(initialMessages);
+  // }, []);
 
 
   const onSend = () => {

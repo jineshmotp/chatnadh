@@ -190,6 +190,7 @@ input: {
   borderColor: colors.primary,
   borderWidth: wp(0.2),
   borderRadius: wp('3%'),
+  fontSize: wp('4%'),
   paddingHorizontal: wp('3%'),
   marginRight: wp('2%'),
 },
@@ -208,13 +209,12 @@ sendIconStyle: {
 },
 timestampText: {
   color: 'gray',
-  fontSize: hp('1.5%'), // Adjust the font size for mobile
-  // Add tablet-specific font size
-  [`@media (min-width: ${hp('800px')})`]: {
-    fontSize: hp('1.8%'), // Adjust the font size for tablets
-  },
+  fontSize: hp('1.5%'),
   alignSelf: 'flex-end', // Align to the right
 },
+
+
+//################################################ Chat Screen style
 
   });
   

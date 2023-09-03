@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import initializeStore from './store'; // Import the modified initializeStore function
 import Router from './src/Router';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs(); // Ignore all log notifications
 
 const App: React.FC = () => {
   const [resolvedStore, setResolvedStore] = useState(null);

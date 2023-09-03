@@ -109,31 +109,38 @@ export const resetcreateChatTable = () => async (dispatch) => {
 
 
 export const fetchChat = (moreUserData) => async (dispatch) => {
-  //console.log('fetchChat action started', moreUserData);
   dispatch({ type: CHAT_FETCH_REQUEST });
 
-  return new Promise((resolve, reject) => {
-    try {
-      const messagesRef = database().ref('messages').orderByChild('chatId').equalTo(moreUserData.chatId).limitToLast(10);
-      messagesRef.on('value', (snapshot) => {
-        //console.log('Received data from Firebase:', snapshot.val());
-        const messagesData = snapshot.val();
-        if (messagesData) {
-          const messages = Object.values(messagesData);
-          messages.sort((a, b) => a.timestamp - b.timestamp);
-          dispatch({ type: CHAT_FETCH_SUCCESS, payload: messages });
-          resolve(messages); // Resolve the promise with the fetched data
-        } else {
-          dispatch({ type: CHAT_FETCH_SUCCESS, payload: [] });
-          resolve([]); // Resolve with an empty array if no messages are found
-        }
-      });
-    } catch (error) {
-      dispatch({ type: CHAT_FETCH_FAIL, payload: error.message });
-      reject(error); // Reject the promise in case of an error
-    }
-  });
+  try {
+    const messagesRef = database()
+      .ref('messages')
+      .orderByChild('chatId')
+      .equalTo(moreUserData.chatId)
+      .limitToLast(10);
+
+    messagesRef.on('value', (snapshot) => {
+      const messagesData = snapshot.val();
+      if (messagesData) {
+        const messagesArray = Object.values(messagesData);
+
+        // Sort messages by timestamp in ascending order (oldest to newest)
+        messagesArray.sort((a, b) => {
+          const timestampA = new Date(a.timestamp).getTime();
+          const timestampB = new Date(b.timestamp).getTime();
+          return timestampA - timestampB;
+        });
+
+        dispatch({ type: CHAT_FETCH_SUCCESS, payload: messagesArray });
+      } else {
+        // If no messages are found, set an empty array
+        dispatch({ type: CHAT_FETCH_SUCCESS, payload: [] });
+      }
+    });
+  } catch (error) {
+    dispatch({ type: CHAT_FETCH_FAIL, payload: error.message });
+  }
 };
+
 
 export const resetfetchChat = () => async (dispatch) => {
 
@@ -170,16 +177,11 @@ export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChat
          emotion:moreOpponentChatData.emotion,
          notification:moreOpponentChatData.notification,
        });
-     }
-    
+     }   
     
     await database().ref('/messages/'+moreUserMessageData.messageId).set(moreUserMessageData);
     await database().ref('/messages/'+moreOpponentMessageData.messageId).set(moreOpponentMessageData);
-
-
-    
-        dispatch({ type: CHAT_CREATE_SUCCESS });
-      
+    dispatch({ type: CHAT_CREATE_SUCCESS });      
    
   } catch (error) {
     dispatch({ type: CHAT_CREATE_FAIL, payload: error.message });

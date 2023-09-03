@@ -15,6 +15,8 @@ const emotionImages = {
 };
 
 const FaceEmotion = ({ emotion, text }) => {
+
+  
   const imageSource = emotionImages[emotion];
 
   if (!imageSource) {
@@ -44,11 +46,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: colors.white,
-    fontSize: hp('2%'), // Adjust the font size for mobile
-    // Add tablet-specific font size
-    [`@media (min-width: ${hp('800px')})`]: {
-      fontSize: hp('2.5%'), // Adjust the font size for tablets
-    },
+    fontSize: hp('2%'),
   },
 });
 
