@@ -27,11 +27,12 @@ import moment from 'moment';
 import FaceEmotion from '../../Components/FaceEmotion';
 import uuid from 'react-native-uuid';
 
-import { resetcreateChatTable,createChat } from '../../Redux/chatActions';
+import { resetcreateChatTable,createChat,fetchChat } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
 
 
 const ChatScreen = ({ route }) => {
+
 
   const { chatUser, fetchChatResult, moreUserData, moreOpponentData } = route.params;
   //const { chatData } = route.params;
@@ -47,6 +48,7 @@ const ChatScreen = ({ route }) => {
    const dispatch = useDispatch()
   const userLogin = useSelector(state => state.userLogin)
   const {user, isLoading, error } = userLogin
+  const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector(state => state.fetchChat);
   
   const closeModal = () => {
     setModalVisible(false);
@@ -56,52 +58,31 @@ const ChatScreen = ({ route }) => {
     setModalVisible(true);
   };
 
+  const scrollToBottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: false });
+    }
+  };
+
+
 
   useEffect(() => {
-    setMessages(fetchChatResult);
-}, [fetchChatResult]);
-
-
-
-  useEffect(() => {
+    // console.log(fetchChatResult);
+    // if (fetchChatResult) {
+    //   setMessages(fetchChatResult);
+    // }
        dispatch(resetcreateChatTable());   
+       dispatch(fetchChat());        
   }, []);
 
-
-
-  // useEffect(() => {
-  //   // Sample messages for the user and the opponent
-  //   const initialMessages = [
-  //     {
-  //       id: 1,
-  //       text: "Hello! How's it going?",
-  //       timestamp: new Date('2023-08-21T10:30:00Z'),
-  //       user: { id: 2, name: 'Opponent' },
-  //       delivered: true,
-  //       faceemotion:'sadness'
-  //     },
-  //     {
-  //       id: 2,
-  //       text: 'Hey, I am doing well. How about you?',
-  //       timestamp: new Date('2023-08-21T10:35:00Z'),
-  //       user: { id: 1, name: 'You' },
-  //       delivered: true,
-  //       faceemotion:'happiness'
-  //     },
-
-  //     {
-  //       id: 3,
-  //       text: 'Hey, I am doing well. How about you? ',
-  //       timestamp: new Date('2023-08-21T10:35:00Z'),
-  //       user: { id: 1, name: 'You' },
-  //       delivered: true,
-  //       faceemotion:'happiness'
-  //     },
-  //     // Add more sample messages here
-  //   ];
-
-  //   setMessages(initialMessages);
-  // }, []);
+  useEffect(() => {
+    if(fetchChatData)
+    {
+      console.log(fetchChatData)
+     setMessages(fetchChatData);
+     scrollToBottom();   
+    }
+   }, [dispatch, fetchChatData]);
 
 
   const onSend = () => {
@@ -109,17 +90,17 @@ const ChatScreen = ({ route }) => {
 
     if (inputMessage.trim() === '') return;
 
-    const newMessage = {
-      id: messages.length + 1,
-      text: inputMessage,
-      timestamp: new Date(),
-      user: { id: 1, name: 'You' },
-      delivered: false,
+    const newMessage = {  
+      messageId:uuid.v4(),
+      chatId : moreUserData.chatId, 
+      senderId:user.id,
+      content:inputMessage,
+      timestamp:(new Date()).toISOString(),
+      delivered:false,
+      emotion:  faceemotion 
     };
 
-    setMessages([...messages, newMessage]);
-    setInputMessage('');
-    scrollToBottom();
+    
 
 
     let moreUserChatData = {      
@@ -137,6 +118,7 @@ const ChatScreen = ({ route }) => {
       senderId:user.id,
       content:inputMessage,
       timestamp:(new Date()).toISOString(),
+      delivered:false,
       emotion:  faceemotion 
      }
 
@@ -156,21 +138,24 @@ const ChatScreen = ({ route }) => {
       senderId:user.id,
       content:inputMessage,
       timestamp:(new Date()).toISOString(),
+      delivered:false,
       emotion:  faceemotion 
      }  
-
+     
      dispatch(createChat(moreUserChatData,moreUserMessageData,moreOpponentChatData,moreOpponentMessageData));   
-  };
+    //setMessages([...messages, newMessage]);
+    setInputMessage('');
+    scrollToBottom();
+     
+    };
 
-  const scrollToBottom = () => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToEnd();
-    }
-  };
+   
+    
+
 
   
   const renderItem = ({ item }) => {
-    const isUserMessage = item.user.id === 1;
+    const isUserMessage = item.senderId === user.id;
     const deliveredIcon = item.delivered ? (
       <Ionicons name="checkmark" size={wp('3%')} color={colors.white} />
     ) : null;
@@ -199,10 +184,10 @@ const ChatScreen = ({ route }) => {
           ]}
         >
 
-            <FaceEmotion emotion={item.faceemotion} text={item.faceemotion} />
+            <FaceEmotion emotion={item.emotion} text={item.faceemotion} />
           
           
-          <Text style={styles.messageText}>{item.text}</Text>
+          <Text style={styles.messageText}>{item.content}</Text>
           <Text style={styles.timestampText}>
             {moment(item.timestamp).format('h:mm A')}
             {deliveredIcon}
@@ -223,34 +208,40 @@ const ChatScreen = ({ route }) => {
 
 <Header openModal={openModal} labeltxt={chatUser.name} onlinestatus={chatUser.onlineStatus} pageidx={3} chatuserimg={chatUser.img} />
 
+  
+<KeyboardAvoidingView
+  style={{ flex: 1 }}
+  behavior={Platform.OS === 'ios' ? 'padding' : null}
+  keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -150} // Adjust the offset as needed
+>
+          <View style={styles.containerBottomChat}>
+            <Text style={{ color: 'black' }}>{moreUserData.chatId}</Text>
 
-         <View style={styles.containerBottomChat} >
-         <Text style={{color:'black'}}>{moreUserData.chatId}</Text>
-       
             <FlatList
               ref={flatListRef}
               data={messages}
               renderItem={renderItem}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={item => item.id}
               contentContainerStyle={{ paddingVertical: 0, paddingHorizontal: 0 }}
+              onContentSizeChange={() => scrollToBottom()}
             />
 
-                <View style={styles.inputContainer}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Type a message..."
-                    value={inputMessage}
-                    onChangeText={(text) => setInputMessage(text)}
-                  />
+            <View style={styles.inputContainer}>
+            <TextInput
+                style={styles.input}
+                placeholder="Type a message..."
+                value={inputMessage}
+                onChangeText={text => setInputMessage(text)}
+                onFocus={() => scrollToBottom()} // Scroll to bottom when input is focused
+              />
 
-                  <TouchableOpacity onPress={onSend} style={styles.sendButton}>
-                    {/* Replace the "Send" button with a send icon */}
-                    <Icon name="send" size={wp('5%')} color={colors.white} />
-                  </TouchableOpacity>
-                </View>
-                    
-        
-         </View>
+              <TouchableOpacity onPress={onSend} style={styles.sendButton}>
+                {/* Replace the "Send" button with a send icon */}
+                <Icon name="send" size={wp('5%')} color={colors.white} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
 
     </BackgroundImage>
   );
