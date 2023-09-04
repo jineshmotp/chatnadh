@@ -139,49 +139,34 @@ flatListContentContainer: {
 
 //#################### ChatScreen ##########################3
 
-containerBottomChat: {
+Messagecontainer: {
   flex: 8,
-    justifyContent: 'center',
-    width: wp('100%'),
-    borderTopLeftRadius: wp('8%'),
-    borderTopRightRadius: wp('8%'),
-    
-    padding: wp('2%'),
-    backgroundColor: colors.white,
+  flexDirection: 'column', // Arrange items vertically
+  justifyContent: 'flex-end', // To push input container to the bottom
+  width: wp('100%'),
+  borderTopLeftRadius: wp('8%'),
+  borderTopRightRadius: wp('8%'),
+  padding: wp('2%'),
+  backgroundColor: colors.white,
+  
 },
 
-chatContainer: {
-  flexGrow: 1,
-  paddingTop: hp('2%'), // Adjust padding to the top
-  paddingBottom: hp('2%'), // Add bottom padding,
-  paddingLeft: hp('2%'), 
-  width:hp('100%'),
-
-},
-
-messageContainer: {
+messageContainer1: {
   maxWidth: '80%',
-  alignSelf: 'flex-start',
+  alignSelf: 'center',
   backgroundColor: colors.secondary,
   padding: wp('3%'),
   borderRadius: wp('3%'),
   marginVertical: hp('1%'),
 },
-
 messageText: {
   color: colors.white,
-  fontSize: hp('2%'), // Adjust the font size for mobile
-  // Add tablet-specific font size
-  [`@media (min-width: ${hp('800px')})`]: {
-    fontSize: hp('2.5%'), // Adjust the font size for tablets
-  },
+  fontSize: hp('2%'),
 },
-
-inputContainer: {
-  
+inputContainer: { 
   flexDirection: 'row',
   alignItems: 'center',
-  paddingHorizontal: wp('0%'),
+  paddingHorizontal: wp('2%'),
   paddingBottom: hp('1%'),
 },
 input: {
@@ -200,20 +185,16 @@ sendButton: {
   paddingVertical: hp('1%'),
   borderRadius: wp('3%'),
 },
-sendButtonText: {
-  color: colors.white,
-  fontWeight: 'bold',
-},
-sendIconStyle: {
- 
-},
 timestampText: {
   color: 'gray',
   fontSize: hp('1.5%'),
-  alignSelf: 'flex-end', // Align to the right
+  alignSelf: 'flex-end',
 },
-
-
+scrollViewContent: {
+  flexGrow: 1,
+  paddingVertical: 0,
+  paddingHorizontal: 0,
+},
 
 
   });

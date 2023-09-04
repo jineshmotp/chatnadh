@@ -2,34 +2,34 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
-  Animated,
-  ScrollView,
   FlatList,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
   TextInput,
   TouchableOpacity,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView
 } from 'react-native';
-import ModelPopup from '../../Components/ModelPopup';
-import Header from '../../Components/Header';
-import styles from './styles';
-import BackgroundImage from '../../Components/BackgroundImage';
-import { colors } from '../../Constants/colors';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import moment from 'moment';
+import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-
-import moment from 'moment';
-import FaceEmotion from '../../Components/FaceEmotion';
-import uuid from 'react-native-uuid';
-
 import { resetcreateChatTable, createChat, fetchChat } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
+
+import BackgroundImage from '../../Components/BackgroundImage';
+import Header from '../../Components/Header';
+import FaceEmotion from '../../Components/FaceEmotion';
+import styles from './styles';
+
+import { colors } from '../../Constants/colors';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const ChatScreen = ({ route }) => {
   const { chatUser, fetchChatResult, moreUserData, moreOpponentData } = route.params;
@@ -39,26 +39,14 @@ const ChatScreen = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [faceemotion, setFaceemotion] = useState('happiness');
-  const flatListRef = useRef();
+  const scrollViewRef = useRef();
 
   const dispatch = useDispatch();
-  const userLogin = useSelector(state => state.userLogin);
+  const userLogin = useSelector((state) => state.userLogin);
   const { user, isLoading, error } = userLogin;
-  const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector(state => state.fetchChat);
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  const openModal = () => {
-    setModalVisible(true);
-  };
-
-  const scrollToBottom = () => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToEnd({ animated: false });
-    }
-  };
+  const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector(
+    (state) => state.fetchChat
+  );
 
   useEffect(() => {
     dispatch(resetcreateChatTable());
@@ -71,6 +59,12 @@ const ChatScreen = ({ route }) => {
       scrollToBottom();
     }
   }, [dispatch, fetchChatData]);
+
+  const scrollToBottom = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: false });
+    }
+  };
 
   const onSend = () => {
     if (inputMessage.trim() === '') return;
@@ -131,7 +125,7 @@ const ChatScreen = ({ route }) => {
     scrollToBottom();
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = (item) => {
     const isUserMessage = item.senderId === user.id;
     const deliveredIcon = item.delivered ? (
       <Ionicons name="checkmark" size={wp('3%')} color={colors.white} />
@@ -139,8 +133,9 @@ const ChatScreen = ({ route }) => {
 
     return (
       <View
+        key={item.id}
         style={[
-          styles.messageContainer,
+          styles.messageContainer1,
           {
             alignSelf: isUserMessage ? 'flex-end' : 'flex-start',
             backgroundColor: isUserMessage ? colors.primary : colors.secondary,
@@ -176,55 +171,72 @@ const ChatScreen = ({ route }) => {
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardVisible(true);
+      scrollToBottom();  
     });
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardVisible(false);
+      scrollToBottom();  
     });
 
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
+      scrollToBottom();      
     };
   }, []);
 
   const handleContentSizeChange = () => {
     if (!keyboardVisible) {
-      scrollToBottom();
+      scrollToBottom();     
     }
   };
 
   return (
     <BackgroundImage>
-      <Header openModal={openModal} labeltxt={chatUser.name} onlinestatus={chatUser.onlineStatus} pageidx={3} chatuserimg={chatUser.img} />
+      <Header
+        
+        labeltxt={chatUser.name}
+        onlinestatus={chatUser.onlineStatus}
+        pageidx={3}
+        chatuserimg={chatUser.img}
+      />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? hp('10%') : 0} // Adjust the offset as needed
       >
-        <View style={styles.containerBottomChat}>
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-            contentContainerStyle={{ paddingVertical: 0, paddingHorizontal: 0 }}
-            onContentSizeChange={handleContentSizeChange}
-          />
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Type a message..."
-              value={inputMessage}
-              onChangeText={text => setInputMessage(text)}
-              onFocus={() => setKeyboardVisible(false)}
-            />
+                   
+                    
+            <View style={styles.Messagecontainer}>
 
-            <TouchableOpacity onPress={onSend} style={styles.sendButton}>
-              <Icon name="send" size={wp('5%')} color={colors.white} />
-            </TouchableOpacity>
-          </View>
-        </View>
+           
+                    <ScrollView
+                        ref={scrollViewRef}
+                        contentContainerStyle={styles.scrollViewContent}
+                        onContentSizeChange={handleContentSizeChange}
+                        keyboardShouldPersistTaps="handled" // Add this line
+                      >
+                        {messages.map(renderItem)}
+                      </ScrollView>
+
+              
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Type a message..."
+                  value={inputMessage}
+                  onChangeText={(text) => setInputMessage(text)}
+                  onFocus={() => setKeyboardVisible(false)}
+                />
+                <TouchableOpacity onPress={onSend} style={styles.sendButton}>
+                  <Icon name="send" size={wp('5%')} color={colors.white} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+
+
       </KeyboardAvoidingView>
     </BackgroundImage>
   );
