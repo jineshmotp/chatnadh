@@ -31,8 +31,10 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import { formatDate } from '../../Utilities/dateUtils';
+
 const ChatScreen = ({ route }) => {
-  const { chatUser, fetchChatResult, moreUserData, moreOpponentData } = route.params;
+  const { chatUser, moreUserData, moreOpponentData } = route.params;
 
   const navigation = useNavigation();
 
@@ -160,7 +162,7 @@ const ChatScreen = ({ route }) => {
 
           <Text style={styles.messageText}>{item.content}</Text>
           <Text style={styles.timestampText}>
-            {moment(item.timestamp).format('h:mm A')}
+               {formatDate(item.timestamp)}
             {deliveredIcon}
           </Text>
         </View>
@@ -214,6 +216,7 @@ const ChatScreen = ({ route }) => {
 
            
                     <ScrollView
+                       
                         ref={scrollViewRef}
                         contentContainerStyle={styles.scrollViewContent}
                         onContentSizeChange={handleContentSizeChange}
@@ -222,7 +225,7 @@ const ChatScreen = ({ route }) => {
                         {messages.map(renderItem)}
                       </ScrollView>
 
-              
+            </View>
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
@@ -231,10 +234,10 @@ const ChatScreen = ({ route }) => {
                   onChangeText={(text) => setInputMessage(text)}
                   onFocus={() => setKeyboardVisible(false)}
                 />
-                <TouchableOpacity onPress={onSend} style={styles.sendButton}>
+                <TouchableOpacity onPress={onSend} style={[styles.sendButton,{backgroundColor:colors.transparent}]}>
                   <Icon name="send" size={wp('5%')} color={colors.white} />
                 </TouchableOpacity>
-              </View>
+              
             </View>
 
 

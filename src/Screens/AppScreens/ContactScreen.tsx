@@ -145,8 +145,7 @@ const ContactScreen = () => {
       //console.log('value returned');
                 
       navigation.navigate('ChatStack', {
-        chatUser: selectchat,
-        fetchChatResult: createChatTabledata,
+        chatUser: selectchat,        
         moreUserData:moreUserData,
         moreOpponentData:moreOpponentData
       });

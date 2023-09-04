@@ -208,37 +208,38 @@ export const fetchChatList = (user) => async (dispatch) => {
       .orderByChild('chatId')
       .startAt(`${user.id}_`)
       .endAt(`${user.id}_\uf8ff`)
-      .on('value', (snapshot) => {
+      .on('value', async (snapshot) => {
         const chatsData = snapshot.val();
 
         if (!chatsData) {
           dispatch({
             type: CHAT_LIST_SUCCESS,
-            payload: { filteredChats: [], chatsWithOpponents: [] },
+            payload: { chatListDatas: [], opponentDatas: [] },
           });
           return;
         }
 
-        const filteredChats = Object.values(chatsData);
+        const chatListDatas = Object.values(chatsData);
 
-        //console.log('filtersdChats ',filteredChats)
-
-        // Extract opponent details for each chat
-        const chatsWithOpponents = filteredChats.map(async (chat) => {
-          const opponentId = chat.chatId.split('_').find((id) => id !== user.id);
-          const opponentSnapshot = await database()
-            .ref(`/users/${opponentId}`)
-            .once('value');
-          return opponentSnapshot.val();
+        // Extract opponent IDs from chat IDs
+        const opponentIds = chatListDatas.map((chat) => {
+          const chatIdParts = chat.chatId.split('_');
+          return chatIdParts.find((id) => id !== user.id);
         });
 
-        // Wait for all opponent details promises to resolve
-        Promise.all(chatsWithOpponents).then((opponents) => {
-          //console.log('opponents ',opponents)
-          dispatch({
-            type: CHAT_LIST_SUCCESS,
-            payload: { filteredChats, opponentDetails: opponents },
-          });
+        // Fetch opponent details from the user table based on opponent IDs
+        const opponentDatas = await Promise.all(
+          opponentIds.map(async (opponentId) => {
+            const opponentSnapshot = await database()
+              .ref(`/users/${opponentId}`)
+              .once('value');
+            return opponentSnapshot.val();
+          })
+        );
+
+        dispatch({
+          type: CHAT_LIST_SUCCESS,
+          payload: { chatListDatas, opponentDatas },
         });
       });
 

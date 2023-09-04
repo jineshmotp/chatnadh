@@ -146,7 +146,10 @@ Messagecontainer: {
   width: wp('100%'),
   borderTopLeftRadius: wp('8%'),
   borderTopRightRadius: wp('8%'),
-  padding: wp('2%'),
+  
+  paddingLeft: wp('2%'),
+  paddingRight: wp('2%'),
+  paddingTop: wp('2%'),
   backgroundColor: colors.white,
   
 },
@@ -168,11 +171,14 @@ inputContainer: {
   alignItems: 'center',
   paddingHorizontal: wp('2%'),
   paddingBottom: hp('1%'),
+  paddingTop: hp('1%'),
+  backgroundColor:colors.transparent
 },
 input: {
   flex: 1,
   height: hp('5%'),
   borderColor: colors.primary,
+  backgroundColor:colors.white,
   borderWidth: wp(0.2),
   borderRadius: wp('3%'),
   fontSize: wp('4%'),
@@ -194,6 +200,7 @@ scrollViewContent: {
   flexGrow: 1,
   paddingVertical: 0,
   paddingHorizontal: 0,
+  backgroundColor:colors.white
 },
 
 

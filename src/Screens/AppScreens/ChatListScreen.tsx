@@ -50,7 +50,16 @@ const ChatListScreen = () => {
   };
 
   const gotoChatScreen = (item) => {
-    navigation.navigate('ChatStack', { chatData: item });
+    ///navigation.navigate('ChatStack', { chatData: item });
+
+    // navigation.navigate('ChatStack', {
+    //   chatUser: selectchat,        
+    //   moreUserData:moreUserData,
+    //   moreOpponentData:moreOpponentData
+    // });
+
+
+
   };
 
   const gotoContactScreen = () => {
@@ -64,15 +73,23 @@ const ChatListScreen = () => {
   useEffect(() => {
     if (chatList) {
       //console.log('\n\n', chatList);
-      // Merge opponent details with filtered chats
-      const mergedChatList = chatList.filteredChats.map((chat) => {
-        const opponent = chatList.opponentDetails.find(
-          (opponent) => opponent.id !== user.id
-        );
-        return { ...chat, opponent };
+        
+      const mergedData = chatList.chatListDatas.map((chatItem) => {
+        // Find the corresponding opponent data based on chatId
+        const opponentItem = chatList.opponentDatas.find((opponent) => {
+          return chatItem.chatId.includes(opponent.id);
+        });
+  
+        // Merge chatItem and opponentItem into a single object
+        return {
+          ...chatItem,
+          opponent: opponentItem,
+        };
       });
-      setChatListData(mergedChatList);
-      //console.log('value : ',mergedChatList);
+
+      console.log(mergedData);
+      setChatListData(mergedData);
+      
     }
   }, [dispatch, chatList]);
   
@@ -92,7 +109,7 @@ const ChatListScreen = () => {
 
       <Animated.View style={styles.containerBottomContact}  >
               
-      <FlatList 
+       <FlatList 
           data={chatListData}
           keyExtractor={item => item.chatId}
           renderItem={({ item }) => (
@@ -102,7 +119,7 @@ const ChatListScreen = () => {
           contentContainerStyle={styles.flatListContentContainer} // Add this line
           
         />
-     
+      
      
       </Animated.View>   
 
