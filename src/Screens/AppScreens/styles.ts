@@ -153,7 +153,7 @@ Messagecontainer: {
 
 messageContainer1: {
   maxWidth: '80%',
-  alignSelf: 'center',
+  alignSelf: 'flex-start',
   backgroundColor: colors.secondary,
   padding: wp('3%'),
   borderRadius: wp('3%'),

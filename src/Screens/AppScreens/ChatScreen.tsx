@@ -51,9 +51,11 @@ const ChatScreen = ({ route }) => {
   useEffect(() => {
     dispatch(resetcreateChatTable());
     dispatch(fetchChat());
-  }, []);
+    scrollToBottom();
+  }, [dispatch]);
 
   useEffect(() => {
+    scrollToBottom();
     if (fetchChatData) {
       setMessages(fetchChatData);
       scrollToBottom();
@@ -121,7 +123,7 @@ const ChatScreen = ({ route }) => {
       createChat(moreUserChatData, moreUserMessageData, moreOpponentChatData, moreOpponentMessageData)
     );
 
-    setInputMessage('');
+    setInputMessage(newMessage);
     scrollToBottom();
   };
 

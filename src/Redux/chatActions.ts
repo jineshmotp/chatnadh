@@ -125,9 +125,9 @@ export const fetchChat = (moreUserData) => async (dispatch) => {
 
         // Sort messages by timestamp in ascending order (oldest to newest)
         messagesArray.sort((a, b) => {
-          const timestampA = new Date(a.timestamp).getTime();
-          const timestampB = new Date(b.timestamp).getTime();
-          return timestampA - timestampB;
+          const timestampA = a.timestamp;
+          const timestampB = b.timestamp;
+          return timestampA.localeCompare(timestampB);
         });
 
         dispatch({ type: CHAT_FETCH_SUCCESS, payload: messagesArray });
