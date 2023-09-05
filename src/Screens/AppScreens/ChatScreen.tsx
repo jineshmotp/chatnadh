@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, } from 'react';
 import {
   View,
   Text,
-  FlatList,
   TextInput,
   TouchableOpacity,
   Keyboard,
@@ -12,12 +11,11 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import moment from 'moment';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { resetcreateChatTable, createChat, fetchChat } from '../../Redux/chatActions';
+
 import LoadingScreen from '../../Components/LoadingScreen';
 
 import BackgroundImage from '../../Components/BackgroundImage';
@@ -32,9 +30,31 @@ import {
 } from 'react-native-responsive-screen';
 
 import { formatDate } from '../../Utilities/dateUtils';
+import { resetcreateChatTable, createChat, fetchChat,resetcreateChat,resetfetchChat, } from '../../Redux/chatActions';
 
-const ChatScreen = ({ route }) => {
-  const { chatUser, moreUserData, moreOpponentData } = route.params;
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+
+type RootStackParamList = {
+  ChatStack: {
+    chatUser: any; // Replace 'any' with the actual type of chatUser
+    loadfetchChatdata: any; // Replace 'any' with the actual type of loadfetchChatdata
+    moreUserData: any; // Replace 'any' with the actual type of moreUserData
+    moreOpponentData: any; // Replace 'any' with the actual type of moreOpponentData
+  };
+};
+
+type ChatScreenRouteProp = RouteProp<RootStackParamList, 'ChatStack'>;
+type ChatScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ChatStack'>;
+
+type Props = {
+  route: ChatScreenRouteProp;
+  navigation: ChatScreenNavigationProp;
+};
+
+const ChatScreen: React.FC<Props> = ({ route }) => {
+  const { chatUser,loadfetchChatdata, moreUserData, moreOpponentData } = route.params;
 
   const navigation = useNavigation();
 
@@ -46,19 +66,35 @@ const ChatScreen = ({ route }) => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { user, isLoading, error } = userLogin;
-  const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector(
-    (state) => state.fetchChat
-  );
+  const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector((state) => state.fetchChat);
+  
 
+ 
   useEffect(() => {
     dispatch(resetcreateChatTable());
-    dispatch(fetchChat());
-    scrollToBottom();
-  }, [dispatch]);
+    dispatch(resetfetchChat());
+      dispatch(resetcreateChat());
+  
+     //console.log(loadfetchChatdata)  
+    if (loadfetchChatdata != null) 
+    {
+      console.log('if')
+      setMessages(loadfetchChatdata);
+      scrollToBottom();
+    } else 
+    {   
+      console.log(chatUser.name)  
+      //console.log(moreUserData)  
+      dispatch(fetchChat(moreUserData));
+      scrollToBottom();
+    }
+  }, [dispatch, moreUserData, loadfetchChatdata,chatUser]);
+
 
   useEffect(() => {
     scrollToBottom();
     if (fetchChatData) {
+      //console.log(fetchChatData);
       setMessages(fetchChatData);
       scrollToBottom();
     }
@@ -137,7 +173,7 @@ const ChatScreen = ({ route }) => {
 
     return (
       <View
-        key={item.id}
+      key={item.messageId}
         style={[
           styles.messageContainer1,
           {

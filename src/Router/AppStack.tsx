@@ -1,9 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ChatListScreen from '../Screens/AppScreens/ChatListScreen';
-import NotificationScreen from '../Screens/AppScreens/NotificationScreen';
 import ContactScreen from '../Screens/AppScreens/ContactScreen';
-import { View, Animated, Easing, Image } from 'react-native';
 import TabBarItem from '../Components/TabBarItem';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../Constants/colors';
@@ -11,6 +9,7 @@ import { colors } from '../Constants/colors';
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => {
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
@@ -27,7 +26,10 @@ const AppStack = () => {
         };
       }}
     >
-      <Tab.Screen
+
+    
+
+<Tab.Screen
         name="ChatListScreen"
         component={ChatListScreen}
         options={({ route, navigation }) => ({
@@ -42,23 +44,9 @@ const AppStack = () => {
           ),
         })}
       />
-      {/* <Tab.Screen
-        name="NotificationScreen"
-        component={NotificationScreen}
-        options={({ route, navigation }) => ({
-          tabBarButton: (props) => (
-            <TabBarItem
-              {...props}
-              iconName="bell"
-              label="Notification"
-              isFocused={props.accessibilityState?.selected ?? false}
-              onPress={() => navigation.navigate(route.name)}
-            />
-          ),
-        })}
-      /> */}
 
-    <Tab.Screen
+
+<Tab.Screen
         name="ContactScreen"
         component={ContactScreen}
         options={({ route, navigation }) => ({

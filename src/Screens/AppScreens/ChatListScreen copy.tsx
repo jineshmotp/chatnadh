@@ -16,10 +16,6 @@ import { fetchChatList,resetfetchChat,resetcreateChat,createChatTable,fetchChat,
 import LoadingScreen from '../../Components/LoadingScreen';
 
 const ChatListScreen = () => {
-
-  const navigation = useNavigation();
-  const dispatch = useDispatch<Dispatch>();
-
   const [fadeAnim] = useState(new Animated.Value(0));
   const [translateYAnim] = useState(new Animated.Value(0)); // Adjust the initial value
   const [scrollOffset, setScrollOffset] = useState(0); // Track scroll offset
@@ -28,60 +24,22 @@ const ChatListScreen = () => {
   
   const [chatListData, setChatListData] = useState([]); // Merged chat list data
   
+  const navigation = useNavigation();
 
-  interface RootState {
-    userLogin: {
-      user: {
-      id: string;
-      about: string;
-      accountactivation: number;
-      emailId: string;
-      hasStory: boolean;
-      img: string;
-      lastMessage: string;
-      name: string;
-      notification: number;
-      onlineStatus: boolean;
-      password: string;
-      time: string;
-      };
-      isLoading: boolean;
-      error: string | null;
-    };
-    fetchChatLists:{
-      fetchChatListData:any[];
-      fetchChatListLoading:boolean;
-      fetchChatListerror:string | null;
-
-    };
-    createChatTable: {
-      createChatTableData: any[]; // Replace with the actual type
-      createChatTableLoading: boolean;
-      createChatTableerror: string | null;
-    };   
-    fetchChat: {
-      fetchChatData: any[]; // Replace with the actual type
-      fetchChatLoading: boolean;
-      fetchChaterror: string | null;
-    };
-  }
+  const dispatch = useDispatch()
+  const userLogin = useSelector(state => state.userLogin)
+  const {user, isLoading, error } = userLogin
   
-  const {user, isLoading, error } = useSelector((state: RootState) => state.userLogin);
-  const {fetchChatListData, fetchChatListLoading, fetchChatListerror } = useSelector((state: RootState) =>  state.fetchChatLists)
-  const { createChatTableData, createChatTableLoading, createChatTableerror } = useSelector((state: RootState) => state.createChatTable);
-  const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: RootState) => state.fetchChat);
-  
+  const fetchChatLists = useSelector(state => state.fetchChatLists)
+  const {chatList, chatListLoading, chatListerror } = fetchChatLists
   const [listclickLoading, setListclickLoading] = useState(false);
-  const [selectchat, setSelectchat] = useState({
-    id: '',
-    about: '',   
-    emailId: '',
-    hasStory: false,
-    img: '',
-    name: '',
-    onlineStatus: false,
-  });
+  const [selectchat, setSelectchat] = useState('');
   
+  
+  const { createChatTableLoading, createChatTabledata,createChatTableerror } = useSelector(state => state.createChatTable)
+  const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector((state) => state.fetchChat);
+
+
   const [moreUserData, setMoreUserData] = useState({
     chatId: "",
     participants: [],
@@ -102,7 +60,13 @@ const ChatListScreen = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
-      // Reset the state variables when navigating away from ChatListScreen
+     
+      
+     dispatch(resetcreateChat())
+     dispatch(resetcreateChatTable())
+     dispatch(resetfetchChat())  
+
+
       setMoreUserData({
         chatId: "",
         participants: [],
@@ -124,9 +88,8 @@ const ChatListScreen = () => {
     return unsubscribe;
   }, [navigation]);
 
-
-// Function to update moreUserData
-  const updateMoreUserData = (newData: Partial<typeof moreUserData>) => {
+  // Function to update moreUserData
+  const updateMoreUserData = (newData) => {
     setMoreUserData(prevData => ({
       ...prevData,
       ...newData
@@ -134,14 +97,12 @@ const ChatListScreen = () => {
   };
 
  
-  const updateMoreOpponentData = (newData: Partial<typeof moreOpponentData>) => {
+  const updateMoreOpponentData = (newData) => {
     setMoreOpponentData(prevData => ({
       ...prevData,
       ...newData
     }));
   };
-
-
 
 
   const closeModal = () => {
@@ -152,33 +113,9 @@ const ChatListScreen = () => {
     setModalVisible(true);
   };
 
-  interface ContactItem {
-
-    chatId:string;
-    emotion:string;
-    lastMessage: string;
-    lastMessageTime:string; 
-    notification: number;
-    opponent:{
-        id: string;
-        about: string;
-        accountactivation: number;
-        emailId: string;
-        hasStory: boolean;
-        img: string;    
-        name: string;    
-        onlineStatus: boolean;
-        password: string;
-        time: string;
-    };
-    participants:any[];    
-    // Add any other properties as needed
-  }
-
-  const gotoChatScreen = async (item: ContactItem) => {
+  const gotoChatScreen = async (item) => {  
     setListclickLoading(true);
-     
-    console.log('item val :',item)
+    
       
     let moreUserData1 = {
       chatId : user.id,
@@ -198,17 +135,18 @@ const ChatListScreen = () => {
       emotion:item.emotion
      }  
 
-     dispatch(resetcreateChat())
-     dispatch(resetcreateChatTable())
-     dispatch(resetfetchChat())
-
      //console.log(moreUserData1);
      setSelectchat(item.opponent);
      updateMoreUserData(moreUserData1);
-     updateMoreOpponentData(moreOpponentData1);  
-
+     updateMoreOpponentData(moreOpponentData1); 
+     
+   
+         
      await dispatch(createChatTable(moreUserData1, moreOpponentData1));
-     await dispatch(fetchChat(moreUserData1));   
+     await dispatch(fetchChat(moreUserData1));
+
+     
+     
      
   };
 
@@ -216,22 +154,28 @@ const ChatListScreen = () => {
    
     if (createChatTableLoading) {
 
-       console.log('fetchChatData :',fetchChatData);
+      console.log('createChatTableLoading ', createChatTableLoading)
       setListclickLoading(false);     
       
+      dispatch(resetcreateChat())
+     dispatch(resetcreateChatTable())
+     dispatch(resetfetchChat())
       
-      
-      console.log(createChatTableData);
+      console.log(createChatTabledata);
       //console.log(moreUserData);
 
-    navigation.navigate('ChatStack', {
-      chatUser: selectchat,   
-      loadfetchChatdata:fetchChatData,      
-      moreUserData:moreUserData,
-      moreOpponentData:moreOpponentData
-    });      
+    // navigation.navigate('ChatStack', {
+    //   chatUser: selectchat,   
+    //   loadfetchChatdata:fetchChatData,      
+    //   moreUserData:moreUserData,
+    //   moreOpponentData:moreOpponentData
+    // });      
   }   
 }, [dispatch, createChatTableLoading,fetchChatData]);
+
+
+
+
 
 
   const gotoContactScreen = () => {
@@ -247,12 +191,11 @@ const ChatListScreen = () => {
 
 
   useEffect(() => {
-    if (fetchChatListData && fetchChatListData.chatListDatas) {
-
-     // console.log('fetchChatListData :',fetchChatListData);
-
-      const mergedData = fetchChatListData.chatListDatas.map((chatItem) => {
-        const opponentItem = fetchChatListData.opponentDatas.find((opponent) => {
+    if (chatList) {
+      //console.log('my chatlist:', chatList);
+  
+      const mergedData = chatList.chatListDatas.map((chatItem) => {
+        const opponentItem = chatList.opponentDatas.find((opponent) => {
           return chatItem.chatId.includes(opponent.id);
         });
   
@@ -269,11 +212,11 @@ const ChatListScreen = () => {
   
       setChatListData(mergedData);
     }
-  }, [dispatch, fetchChatListData]);
+  }, [dispatch, chatList]);
   
 
     
-   if(fetchChatListLoading)
+   if(chatListLoading)
   {
     return (
       <LoadingScreen />

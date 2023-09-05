@@ -7,15 +7,16 @@ import { colors } from '../../Constants/colors';
 interface ContactListProps {
   item: {
     id: string;
-    username: string;
-    picture: any; // or specify the correct image type
+    name: string;
+    about:string;
+    img: any; // or specify the correct image type
     time: string;
     lastMessage: string;
     onlineStatus: boolean;
     hasStory: boolean;
     notification: number;
   };
-  gotoChatScreen: () => void;
+  gotoChatScreen: (item: ContactItem) => void;
 }
 
 const ContactList: FunctionComponent<ContactListProps> = ({ item, gotoChatScreen }) => {

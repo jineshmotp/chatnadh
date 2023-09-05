@@ -31,13 +31,9 @@ import {
 
  } from  './chatConstants'
 
-//########################################################################
 
-type User = {
-  id: string; 
-};
 // Async action creator using Redux Thunk
-export const getallContacts = (user: User) => async (dispatch: Dispatch) => {
+export const getallContacts = (user) => async (dispatch) => {
   dispatch({ type: CONTACT_LIST_REQUEST });
   try {
     const contactsRef = database().ref('/users/');
@@ -66,10 +62,8 @@ export const getallContacts = (user: User) => async (dispatch: Dispatch) => {
   }
 };
 
-//###########################################################################
 
-
-export const createChatTable = (moreUserData, moreOpponentData) => async (dispatch: Dispatch) => {
+export const createChatTable = (moreUserData, moreOpponentData) => async (dispatch) => {
   //console.log('createChatTable action started', moreUserData, moreOpponentData);
   dispatch({ type: CHAT_TABLE_REQUEST });
   try {
@@ -84,18 +78,17 @@ export const createChatTable = (moreUserData, moreOpponentData) => async (dispat
       .equalTo(moreOpponentData.chatId)
       .once('value');
 
-    if (!opponentSnapshot.exists()) {
-      //console.log('opponent if check works');
+    if (!opponentSnapshot.exists()) {     
       await database().ref('/chats/' + moreOpponentData.chatId).set(moreOpponentData);
     }
 
     if (!userSnapshot.exists()) {
-     // console.log('user if check works');
+      console.log('user if check works');
       await database().ref('/chats/' + moreUserData.chatId).set(moreUserData);
       dispatch({ type: CHAT_TABLE_SUCCESS, payload: null });
     } else {
-      //console.log('user else check works', moreUserData.chatId);
-      const fetchChatResult = await dispatch(fetchChat(moreUserData));
+      console.log('user else check works', moreUserData.chatId);
+      const fetchChatResult = dispatch(fetchChat(moreUserData));
       console.log('FetchChatResult : ',fetchChatResult); 
       dispatch({ type: CHAT_TABLE_SUCCESS, payload: fetchChatResult });
     }
@@ -104,7 +97,7 @@ export const createChatTable = (moreUserData, moreOpponentData) => async (dispat
   }
 };
 
-export const resetcreateChatTable = () => async (dispatch: Dispatch) => {
+export const resetcreateChatTable = () => async (dispatch) => {
 
   dispatch({ type: CHAT_TABLE_RESET });
 
@@ -114,7 +107,7 @@ export const resetcreateChatTable = () => async (dispatch: Dispatch) => {
 //######################################################################
 
 
-export const fetchChat = (moreUserData) => (dispatch: Dispatch) => {
+export const fetchChat = (moreUserData) => (dispatch) => {
   dispatch({ type: CHAT_FETCH_REQUEST });
 
   try {
@@ -136,7 +129,7 @@ export const fetchChat = (moreUserData) => (dispatch: Dispatch) => {
           return timestampA.localeCompare(timestampB);
         });
 
-        //console.log('fetchChat value:', messagesArray);
+        console.log('fetchChat value:', messagesArray);
 
         dispatch({ type: CHAT_FETCH_SUCCESS, payload: messagesArray });
       } else {
@@ -150,7 +143,7 @@ export const fetchChat = (moreUserData) => (dispatch: Dispatch) => {
 };
 
 
-export const resetfetchChat = () => async (dispatch: Dispatch) => {
+export const resetfetchChat = () => async (dispatch) => {
 
   dispatch({ type: CHAT_FETCH_RESET });
 
@@ -158,11 +151,11 @@ export const resetfetchChat = () => async (dispatch: Dispatch) => {
 
 //##################################################################
 
-export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChatData,moreOpponentMessageData) => async (dispatch: Dispatch) => {
+export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChatData,moreOpponentMessageData) => async (dispatch) => {
   dispatch({ type: CHAT_CREATE_REQUEST });
   
  
-  try {
+  try {    
 
     const userChatRef = database().ref('/chats/' + moreUserChatData.chatId);
     const userChatSnapshot = await userChatRef.once('value');
@@ -197,7 +190,7 @@ export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChat
 };
 
 
-export const resetcreateChat = () => async (dispatch: Dispatch) => {
+export const resetcreateChat = () => async (dispatch) => {
 
   dispatch({ type: CHAT_CREATE_RESET });
 
@@ -206,7 +199,7 @@ export const resetcreateChat = () => async (dispatch: Dispatch) => {
 //#########################################################################
 
 
-export const fetchChatList = (user) => async (dispatch: Dispatch) => {
+export const fetchChatList = (user) => async (dispatch) => {
   dispatch({ type: CHAT_LIST_REQUEST });
   try {
     const chatsRef = database().ref('/chats');

@@ -28,15 +28,14 @@ import {
  } from  './chatConstants'
 
  const initialState = {
-  chatcontacts: [],  
-  chatisLoading: false,
   
-  chaterror: null,
+  getallContactsData:[],
+  getallContactsLoading: false,  
+  getallContactserror: null,
 
+  createChatTableData: [],
   createChatTableLoading:false,
-  createChatTableerror:null,
-  createChatTabledata: [],
-
+  createChatTableerror:null, 
 
   createChatLoading:false,
   createChaterror:null,
@@ -45,55 +44,101 @@ import {
   fetchChatLoading:false,
   fetchChaterror:null,
 
-
-  chatList:[],
-  chatListLoading:false,
-  chatListerror:false,
-  chatbuttonLoading: false, 
+  fetchChatListData:[],
+  fetchChatListLoading:false,
+  fetchChatListerror:false,
+ 
 };
 
-export const getallContactsReducer = (state = initialState, action) => {
+
+type ContactActionTypes = {
+  type:
+    | typeof CONTACT_LIST_REQUEST
+    | typeof CONTACT_LIST_SUCCESS
+    | typeof CONTACT_LIST_FAIL
+    | typeof CONTACT_LIST_RESET;
+    payload: (string[] | null); // You should replace 'any' with the actual payload type
+};
+
+type ChatActionTypes =
+  | {
+      type:
+        | typeof CHAT_TABLE_REQUEST
+        | typeof CHAT_TABLE_SUCCESS
+        | typeof CHAT_TABLE_RESET
+        | typeof CHAT_TABLE_FAIL;
+        payload: (string[] | null); // Replace with actual payload type
+    }
+  | {
+      type:
+        | typeof CHAT_CREATE_REQUEST
+        | typeof CHAT_CREATE_SUCCESS
+        | typeof CHAT_CREATE_RESET
+        | typeof CHAT_CREATE_FAIL;
+    }
+  | {
+      type:
+        | typeof CHAT_FETCH_REQUEST
+        | typeof CHAT_FETCH_SUCCESS
+        | typeof CHAT_FETCH_RESET
+        | typeof CHAT_FETCH_FAIL;
+        payload: (string[] | null); // Replace with actual payload type
+    }
+  | {
+      type:
+        | typeof CHAT_LIST_REQUEST
+        | typeof CHAT_LIST_SUCCESS
+        | typeof CHAT_LIST_RESET
+        | typeof CHAT_LIST_FAIL;
+        payload: (string[] | null); // Replace with actual payload type
+    };
+
+
+
+
+
+export const getallContactsReducer = (state = initialState, action: ContactActionTypes) => {
   switch (action.type) {
     case CONTACT_LIST_REQUEST:
-      return { ...state, chatisLoading: true, chaterror: null };    
+      return { ...state, getallContactsLoading: true, getallContactserror: null };    
     case CONTACT_LIST_SUCCESS:       
-      return { ...state, chatcontacts: action.payload, chatisLoading: false, chaterror: null };
+      return { ...state, getallContactsData: action.payload, getallContactsLoading: false, getallContactserror: null };
     case CONTACT_LIST_FAIL:
-      return { ...state, chatcontacts:null, chatisLoading: false, chaterror: action.payload,  };
+      return { ...state, getallContactsData:null, getallContactsLoading: false, getallContactserror: action.payload,  };
     
     case CONTACT_LIST_RESET:
-      return { ...state, chatbuttonLoading:false, chatcontacts: null,chaterror: null, chatisLoading: false, };
+      return { ...state, getallContactsData: null,getallContactserror: null, getallContactsLoading: false, };
   
     default:
       return state;
   }
 };
 
-export const createChatTableReducer = (state = initialState, action) => {
+export const createChatTableReducer = (state = initialState,action: ChatActionTypes) => {
   switch (action.type) {
     case CHAT_TABLE_REQUEST:
-      return { ...state, createChatTableLoading: false, createChatTabledata:null,createChatTableerror: null };    
+      return { ...state, createChatTableLoading: false, createChatTableerror: null };    
     case CHAT_TABLE_SUCCESS:       
-      return { ...state, createChatTableLoading: true,createChatTabledata:action.payload, createChatTableerror: null };
+      return { ...state, createChatTableLoading: true,createChatTableData:action.payload, createChatTableerror: null };
     case CHAT_TABLE_FAIL:
-      return { ...state, createChatTableLoading: false,createChatTabledata:null, createChatTableerror: action.payload,  };
+      return { ...state, createChatTableLoading: false,createChatTableData:null, createChatTableerror: action.payload,  };
     
     case CHAT_TABLE_RESET:
-      return { ...state, createChatTableLoading: false,createChatTableerror: null  };
+      return { ...state, createChatTableLoading: false,createChatTableData:null,createChatTableerror: null  };
   
     default:
       return state;
   }
 };
 
-export const createChatReducer = (state = initialState, action) => {
+export const createChatReducer = ( state = initialState,action: ChatActionTypes) => {
   switch (action.type) {
     case CHAT_CREATE_REQUEST:
       return { ...state, createChatLoading: false, createChaterror: null };    
     case CHAT_CREATE_SUCCESS:       
       return { ...state, createChatLoading: true, createChaterror: null };
     case CHAT_CREATE_FAIL:
-      return { ...state, createChatLoading: false, createChaterror: action.payload,  };
+      return { ...state, createChatLoading: false, createChaterror: action.payload  };
     
     case CHAT_CREATE_RESET:
       return { ...state, createChatLoading: false,createChaterror: null  };
@@ -105,10 +150,10 @@ export const createChatReducer = (state = initialState, action) => {
 
 
 
-export const fetchChatReducer = (state = initialState, action) => {
+export const fetchChatReducer = ( state = initialState,action: ChatActionTypes) => {
   switch (action.type) {
     case CHAT_FETCH_REQUEST:
-      return { ...state, fetchChatLoading: true,fetchChatData:null, fetchChaterror: null };    
+      return { ...state, fetchChatLoading: true, fetchChaterror: null };    
     case CHAT_FETCH_SUCCESS:       
       return { ...state, fetchChatLoading: false, fetchChatData:action.payload, fetchChaterror: null };
     case CHAT_FETCH_FAIL:
@@ -123,17 +168,17 @@ export const fetchChatReducer = (state = initialState, action) => {
 };
 
 
-export const fetchChatListReducer = (state={}, action) => {
+export const fetchChatListReducer = ( state = initialState,action: ChatActionTypes) => {
   switch (action.type) {
     case CHAT_LIST_REQUEST:
-      return { ...state, chatListLoading: true, chatListerror: null };    
+      return { ...state, fetchChatListLoading: true, fetchChatListerror: null };    
     case CHAT_LIST_SUCCESS:       
-      return { ...state, chatList: action.payload, chatListLoading: false, chatListerror: null };
+      return { ...state, fetchChatListData: action.payload, fetchChatListLoading: false, fetchChatListerror: null };
     case CHAT_LIST_FAIL:
-      return { ...state, chatList:null, chatListLoading: false, chatListerror: action.payload,  };
+      return { ...state, fetchChatListData:null, fetchChatListLoading: false, fetchChatListerror: action.payload,  };
     
     case CHAT_LIST_RESET:
-      return { ...state, chatbuttonLoading:false, chatList: null,chatListerror: null, chatListLoading: false, };
+      return { ...state, fetchChatListData: null,fetchChatListerror: null, fetchChatListLoading: false, };
   
     default:
       return state;
