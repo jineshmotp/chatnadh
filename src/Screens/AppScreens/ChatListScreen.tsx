@@ -25,12 +25,10 @@ const ChatListScreen = () => {
 
   type ChatStackRouteProps = RouteProp<ParamListBase, 'ChatStack'>;
 
-  const [fadeAnim] = useState(new Animated.Value(0));
-  const [translateYAnim] = useState(new Animated.Value(0)); // Adjust the initial value
-  const [scrollOffset, setScrollOffset] = useState(0); // Track scroll offset
+  const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
+  const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
-  const [isContainerTopVisible, setContainerTopVisible] = useState(true); // State to manage containerTop visibility
-  
+
   const [chatListData, setChatListData] = useState([]); // Merged chat list data
   
 
@@ -178,7 +176,7 @@ const ChatListScreen = () => {
 
       navigation.reset({
         index: 0, // The index of the screen you want to navigate to in the stack
-        routes: [{ name: 'ContactStack' }], // The name of the route you want to navigate to
+        routes: [{ name: 'ContactScreen' }], // The name of the route you want to navigate to
       });     
   };
 
@@ -232,7 +230,7 @@ const ChatListScreen = () => {
      
       <Header openModal={openModal} gotoContactScreen={gotoContactScreen} chatsearch={true} labeltxt={user.name} pageidx={0}  />
 
-      <Animated.View style={styles.containerBottomContact}  >
+      <Animated.View style={styles.containerBottomContact} >
               
        <FlatList 
           data={chatListData}

@@ -23,13 +23,13 @@ const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({  gotoChatList
     keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}
   >
           <View style={styles.searchInputContainer} behavior="padding" keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}>
-            <TouchableOpacity style={styles.searchIconContainer} onPress={gotoChatListScreen}>
+            {/* <TouchableOpacity style={styles.searchIconContainer} onPress={gotoChatListScreen}>
               <Icon name="angle-left" size={iconSizeLR} color="white"  />              
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TextInput
               style={styles.searchInput}
-              placeholder="Search"
-              placeholderTextColor="white"  
+              placeholder="Type Contact name ...."
+              placeholderTextColor='gray' 
               onChangeText={onSearch}                
             />
 
