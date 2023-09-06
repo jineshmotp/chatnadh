@@ -6,10 +6,10 @@ const Stack = createNativeStackNavigator();
 
 const ChatStack = ({ route }) => {
 
-  const { chatUser,loadfetchChatdata, moreUserData, moreOpponentData } = route.params;
+  const { chatUser,moreUserData, moreOpponentData } = route.params;
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ChatScreen" component={ChatScreen} initialParams={{ chatUser,loadfetchChatdata, moreUserData, moreOpponentData }} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} initialParams={{ chatUser,moreUserData, moreOpponentData }} />
    
     </Stack.Navigator>
   );

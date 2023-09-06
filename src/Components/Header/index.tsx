@@ -145,7 +145,7 @@ const Header: React.FC<HeaderProps> = ({ openModal,gotoContactScreen,chatsearch,
           <View style={styles.iconContainer}>
         
           <TouchableOpacity style={styles.iconContainer} onPress={gotoContactScreen} >
-            <Icon name="search"  size={iconSize} color="white" />
+            <Icon name="users"  size={iconSize} color="white" />
           </TouchableOpacity>
         
           <TouchableOpacity onPress={openModal} style={[styles.iconContainer,{paddingLeft: wp('5%'),}]}>

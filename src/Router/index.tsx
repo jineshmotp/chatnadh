@@ -9,6 +9,8 @@ import AuthStack from './AuthStack';
 import SettingsStack from './SettingsStack'; 
 import AboutStack from './AboutStack'; 
 import ChatStack from './ChatStack';
+import ContactStack from './ContactStack';
+import ChatListStack from './ChatListStack';
 
 import { checkLoginStatus,initializeUserDataListener  } from '../Redux/userActions';
 import {resetfetchChat,resetcreateChat, resetcreateChatTable} from '../Redux/chatActions'
@@ -45,6 +47,8 @@ const Router = () => {
       {user ? (
         <Stack.Navigator headerMode="none">
           <Stack.Screen name="AppStack" component={AppStack}  options={{ headerShown: false }}/>
+          {/* <Stack.Screen name="ChatListStack" component={ChatListStack}  options={{ headerShown: false }}/>
+          <Stack.Screen name="ContactStack" component={ContactStack}  options={{ headerShown: false }}/> */}
           <Stack.Screen name="SettingsStack" component={SettingsStack}  options={{ headerShown: false }}/>
           <Stack.Screen name="AboutStack" component={AboutStack}  options={{ headerShown: false }} />
           <Stack.Screen name="ChatStack" component={ChatStack}  options={{ headerShown: false }} />

@@ -56,7 +56,7 @@ type Props = {
 };
 
 const ChatScreen: React.FC<Props> = ({ route }) => {
-  const { chatUser,loadfetchChatdata, moreUserData, moreOpponentData } = route.params;
+  const { chatUser,moreUserData, moreOpponentData } = route.params;
 
   const navigation = useNavigation();
 

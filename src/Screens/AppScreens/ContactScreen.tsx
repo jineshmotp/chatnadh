@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Animated, 
-  FlatList,
-} from 'react-native';
+import { Animated, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
 import ModelPopup from '../../Components/ModelPopup';
@@ -11,8 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import ContactList from '../../Components/ContactList';
 import ContactScreenHeader from '../../Components/ContactScreenHeader';
 
-import { getallContacts,createChatTable,fetchChat,
-  fetchChatList,resetfetchChat,resetcreateChat,resetfetchChatList,resetcreateChatTable
+import { getallContacts,createChatTable,fetchChat,resetfetchChat,resetcreateChat,resetfetchChatList,resetcreateChatTable
 } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
 
@@ -106,11 +102,7 @@ const ContactScreen = () => {
     getallContactsLoading: boolean;
     getallContactserror: string | null;
   };
-  fetchChat: {
-    fetchChatData: any[]; // Replace with the actual type
-    fetchChatLoading: boolean;
-    fetchChaterror: string | null;
-  };
+  
 }
 
 type ChatStackRouteProps = RouteProp<ParamListBase, 'ChatStack'>;
@@ -119,8 +111,6 @@ type ChatStackRouteProps = RouteProp<ParamListBase, 'ChatStack'>;
 const { user, isLoading, error } = useSelector((state: RootState) => state.userLogin);
 const { createChatTableData, createChatTableLoading, createChatTableerror } = useSelector((state: RootState) => state.createChatTable);
 const { getallContactsData, getallContactsLoading, getallContactserror } = useSelector((state: RootState) => state.getallContacts);
-const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: RootState) => state.fetchChat);
-  
 
 
 // Function to update moreUserData
@@ -138,8 +128,6 @@ const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: 
       ...newData
     }));
   };
-
-
 
 
   const closeModal = () => {
@@ -197,8 +185,7 @@ const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: 
     updateMoreUserData(moreUserData1);
     updateMoreOpponentData(moreOpponentData1);
   
-    await dispatch(createChatTable(moreUserData1, moreOpponentData1));
-    await dispatch(fetchChat(moreUserData1));
+    await dispatch(createChatTable(moreUserData1, moreOpponentData1));    
   };
 
 
@@ -208,15 +195,15 @@ const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: 
 
   useEffect(() => {
     const callContacts = async() => {
-      await dispatch(resetcreateChat());
-      await dispatch(resetcreateChatTable());
-      await dispatch(resetfetchChat());
-      await dispatch(resetfetchChatList());
+      // await dispatch(resetcreateChat());
+      // await dispatch(resetcreateChatTable());
+      // await dispatch(resetfetchChat());
+      // await dispatch(resetfetchChatList());
       await dispatch(getallContacts(user));
     };
     callContacts();    
 
-  }, [dispatch, user,navigation]);
+  }, [dispatch,user,navigation]);
 
 
   useEffect(() => {
@@ -229,23 +216,25 @@ const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: 
 
 
   useEffect(() => {
-    if (fetchChatData && !fetchChatLoading) {
-      setListclickLoading(false);
-      
-      //console.log('fetchChatData Contact Screen 1 :', fetchChatData);
-
-      console.log('fetchChatData Contact Screen 1');
+    if (createChatTableLoading) {
+      setListclickLoading(false);      
                   
        navigation.navigate('ChatStack', {
-        chatUser: selectchat,
-        loadfetchChatdata: createChatTableData,
+        chatUser: selectchat,       
         moreUserData: moreUserData,
         moreOpponentData: moreOpponentData
       } as ChatStackRouteProps);
 
     }
 
-  }, [fetchChatData,fetchChatLoading]);
+  }, [createChatTableLoading,moreUserData,moreOpponentData,selectchat]);
+
+  const gotoChatListScreen = () => {
+    navigation.reset({
+      index: 0, // The index of the screen you want to navigate to in the stack
+      routes: [{ name: 'ChatListStack' }], // The name of the route you want to navigate to
+    });
+  };
 
     
   useEffect(() => {
@@ -275,7 +264,7 @@ const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: 
     <BackgroundImage>
   
 
-<ContactScreenHeader onSearch={handleSearch} />
+<ContactScreenHeader gotoChatListScreen={gotoChatListScreen} onSearch={handleSearch} />
 
   
       <Animated.View

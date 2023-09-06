@@ -6,13 +6,15 @@ import { colors } from '../../Constants/colors';
 
 
 interface ContactScreenHeaderProps {
- 
+
   onSearch: (searchQuery: string) => void;
+  gotoChatListScreen: () => void;
+
 }
 
-const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({  onSearch }) => {
+const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({  gotoChatListScreen, onSearch  }) => {
   const iconSize = hp('3%');
-
+  const iconSizeLR = hp('5%');
  
   return (
     <KeyboardAvoidingView
@@ -21,8 +23,8 @@ const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({  onSearch }) 
     keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}
   >
           <View style={styles.searchInputContainer} behavior="padding" keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}>
-            <TouchableOpacity style={styles.searchIconContainer}>
-              <Icon name="search" size={iconSize} color="white" />
+            <TouchableOpacity style={styles.searchIconContainer} onPress={gotoChatListScreen}>
+              <Icon name="angle-left" size={iconSizeLR} color="white"  />              
             </TouchableOpacity>
             <TextInput
               style={styles.searchInput}
@@ -30,6 +32,10 @@ const ContactScreenHeader: React.FC<ContactScreenHeaderProps> = ({  onSearch }) 
               placeholderTextColor="white"  
               onChangeText={onSearch}                
             />
+
+           <TouchableOpacity style={styles.searchIconContainer}>
+              <Icon name="search" size={iconSize} color="white" />
+            </TouchableOpacity>
           </View>      
    
    </KeyboardAvoidingView >
