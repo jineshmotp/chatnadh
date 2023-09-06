@@ -11,7 +11,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import ContactList from '../../Components/ContactList';
 import ContactScreenHeader from '../../Components/ContactScreenHeader';
 
-import { getallContacts,createChatTable,fetchChat } from '../../Redux/chatActions';
+import { getallContacts,createChatTable,fetchChat,
+  fetchChatList,resetfetchChat,resetcreateChat,resetfetchChatList,resetcreateChatTable
+} from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
 
 import { RouteProp } from '@react-navigation/native';
@@ -206,11 +208,15 @@ const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: 
 
   useEffect(() => {
     const callContacts = async() => {
+      await dispatch(resetcreateChat());
+      await dispatch(resetcreateChatTable());
+      await dispatch(resetfetchChat());
+      await dispatch(resetfetchChatList());
       await dispatch(getallContacts(user));
     };
     callContacts();    
 
-  }, [dispatch, user]);
+  }, [dispatch, user,navigation]);
 
 
   useEffect(() => {
@@ -222,14 +228,14 @@ const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: 
   }, [searchQuery, getallContactsData]);
 
 
-
   useEffect(() => {
-    if (createChatTableLoading) {
+    if (fetchChatData && !fetchChatLoading) {
       setListclickLoading(false);
+      
+      //console.log('fetchChatData Contact Screen 1 :', fetchChatData);
 
-      console.log('fetchData :', fetchChatData);
-      console.log('selectchat :', selectchat);
-                
+      console.log('fetchChatData Contact Screen 1');
+                  
        navigation.navigate('ChatStack', {
         chatUser: selectchat,
         loadfetchChatdata: createChatTableData,
@@ -239,7 +245,7 @@ const { fetchChatData, fetchChatLoading, fetchChaterror } = useSelector((state: 
 
     }
 
-  }, [dispatch, createChatTableLoading,fetchChatData]);
+  }, [fetchChatData,fetchChatLoading]);
 
     
   useEffect(() => {

@@ -184,5 +184,3 @@ export const fetchChatListReducer = ( state = initialState,action: ChatActionTyp
       return state;
   }
 };
-
-

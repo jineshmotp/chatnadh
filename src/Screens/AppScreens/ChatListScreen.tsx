@@ -12,13 +12,20 @@ import ChatList from '../../Components/ChatList';
 
 import { useDispatch, useSelector } from 'react-redux'
 
-import { fetchChatList,resetfetchChat,resetcreateChat,createChatTable,fetchChat, resetcreateChatTable } from '../../Redux/chatActions';
+import { fetchChatList,resetfetchChat,resetcreateChat,resetfetchChatList,createChatTable,fetchChat, resetcreateChatTable } from '../../Redux/chatActions';
 import LoadingScreen from '../../Components/LoadingScreen';
+
+import { RouteProp } from '@react-navigation/native';
+import { ParamListBase } from '@react-navigation/routers';
+
+import { useFocusEffect } from '@react-navigation/native';
 
 const ChatListScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch<Dispatch>();
+
+  type ChatStackRouteProps = RouteProp<ParamListBase, 'ChatStack'>;
 
   const [fadeAnim] = useState(new Animated.Value(0));
   const [translateYAnim] = useState(new Animated.Value(0)); // Adjust the initial value
@@ -102,7 +109,7 @@ const ChatListScreen = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
-      // Reset the state variables when navigating away from ChatListScreen
+      // Reset all relevant state variables here
       setMoreUserData({
         chatId: "",
         participants: [],
@@ -119,8 +126,8 @@ const ChatListScreen = () => {
         notification: 0,
         emotion: ""
       });
+      // Reset any other state variables if needed
     });
-  
     return unsubscribe;
   }, [navigation]);
 
@@ -177,33 +184,32 @@ const ChatListScreen = () => {
 
   const gotoChatScreen = async (item: ContactItem) => {
     setListclickLoading(true);
-     
-    console.log('item val :',item)
+    setSelectchat(item.opponent);
+    
+    const participants: string[] = [user.id, item.opponent.id];
+    const chatIdFromUser = `${user.id}_${item.opponent.id}`;
+    const chatIdFromOpponent = `${item.opponent.id}_${user.id}`;
       
-    let moreUserData1 = {
-      chatId : user.id,
-      participants:item.participants,
+    const moreUserData1: Partial<typeof moreUserData> = {
+      chatId : chatIdFromUser,
+      participants: participants as string[],
       lastMessage: item.lastMessage,
       lastMessageTime: item.lastMessageTime,
       notification:item.notification,
       emotion:item.emotion
      }
 
-     let moreOpponentData1 = {
-      chatId : item.opponent.id,
-      participants:item.participants,
+     const moreOpponentData1: Partial<typeof moreOpponentData> = {
+      chatId : chatIdFromOpponent,
+      participants: participants as string[],
       lastMessage: item.lastMessage,
       lastMessageTime: item.lastMessageTime,
       notification:item.notification,
       emotion:item.emotion
      }  
 
-     dispatch(resetcreateChat())
-     dispatch(resetcreateChatTable())
-     dispatch(resetfetchChat())
-
      //console.log(moreUserData1);
-     setSelectchat(item.opponent);
+     
      updateMoreUserData(moreUserData1);
      updateMoreOpponentData(moreOpponentData1);  
 
@@ -213,37 +219,42 @@ const ChatListScreen = () => {
   };
 
   useEffect(() => {
-   
-    if (createChatTableLoading) {
+    
+    if (fetchChatData && fetchChatData.length > 0 && !fetchChatLoading) {
+      setListclickLoading(false);
 
-       console.log('fetchChatData :',fetchChatData);
-      setListclickLoading(false);     
-      
-      
-      
-      console.log(createChatTableData);
-      //console.log(moreUserData);
+      console.log('fetchChatData ChatList Screen 1 :', fetchChatData);
+      console.log('fetchChatLoading ChatList Screen 1 :', fetchChatLoading);
 
-    navigation.navigate('ChatStack', {
-      chatUser: selectchat,   
-      loadfetchChatdata:fetchChatData,      
-      moreUserData:moreUserData,
-      moreOpponentData:moreOpponentData
-    });      
-  }   
-}, [dispatch, createChatTableLoading,fetchChatData]);
+      console.log(selectchat);
+                
+       navigation.navigate('ChatStack', {
+        chatUser: selectchat,
+        loadfetchChatdata: fetchChatData,
+        moreUserData: moreUserData,
+        moreOpponentData: moreOpponentData
+      } as ChatStackRouteProps);
+
+    }
+
+  }, [fetchChatData,fetchChatLoading]);
 
 
   const gotoContactScreen = () => {
     navigation.navigate('ContactScreen');
   };
 
-  useEffect(() => { 
-    const callchatList = async() => {
-      await dispatch(fetchChatList(user));   
+  useEffect(() => {
+    const callchatList = async () => {
+      await dispatch(resetcreateChat());
+      await dispatch(resetcreateChatTable());
+      await dispatch(resetfetchChat());
+      await dispatch(resetfetchChatList());
+      await dispatch(fetchChatList(user));
     };
-    callchatList();        
-  }, [dispatch,user]);
+    callchatList();
+  }, [dispatch, user, navigation]);
+
 
 
   useEffect(() => {
@@ -269,7 +280,7 @@ const ChatListScreen = () => {
   
       setChatListData(mergedData);
     }
-  }, [dispatch, fetchChatListData]);
+  }, [fetchChatListData]);
   
 
     

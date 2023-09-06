@@ -23,10 +23,10 @@ const Router = () => {
   const { user, isLoading } = userLogin;
 
   useEffect(() => {
-    dispatch(checkLoginStatus())
-    dispatch(resetcreateChat())
-    dispatch(resetcreateChatTable())
-    dispatch(resetfetchChat())
+    // dispatch(checkLoginStatus())
+    // dispatch(resetcreateChat())
+    // dispatch(resetcreateChatTable())
+    // dispatch(resetfetchChat())
 
     if (user) {
       dispatch(initializeUserDataListener()); // Set up the listener if user is logged in

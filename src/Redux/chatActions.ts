@@ -95,9 +95,9 @@ export const createChatTable = (moreUserData, moreOpponentData) => async (dispat
       dispatch({ type: CHAT_TABLE_SUCCESS, payload: null });
     } else {
       //console.log('user else check works', moreUserData.chatId);
-      const fetchChatResult = await dispatch(fetchChat(moreUserData));
-      console.log('FetchChatResult : ',fetchChatResult); 
-      dispatch({ type: CHAT_TABLE_SUCCESS, payload: fetchChatResult });
+      //const fetchChatResult = await dispatch(fetchChat(moreUserData));
+      //console.log('FetchChatResult : ',fetchChatResult); 
+      dispatch({ type: CHAT_TABLE_SUCCESS, payload: null });
     }
   } catch (error) {
     dispatch({ type: CHAT_TABLE_FAIL, payload: error.message });
@@ -256,4 +256,11 @@ export const fetchChatList = (user) => async (dispatch: Dispatch) => {
   } catch (error) {
     dispatch({ type: CHAT_LIST_FAIL, payload: error.message });
   }
+};
+
+
+export const resetfetchChatList = () => async (dispatch: Dispatch) => {
+
+  dispatch({ type:  CHAT_LIST_RESET });
+
 };

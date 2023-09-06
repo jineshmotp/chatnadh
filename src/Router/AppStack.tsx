@@ -6,9 +6,26 @@ import TabBarItem from '../Components/TabBarItem';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../Constants/colors';
 
+import { fetchChatList,resetfetchChat,resetcreateChat,resetfetchChatList, resetcreateChatTable } from '../Redux/chatActions';
+import { useDispatch, useSelector } from 'react-redux'
+
+
+
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => {
+
+  const dispatch = useDispatch<Dispatch>();
+
+  const resetFunction = () => {
+    console.log('reset function calling')
+
+     dispatch(resetcreateChat())
+     dispatch(resetcreateChatTable())
+     dispatch(resetfetchChat())  
+     dispatch(resetfetchChatList()) 
+   
+  };
   
   return (
     <Tab.Navigator
@@ -27,7 +44,6 @@ const AppStack = () => {
       }}
     >
 
-    
 
 <Tab.Screen
         name="ChatListScreen"
@@ -39,11 +55,16 @@ const AppStack = () => {
               iconName="chat"
               label="Chats"
               isFocused={props.accessibilityState?.selected ?? false}
-              onPress={() => navigation.navigate(route.name)}
+              onPress={() => {
+                // Call your reset function when the tab is pressed
+                resetFunction();
+                navigation.navigate(route.name);
+              }}
             />
           ),
         })}
       />
+
 
 
 <Tab.Screen
@@ -56,11 +77,20 @@ const AppStack = () => {
               iconName="contact"
               label="Contacts"
               isFocused={props.accessibilityState?.selected ?? false}
-              onPress={() => navigation.navigate(route.name)}
+              onPress={() => {
+                // Call your reset function when the tab is pressed
+                resetFunction();
+                navigation.navigate(route.name);
+              }}
             />
           ),
         })}
       />
+    
+
+   
+
+
 
 
     </Tab.Navigator>

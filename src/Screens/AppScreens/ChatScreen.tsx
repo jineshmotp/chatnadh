@@ -35,6 +35,8 @@ import { resetcreateChatTable, createChat, fetchChat,resetcreateChat,resetfetchC
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
+import { useFocusEffect } from '@react-navigation/native';
+
 
 type RootStackParamList = {
   ChatStack: {
@@ -59,6 +61,10 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation();
 
   const [messages, setMessages] = useState([]);
+  const [chatUsers, setChatUser] = useState(chatUser);
+  const [moreUserDatas, setMoreUserDatas] = useState(moreUserData);
+  const [moreOpponentDatas, setMoreOpponentDatas] = useState(moreOpponentData);
+
   const [inputMessage, setInputMessage] = useState('');
   const [faceemotion, setFaceemotion] = useState('happiness');
   const scrollViewRef = useRef();
@@ -68,27 +74,25 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   const { user, isLoading, error } = userLogin;
   const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector((state) => state.fetchChat);
   
-
- 
   useEffect(() => {
-    dispatch(resetcreateChatTable());
-    dispatch(resetfetchChat());
-      dispatch(resetcreateChat());
-  
-     //console.log(loadfetchChatdata)  
-    if (loadfetchChatdata != null) 
+
+    setChatUser(chatUser);
+    setMoreUserDatas(moreUserData);
+    setMoreOpponentDatas(moreOpponentData);
+   
+  }, [chatUser,moreUserData,moreOpponentData]);
+
+
+
+
+  useEffect(() => {
+    if(chatUsers && moreUserDatas && moreOpponentDatas)
     {
-      console.log('if')
-      setMessages(loadfetchChatdata);
-      scrollToBottom();
-    } else 
-    {   
-      console.log(chatUser.name)  
-      //console.log(moreUserData)  
-      dispatch(fetchChat(moreUserData));
-      scrollToBottom();
-    }
-  }, [dispatch, moreUserData, loadfetchChatdata,chatUser]);
+      //console.log(chatUsers.name);
+      dispatch(resetcreateChatTable());
+      dispatch(fetchChat(moreUserDatas));
+    }    
+  }, [dispatch,chatUsers,moreUserDatas,moreOpponentDatas]);
 
 
   useEffect(() => {
@@ -100,6 +104,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     }
   }, [dispatch, fetchChatData]);
 
+  
   const scrollToBottom = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: false });
@@ -111,7 +116,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
 
     const newMessage = {
       messageId: uuid.v4(),
-      chatId: moreUserData.chatId,
+      chatId: moreUserDatas.chatId,
       senderId: user.id,
       content: inputMessage,
       timestamp: new Date().toISOString(),
@@ -120,17 +125,17 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     };
 
     let moreUserChatData = {
-      chatId: moreUserData.chatId,
-      participants: moreUserData.participants,
+      chatId: moreUserDatas.chatId,
+      participants: moreUserDatas.participants,
       lastMessage: inputMessage,
       lastMessageTime: new Date(),
-      notification: moreUserData.notification,
+      notification: moreUserDatas.notification,
       emotion: faceemotion,
     };
 
     let moreUserMessageData = {
       messageId: uuid.v4(),
-      chatId: moreUserData.chatId,
+      chatId: moreUserDatas.chatId,
       senderId: user.id,
       content: inputMessage,
       timestamp: new Date().toISOString(),
@@ -139,17 +144,17 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     };
 
     let moreOpponentChatData = {
-      chatId: moreOpponentData.chatId,
-      participants: moreUserData.participants,
+      chatId: moreOpponentDatas.chatId,
+      participants: moreUserDatas.participants,
       lastMessage: inputMessage,
       lastMessageTime: new Date(),
-      notification: moreUserData.notification + 1,
+      notification: moreUserDatas.notification + 1,
       emotion: faceemotion,
     };
 
     let moreOpponentMessageData = {
       messageId: uuid.v4(),
-      chatId: moreOpponentData.chatId,
+      chatId: moreOpponentDatas.chatId,
       senderId: user.id,
       content: inputMessage,
       timestamp: new Date().toISOString(),
@@ -235,10 +240,10 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     <BackgroundImage>
       <Header
         
-        labeltxt={chatUser.name}
-        onlinestatus={chatUser.onlineStatus}
+        labeltxt={chatUsers.name}
+        onlinestatus={chatUsers.onlineStatus}
         pageidx={3}
-        chatuserimg={chatUser.img}
+        chatuserimg={chatUsers.img}
       />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
