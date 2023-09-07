@@ -1,5 +1,4 @@
-// src/redux-reducer/userReducer.ts
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// src/Redux/userReducer.ts
 import { 
   USER_LOGIN_REQUEST, 
   USER_LOGIN_SUCCESS, 
@@ -18,15 +17,26 @@ import {
   USER_LOGOUT_REQUEST,
   USER_LOGOUT_SUCCESS,
   USER_LOGOUT_FAIL,
-  USER_LOGOUT
+  USER_LOGOUT,
+
+  USER_UPDATE_ONLINE_STATUS
 
 } from './userConstants';
 
-const initialState = {
+interface UserState {
+  user: User | null;
+  isLoading: boolean;
+  buttonLoading: boolean;
+  error: string | null;
+  isOnline: boolean; // Add this field
+}
+
+const initialState: UserState = {
   user: null,
   isLoading: false,
-  buttonLoading:false,
+  buttonLoading: false,
   error: null,
+  isOnline: false, 
 };
 
 export const userLoginReducer = (state = initialState, action) => {
@@ -77,3 +87,14 @@ export const userRegisterReducer = (state = { }, action) => {
           return state  
   }
 }
+
+// export const userLoginStatusReducer = (state = { }, action) => {
+
+//   switch (action.type){
+//     case USER_UPDATE_ONLINE_STATUS:
+//         return { isOnline:action.payload}
+
+//       }
+
+
+// }

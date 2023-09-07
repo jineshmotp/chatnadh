@@ -1,4 +1,4 @@
-// src/redux-reducer/userActions.ts
+// src/Redux/userActions.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import database from '@react-native-firebase/database';
 
@@ -20,6 +20,8 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_RESET,
+
+  USER_UPDATE_ONLINE_STATUS
 
 } from './userConstants';
 import { auth } from '../config/firebase';
@@ -151,4 +153,16 @@ export const resetdata = () => async (dispatch) => {
   dispatch({ type: USER_REGISTER_RESET });
 
 };
+
+
+//############################################
+
+
+// export const userLoginStatus = (isOnline: boolean) => async (dispatch) => {
+
+//   // update online status in user table
+
+//   dispatch({ type: USER_UPDATE_ONLINE_STATUS, payload: isOnline });
+
+// };
 

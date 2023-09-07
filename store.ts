@@ -6,6 +6,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   userLoginReducer,
   userRegisterReducer,
+  //userLoginStatusReducer,
   //userLogoutReducer
 } from './src/Redux/userReducer';
 
@@ -21,18 +22,15 @@ import {
 const rootReducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
+  //userLoginStatus:userLoginStatusReducer,
+
   getallContacts:getallContactsReducer,
 
   createChatTable:createChatTableReducer,
-  createChat:createChatReducer,
-  
+  createChat:createChatReducer,  
   
   fetchChatLists :fetchChatListReducer,
-  fetchChat:fetchChatReducer,
-
-  
-
-  
+  fetchChat:fetchChatReducer,   
   // other reducers...
 });
 
