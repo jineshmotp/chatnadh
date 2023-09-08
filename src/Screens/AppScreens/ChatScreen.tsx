@@ -79,6 +79,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     setChatUser(chatUser);
     setMoreUserDatas(moreUserData);
     setMoreOpponentDatas(moreOpponentData);
+    scrollToBottom();
    
   }, [chatUser,moreUserData,moreOpponentData]);
 
@@ -91,6 +92,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       //console.log(chatUsers.name);
       dispatch(resetcreateChatTable());
       dispatch(fetchChat(moreUserDatas));
+      scrollToBottom();
     }    
   }, [dispatch,chatUsers,moreUserDatas,moreOpponentDatas]);
 

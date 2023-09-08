@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { AppState } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoadingScreen from '../Components/LoadingScreen';
@@ -12,7 +13,7 @@ import ChatStack from './ChatStack';
 import ContactStack from './ContactStack';
 import ChatListStack from './ChatListStack';
 
-import { checkLoginStatus,initializeUserDataListener,userLoginStatus  } from '../Redux/userActions';
+import { checkLoginStatus,initializeUserDataListener,updateOnlineStatus  } from '../Redux/userActions';
 import {resetfetchChat,resetcreateChat, resetcreateChatTable} from '../Redux/chatActions'
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,14 +25,33 @@ const Router = () => {
   const userLogin = useSelector(state => state.userLogin);
   const { user, isLoading } = userLogin;
 
-  useEffect(() => {
-     dispatch(checkLoginStatus())
-    
+  useEffect(() => {   
     if (user) {
       dispatch(initializeUserDataListener()); // Set up the listener if user is logged in
     }
 
   }, [dispatch]);
+
+
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'active') {
+        //dispatch(updateOnlineStatus(true)); // App is active, so user is considered online
+         console.log('active')
+      } else {
+        //dispatch(updateOnlineStatus(false)); // App is in the background, so user is considered offline
+        console.log('not active')
+      }
+    };
+    AppState.addEventListener('change', handleAppStateChange);
+  
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, [dispatch]);
+
+
 
   if (isLoading) {
     return <LoadingScreen />;

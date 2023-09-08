@@ -91,7 +91,7 @@ const LoginScreen = () => {
       } catch (catchError) { // Rename the variable here
         // Display the error message from the Redux state
         Toast.showWithGravity(
-          error.message, // Access the error message directly from the Redux state
+          catchError.message, // Access the error message directly from the Redux state
           Toast.LONG,
           Toast.BOTTOM
         );
@@ -121,11 +121,21 @@ const LoginScreen = () => {
 
   const buttonloadchange = async() =>
   {  
+    let erval =''
+   
     if(error != null)
     {
+      if(error == 'Cannot convert null value to object')
+      {
+        erval = 'User not found'
+      }
+      else
+      {
+        erval = error
+      }
       console.log(error);
         Toast.showWithGravity(
-          error, 
+          erval, 
           Toast.LONG,
           Toast.BOTTOM
         );

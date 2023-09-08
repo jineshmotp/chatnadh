@@ -209,7 +209,7 @@ export const resetcreateChat = () => async (dispatch: Dispatch) => {
 export const fetchChatList = (user) => async (dispatch: Dispatch) => {
   dispatch({ type: CHAT_LIST_REQUEST });
   try {
-    const chatsRef = database().ref('/chats');
+    const chatsRef = database().ref('/chats/');
 
     // Set up a listener for real-time data updates
     chatsRef

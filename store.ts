@@ -6,7 +6,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   userLoginReducer,
   userRegisterReducer,
-  //userLoginStatusReducer,
+  userLoginStatusReducer,
   //userLogoutReducer
 } from './src/Redux/userReducer';
 

@@ -110,7 +110,7 @@ const RegisterScreen = () => {
           // time: '',
           notification: 0,
           hasStory: false,
-          onlineStatus: true,
+          onlineStatus: false,
           accountactivation: timestamp, // Store the timestamp instead of the Date object
           img: "https://t3.ftcdn.net/jpg/00/77/33/88/360_F_77338842_r1TSwo2urwuwEm8n03uCocyg1NkPgoFN.jpg"
         };

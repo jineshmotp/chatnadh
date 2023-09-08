@@ -194,11 +194,7 @@ const { getallContactsData, getallContactsLoading, getallContactserror } = useSe
   };
 
   useEffect(() => {
-    const callContacts = async() => {
-      // await dispatch(resetcreateChat());
-      // await dispatch(resetcreateChatTable());
-      // await dispatch(resetfetchChat());
-      // await dispatch(resetfetchChatList());
+    const callContacts = async() => {     
       await dispatch(getallContacts(user));
     };
     callContacts();    

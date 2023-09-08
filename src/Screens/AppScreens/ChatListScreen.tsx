@@ -29,7 +29,7 @@ const ChatListScreen = () => {
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
   const [isModalVisible, setModalVisible] = useState(false); // State to manage modal visibility
 
-  const [chatListData, setChatListData] = useState([]); // Merged chat list data
+  const [chatListData, setChatListData] = useState<ContactItem[]>([]); // Merged chat list data
   
 
   interface RootState {
@@ -181,15 +181,11 @@ const ChatListScreen = () => {
   };
 
   useEffect(() => {
-    const callchatList = async () => {
-      await dispatch(resetcreateChat());
-      await dispatch(resetcreateChatTable());
-      await dispatch(resetfetchChat());
-      await dispatch(resetfetchChatList());
+    const callchatList = async () => {     
       await dispatch(fetchChatList(user));
     };
     callchatList();
-  }, [dispatch, user]);
+  }, [dispatch,user,navigation]);
 
 
 
@@ -214,7 +210,7 @@ const ChatListScreen = () => {
   
       setChatListData(mergedData);
     }
-  }, [fetchChatListData]);
+  }, [fetchChatListData,user]);
   
 
     

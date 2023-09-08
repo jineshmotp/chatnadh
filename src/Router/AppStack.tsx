@@ -18,8 +18,7 @@ const AppStack = () => {
   const dispatch = useDispatch<Dispatch>();
 
   const resetFunction = () => {
-    console.log('reset function calling')
-
+   
      dispatch(resetcreateChat())
      dispatch(resetcreateChatTable())
      dispatch(resetfetchChat())  

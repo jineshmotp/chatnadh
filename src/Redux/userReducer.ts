@@ -55,7 +55,8 @@ export const userLoginReducer = (state = initialState, action) => {
         return { ...state, buttonLoading:false  };
       
     
-    
+    case USER_UPDATE_ONLINE_STATUS:
+        return { ...state, isOnline: action.payload}
     
     case USER_LOGOUT_REQUEST:      
       return { ...state, isLoading: true };
@@ -88,13 +89,3 @@ export const userRegisterReducer = (state = { }, action) => {
   }
 }
 
-// export const userLoginStatusReducer = (state = { }, action) => {
-
-//   switch (action.type){
-//     case USER_UPDATE_ONLINE_STATUS:
-//         return { isOnline:action.payload}
-
-//       }
-
-
-// }

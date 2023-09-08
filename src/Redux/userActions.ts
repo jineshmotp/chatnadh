@@ -38,7 +38,6 @@ export const initializeUserDataListener = () => async (dispatch, getState) => {
     userRef.on('value', (snapshot) => {
       const userData = snapshot.val();
       dispatch({ type: 'USER_DATA_UPDATED', payload: userData });
-
       // Save the updated data to AsyncStorage
       AsyncStorage.setItem('user', JSON.stringify(userData));
     });
@@ -47,6 +46,29 @@ export const initializeUserDataListener = () => async (dispatch, getState) => {
     return () => userRef.off();
   }
 };
+
+//#########################################################
+
+
+export const updateOnlineStatus = (isOnline: boolean) => async (dispatch, getState) => {
+   
+  console.log('updateOnlineStatus');
+  
+  const user = getState().userLogin.user;
+  if (user) {
+    try {
+      console.log('updateOnlineStatus');
+      await database().ref(`/users/${user.id}`).update({ onlineStatus: isOnline });
+
+      // Dispatch the action to update the store
+      dispatch({ type: USER_UPDATE_ONLINE_STATUS, payload: isOnline });
+    } catch (error) {
+      console.error('Error updating online status:', error);
+    }
+  }
+};
+
+//###############################################################
 
 export const login = (data) => async (dispatch) => {
   
@@ -58,21 +80,26 @@ export const login = (data) => async (dispatch) => {
       .once('value');
 
     const userArray = snapshot.val();
-    dispatch({ type: USER_LOGIN_REQUEST });
-    
-
+   
     const userId = Object.keys(userArray)[0];
     const user = userArray[userId];
 
     if (!userArray) {
       throw new Error('User not found');
-    }
+          }
     if (user.password !== data.password) 
     {
-      throw new Error('Invalid password');
+      throw new Error('Invalid password');     
     }
+   
+
+    await database().ref(`/users/${user.id}`).update({ onlineStatus: true });
+    await dispatch({ type: USER_UPDATE_ONLINE_STATUS, payload: true });
+   
+    await dispatch({ type: USER_LOGIN_REQUEST });
         
     await AsyncStorage.setItem('user', JSON.stringify(user));
+    
     dispatch({ type: USER_LOGIN_SUCCESS, payload: user });
     dispatch(initializeUserDataListener());
   } catch (error) {
@@ -93,19 +120,24 @@ export const loginbuttonreset = () => async (dispatch) => {
 
 };
 
+//######################## LOGOUT 
 
 export const logout = () => async (dispatch) => {
-  //dispatch({ type: USER_LOGOUT_REQUEST });
-  console.log('USER_LOGOUT_REQUEST');
+  
   try {
+   
+    
+    await dispatch(updateOnlineStatus(false)); 
     await AsyncStorage.removeItem('user');
-    //dispatch({ type: USER_LOGOUT_SUCCESS });
+     
     dispatch({ type: USER_LOGOUT });
     return Promise.resolve(); // Resolve the promise if logout is successful
   } catch (error) {
     return Promise.reject(error); // Reject the promise if logout fails
   }
 };
+
+//#################################################################
 
 export const checkLoginStatus = () => async (dispatch) => { // Wrap the action creator in an async function
   try {
@@ -122,6 +154,8 @@ export const checkLoginStatus = () => async (dispatch) => { // Wrap the action c
     throw error;
   }
 };
+
+//#############################################################
 
 export const register = (data) => async (dispatch) => {
   try {
@@ -158,11 +192,5 @@ export const resetdata = () => async (dispatch) => {
 //############################################
 
 
-// export const userLoginStatus = (isOnline: boolean) => async (dispatch) => {
 
-//   // update online status in user table
-
-//   dispatch({ type: USER_UPDATE_ONLINE_STATUS, payload: isOnline });
-
-// };
 
