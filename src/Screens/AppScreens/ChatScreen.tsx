@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
@@ -36,6 +37,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { useFocusEffect } from '@react-navigation/native';
+import ChatInput from '../../Components/ChatInput';
 
 
 type RootStackParamList = {
@@ -111,6 +113,15 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: false });
     }
+  };
+
+  const onChangeMessageText = () => {
+   console.log('haii');
+  };
+
+  const onAttachmentSend = () => {
+    console.log('attachment')
+    
   };
 
   const onSend = () => {
@@ -269,20 +280,31 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
                       </ScrollView>
 
             </View>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Type a message..."
-                  value={inputMessage}
-                  onChangeText={(text) => setInputMessage(text)}
-                  onFocus={() => setKeyboardVisible(false)}
-                />
-                <TouchableOpacity onPress={onSend} style={[styles.sendButton,{backgroundColor:colors.transparent}]}>
-                  <Icon name="send" size={wp('5%')} color={colors.white} />
-                </TouchableOpacity>
-              
+
+
+            <ChatInput onAttachmentSend={onAttachmentSend} onSend={onSend} onChangeMessageText={onChangeMessageText} />
+        
+          {/* <View style={styles.inputWraper}>
+            <TextInput
+              style={styles.input}
+              placeholder="Type a message..."
+              value={inputMessage}
+              onChangeText={(text) => setInputMessage(text)}
+              onFocus={() => setKeyboardVisible(false)}
+            />
+
+             <TouchableOpacity onPress={onAttachmentSend} style={styles.attachmentButton}>
+              <MaterialIcons name="attach-file" size={wp('5%')} color={colors.white} />
+            </TouchableOpacity>
+
             </View>
 
+         
+          <TouchableOpacity onPress={onSend} style={[styles.sendButton, { backgroundColor: colors.transparent }]}>
+            <Icon name="send" size={wp('5%')} color={colors.white} />
+          </TouchableOpacity> */}
+        
+       
 
 
       </KeyboardAvoidingView>

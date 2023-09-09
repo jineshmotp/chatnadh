@@ -174,6 +174,12 @@ inputContainer: {
   paddingTop: hp('1%'),
   backgroundColor:colors.transparent
 },
+
+inputWraper: { 
+  flexDirection: 'row',
+ 
+},
+
 input: {
   flex: 1,
   height: hp('5%'),
@@ -190,6 +196,12 @@ sendButton: {
   paddingHorizontal: wp('3%'),
   paddingVertical: hp('1%'),
   borderRadius: wp('3%'),
+},
+attachmentButton: {
+  backgroundColor: colors.primary,
+  paddingHorizontal: wp('1%'),
+  paddingVertical: hp('1%'),
+  borderRadius: wp('1%'),
 },
 timestampText: {
   color: 'gray',
