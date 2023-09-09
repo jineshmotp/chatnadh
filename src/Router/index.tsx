@@ -43,19 +43,30 @@ const Router = () => {
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
       if (nextAppState === 'active') {
-        //dispatch(updateOnlineStatus(true)); // App is active, so user is considered online
-         console.log('active')
+        // App is active, so user is considered online
+        console.log('active');
       } else {
-        //dispatch(updateOnlineStatus(false)); // App is in the background, so user is considered offline
-        console.log('not active')
+        // App is in the background, so user is considered offline
+        console.log('not active');
       }
     };
+
+    // Add the event listener
     AppState.addEventListener('change', handleAppStateChange);
-  
+
+    // Set up a timer to call a function every minute
+    const intervalId = setInterval(() => {
+      // Call your function here
+      console.log('Function called every hour');
+    }, 3600); // 60000 milliseconds = 1 minute
+
+    // Clean up the event listener and timer when the component unmounts
     return () => {
       AppState.removeEventListener('change', handleAppStateChange);
+      clearInterval(intervalId);
     };
-  }, [dispatch]);
+  }, []);
+
 
 
 
