@@ -22,7 +22,9 @@ import {
   CHAT_LIST_REQUEST,
   CHAT_LIST_SUCCESS,
   CHAT_LIST_RESET,
-  CHAT_LIST_FAIL
+  CHAT_LIST_FAIL,
+
+  UPDATE_OPPONENT_DATA
 
 
  } from  './chatConstants'
@@ -88,6 +90,7 @@ type ChatActionTypes =
       type:
         | typeof CHAT_LIST_REQUEST
         | typeof CHAT_LIST_SUCCESS
+        | typeof UPDATE_OPPONENT_DATA
         | typeof CHAT_LIST_RESET
         | typeof CHAT_LIST_FAIL;
         payload: (string[] | null); // Replace with actual payload type
@@ -172,8 +175,30 @@ export const fetchChatListReducer = ( state = initialState,action: ChatActionTyp
   switch (action.type) {
     case CHAT_LIST_REQUEST:
       return { ...state, fetchChatListLoading: true, fetchChatListerror: null };    
-    case CHAT_LIST_SUCCESS:       
+    case CHAT_LIST_SUCCESS:         
       return { ...state, fetchChatListData: action.payload, fetchChatListLoading: false, fetchChatListerror: null };
+    
+      case UPDATE_OPPONENT_DATA:
+        // Check if fetchChatListData is not null before updating opponent data
+        if (state.fetchChatListData && state.fetchChatListData.opponentDatas) {
+          // Update opponent data based on opponent ID
+          const updatedOpponentDatas = state.fetchChatListData.opponentDatas.map((opponentData) => {
+            if (opponentData.id === action.payload.opponentData.id) {
+              return action.payload.opponentData;
+            }
+            return opponentData;
+          });
+  
+          // Return updated state
+          return {
+            ...state,
+            fetchChatListData: {
+              ...state.fetchChatListData,
+              opponentDatas: updatedOpponentDatas,
+            },
+          };
+        };
+
     case CHAT_LIST_FAIL:
       return { ...state, fetchChatListData:null, fetchChatListLoading: false, fetchChatListerror: action.payload,  };
     

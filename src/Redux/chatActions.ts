@@ -29,6 +29,8 @@ import {
   CHAT_LIST_RESET,
   CHAT_LIST_FAIL,
 
+  UPDATE_OPPONENT_DATA
+
  } from  './chatConstants'
 
 //########################################################################
@@ -235,16 +237,10 @@ export const fetchChatList = (user) => async (dispatch: Dispatch) => {
           return chatIdParts.find((id) => id !== user.id);
         });
 
-        // Fetch opponent details from the user table based on opponent IDs
-        const opponentDatas = await Promise.all(
-          opponentIds.map(async (opponentId) => {
-            const opponentSnapshot = await database()
-              .ref(`/users/${opponentId}`)
-              .once('value');
-            return opponentSnapshot.val();
-          })
-        );
-
+        // Here, you can call the real-time listener for opponent data
+        const opponentDatas = await fetchOpponentDataRealtime(opponentIds, dispatch);
+        
+        console.log('updated opponent name : ',opponentDatas[0].name)
         dispatch({
           type: CHAT_LIST_SUCCESS,
           payload: { chatListDatas, opponentDatas },
@@ -257,6 +253,36 @@ export const fetchChatList = (user) => async (dispatch: Dispatch) => {
     dispatch({ type: CHAT_LIST_FAIL, payload: error.message });
   }
 };
+
+// Function to fetch opponent data with real-time updates
+const fetchOpponentDataRealtime = async (opponentIds, dispatch) => {
+  const opponentDatas = await Promise.all(
+    opponentIds.map(async (opponentId) => {
+      const opponentRef = database().ref(`/users/${opponentId}`);
+
+      // Set up a listener for real-time data updates on the opponent user
+      opponentRef.on('value', (opponentSnapshot) => {
+        const opponentData = opponentSnapshot.val();
+        console.log('Received new data for opponent :',opponentData.name);
+
+        // Handle the updated opponent data, e.g., dispatch an action to update the state
+        dispatch({
+          type: UPDATE_OPPONENT_DATA,
+          payload: { opponentData },
+        });
+      });
+
+      // Fetch the initial data (once) and return it immediately
+      const opponentSnapshot = await opponentRef.once('value');
+      //console.log('Initial data for opponent', opponentId, opponentSnapshot.val());
+
+      return opponentSnapshot.val();
+    })
+  );
+
+  return opponentDatas;
+};
+
 
 
 export const resetfetchChatList = () => async (dispatch: Dispatch) => {

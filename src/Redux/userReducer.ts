@@ -19,6 +19,12 @@ import {
   USER_LOGOUT_FAIL,
   USER_LOGOUT,
 
+  USER_INDIVIDUAL_REQUEST,
+  USER_INDIVIDUAL_FAIL,
+  USER_INDIVIDUAL_SUCCESS,
+  USER_INDIVIDUAL_RESET,
+
+  
   USER_UPDATE_ONLINE_STATUS
 
 } from './userConstants';
@@ -29,6 +35,10 @@ interface UserState {
   buttonLoading: boolean;
   error: string | null;
   isOnline: boolean; // Add this field
+
+  userIndividualLoading:boolean;
+  userIndividualerror:string | null;
+  userIndividualData:[],
 }
 
 const initialState: UserState = {
@@ -37,6 +47,11 @@ const initialState: UserState = {
   buttonLoading: false,
   error: null,
   isOnline: false, 
+
+  userIndividualLoading:false,
+  userIndividualerror:null,
+  userIndividualData:null,
+
 };
 
 export const userLoginReducer = (state = initialState, action) => {
@@ -67,6 +82,21 @@ export const userLoginReducer = (state = initialState, action) => {
     
     default:
       return state;
+  }
+};
+
+export const userIndividualReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case USER_INDIVIDUAL_REQUEST:
+      return { ...state, userIndividualLoading: true, userIndividualerror: null };
+    case USER_INDIVIDUAL_SUCCESS:
+      return { ...state, userIndividualData: action.payload, userIndividualLoading: false };
+    case USER_INDIVIDUAL_FAIL:
+      return { ...state, userIndividualData: null, userIndividualLoading: false, userIndividualerror: action.payload };
+    case USER_INDIVIDUAL_RESET:
+      return { ...state, userIndividualData: null, userIndividualLoading: false, userIndividualerror: null };
+    default:
+      return state; // Return the initial state here
   }
 };
 

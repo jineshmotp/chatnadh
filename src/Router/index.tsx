@@ -14,7 +14,7 @@ import ContactStack from './ContactStack';
 import ChatListStack from './ChatListStack';
 
 import { checkLoginStatus,initializeUserDataListener,updateOnlineStatus  } from '../Redux/userActions';
-import {resetfetchChat,resetcreateChat, resetcreateChatTable} from '../Redux/chatActions'
+import {resetfetchChat,resetcreateChat, resetcreateChatTable,resetfetchChatList} from '../Redux/chatActions'
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -27,6 +27,12 @@ const Router = () => {
 
   useEffect(() => {   
     if (user) {
+
+      dispatch(resetcreateChat())
+      dispatch(resetcreateChatTable())
+      dispatch(resetfetchChat())  
+      dispatch(resetfetchChatList()) 
+
       dispatch(initializeUserDataListener()); // Set up the listener if user is logged in
     }
 

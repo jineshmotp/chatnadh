@@ -8,6 +8,12 @@ import { formatDate } from '../../Utilities/dateUtils';
 
 import FaceEmotion from '../FaceEmotion';
 
+import { useDispatch, useSelector } from 'react-redux'
+
+import { userIndividual } from '../../Redux/userActions';
+
+import LoadingScreen from '../LoadingScreen';
+
 interface ChatListProps {
   item: {
     chatId: string;
@@ -33,17 +39,54 @@ interface ChatListProps {
 
 const ChatList: FunctionComponent<ChatListProps> = ({ item, gotoChatScreen }) => {
   const formattedTime = formatDate(item.lastMessageTime);
-  //console.log('Opponent Data from chatlist component:', item.opponent);
 
+  interface UserIndidualState {
+    userIndividual: {
+      userIndividualData: {
+      id: string;
+      about: string;
+      accountactivation: number;
+      emailId: string;
+      hasStory: boolean;
+      img: string;
+      lastMessage: string;
+      name: string;
+      notification: number;
+      onlineStatus: boolean;
+      password: string;
+      time: string;
+      };
+      userIndividualLoading: boolean;
+      userIndividualerror: string | null;
+    };   
+  }
+
+  const dispatch = useDispatch<Dispatch>();
+  const {userIndividualLoading, userIndividualData, userIndividualerror } = useSelector((state: UserIndidualState) => state.userIndividual);
+  
+  useEffect(() => {
+    const getUserindividual = async () => {     
+      await dispatch(userIndividual(item.opponent.id));
+    };
+    getUserindividual();
+  }, [dispatch,item]);
+
+  if(userIndividualLoading)
+  {
+    return (
+      <LoadingScreen />
+    )
+  }
+ 
   return (
     <TouchableOpacity style={styles.ChatListCard} onPress={() => gotoChatScreen(item)}>
       <View style={styles.ChatListUserInfo}>
 
-      <IconOcticons
-          name={item.opponent.onlineStatus ? "dot-fill" : "dot"}
-          size={hp('5%')}
-          color={item.opponent.onlineStatus ? 'green' : 'red'}
-        />
+        {item.opponent?.onlineStatus !== false ? (
+            <IconOcticons name="dot-fill" size={hp('5%')} color='green' />
+          ) : (
+            <IconOcticons name="dot" size={hp('5%')} color='red' />
+          )}
 
         <View style={styles.ChatListImageSection}>
           <Image

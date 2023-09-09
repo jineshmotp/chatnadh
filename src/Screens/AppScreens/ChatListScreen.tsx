@@ -18,6 +18,8 @@ import LoadingScreen from '../../Components/LoadingScreen';
 import { RouteProp } from '@react-navigation/native';
 import { ParamListBase } from '@react-navigation/routers';
 
+import { useFocusEffect } from '@react-navigation/native';
+
 const ChatListScreen = () => {
 
   const navigation = useNavigation();
@@ -56,9 +58,29 @@ const ChatListScreen = () => {
       fetchChatListLoading:boolean;
       fetchChatListerror:string | null;
     };
+
+    userIndividual: {
+      userIndividualData: {
+      id: string;
+      about: string;
+      accountactivation: number;
+      emailId: string;
+      hasStory: boolean;
+      img: string;
+      lastMessage: string;
+      name: string;
+      notification: number;
+      onlineStatus: boolean;
+      password: string;
+      time: string;
+      };
+      userIndividualLoading: boolean;
+      userIndividualerror: string | null;
+    };   
+
    
   }
-  
+  const {userIndividualLoading, userIndividualData, userIndividualerror } = useSelector((state: RootState) => state.userIndividual);
   const {user, isLoading, error } = useSelector((state: RootState) => state.userLogin);
   const {fetchChatListData, fetchChatListLoading, fetchChatListerror } = useSelector((state: RootState) =>  state.fetchChatLists)
    
@@ -180,37 +202,41 @@ const ChatListScreen = () => {
       });     
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const callchatList = async () => {
+        await dispatch(fetchChatList(user));
+      };
+      callchatList();
+    }, [dispatch, user])
+  );
+
+
+
+
   useEffect(() => {
-    const callchatList = async () => {     
-      await dispatch(fetchChatList(user));
-    };
-    callchatList();
-  }, [dispatch,user,navigation]);
+    if (fetchChatListData && fetchChatListData.chatListDatas) {      
+      const updatedChatListData = [...fetchChatListData.chatListDatas];
+      
+      console.log('oputput fron useeffect :',fetchChatListData)
 
-
-
-  useEffect(() => {
-    if (fetchChatListData && fetchChatListData.chatListDatas) {
-  
-      const mergedData = fetchChatListData.chatListDatas.map((chatItem) => {
+      // Update the opponent data for each chat item
+      updatedChatListData.forEach((chatItem) => {
         const opponentItem = fetchChatListData.opponentDatas.find((opponent) => {
           return chatItem.chatId.includes(opponent.id);
         });
-  
-       
-        if (!chatItem.lastMessage) {
-          return null; 
+        
+        if (opponentItem) {         
+          chatItem.opponent = { ...chatItem.opponent, ...opponentItem };         
         }
+      });
   
-        return {
-          ...chatItem,
-          opponent: opponentItem,
-        };
-      }).filter(Boolean); // Remove null items
-  
+      // Filter out any items that have a null lastMessage
+      const mergedData = updatedChatListData.filter((chatItem) => chatItem.lastMessage);
+      console.log('updated name in chatlist ',mergedData[0].opponent.name);
       setChatListData(mergedData);
-    }
-  }, [fetchChatListData,user]);
+     }
+  }, [fetchChatListData, user]);
   
 
     

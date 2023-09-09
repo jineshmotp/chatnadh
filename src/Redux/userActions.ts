@@ -21,6 +21,11 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_RESET,
 
+  USER_INDIVIDUAL_REQUEST,
+  USER_INDIVIDUAL_FAIL,
+  USER_INDIVIDUAL_SUCCESS,
+  USER_INDIVIDUAL_RESET,
+
   USER_UPDATE_ONLINE_STATUS
 
 } from './userConstants';
@@ -97,7 +102,7 @@ export const login = (data) => async (dispatch) => {
     await dispatch({ type: USER_UPDATE_ONLINE_STATUS, payload: true });
    
     await dispatch({ type: USER_LOGIN_REQUEST });
-        
+
     await AsyncStorage.setItem('user', JSON.stringify(user));
     
     dispatch({ type: USER_LOGIN_SUCCESS, payload: user });
@@ -194,3 +199,28 @@ export const resetdata = () => async (dispatch) => {
 
 
 
+export const userIndividual = (individualId) => async (dispatch) => {
+  dispatch({ type: USER_INDIVIDUAL_REQUEST });
+  
+  try {
+    // Set up a listener for real-time updates on the user with the specified ID
+    const userRef = database().ref(`/users/${individualId}`);
+    
+    userRef.on('value', (snapshot) => {
+      const userData = snapshot.val();
+      
+      if (userData) {
+        dispatch({ type: USER_INDIVIDUAL_SUCCESS, payload: userData });
+      } else {
+        // Handle the case where the user with the specified ID does not exist
+        dispatch({ type: USER_INDIVIDUAL_FAIL, payload: 'User not found' });
+      }
+    });
+    
+    // Return a function to unsubscribe from the real-time listener when needed
+    return () => userRef.off();
+  } catch (error) {
+    console.log("Database error:", error);
+    dispatch({ type: USER_INDIVIDUAL_FAIL, payload: error.message });
+  }
+};

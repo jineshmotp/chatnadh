@@ -5,8 +5,8 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   userLoginReducer,
-  userRegisterReducer,
-  userLoginStatusReducer,
+  userRegisterReducer, 
+  userIndividualReducer
   //userLogoutReducer
 } from './src/Redux/userReducer';
 
@@ -22,7 +22,7 @@ import {
 const rootReducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-  //userLoginStatus:userLoginStatusReducer,
+  userIndividual:userIndividualReducer,
 
   getallContacts:getallContactsReducer,
 
