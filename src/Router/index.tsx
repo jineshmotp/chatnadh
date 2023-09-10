@@ -44,10 +44,11 @@ const Router = () => {
     const handleAppStateChange = (nextAppState) => {
       if (nextAppState === 'active') {
         // App is active, so user is considered online
-        console.log('active');
+        updateOnlineStatus(true);
+       
       } else {
         // App is in the background, so user is considered offline
-        console.log('not active');
+        updateOnlineStatus(false);
       }
     };
 
@@ -55,10 +56,8 @@ const Router = () => {
     AppState.addEventListener('change', handleAppStateChange);
 
     // Set up a timer to call a function every minute
-    const intervalId = setInterval(() => {
-      // Call your function here
-      console.log('Function called every hour');
-    }, 3600); // 60000 milliseconds = 1 minute
+    const intervalId = setInterval(() => {    
+    }, 3600000); // 60000 milliseconds = 1 minute
 
     // Clean up the event listener and timer when the component unmounts
     return () => {

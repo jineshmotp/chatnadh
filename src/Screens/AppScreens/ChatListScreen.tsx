@@ -218,7 +218,7 @@ const ChatListScreen = () => {
     if (fetchChatListData && fetchChatListData.chatListDatas) {      
       const updatedChatListData = [...fetchChatListData.chatListDatas];
       
-      console.log('oputput fron useeffect :',fetchChatListData)
+     // console.log('oputput fron useeffect :',fetchChatListData)
 
       // Update the opponent data for each chat item
       updatedChatListData.forEach((chatItem) => {
@@ -233,7 +233,7 @@ const ChatListScreen = () => {
   
       // Filter out any items that have a null lastMessage
       const mergedData = updatedChatListData.filter((chatItem) => chatItem.lastMessage);
-      console.log('updated name in chatlist ',mergedData[0].opponent.name);
+     // console.log('updated name in chatlist ',mergedData[0].opponent.name);
       setChatListData(mergedData);
      }
   }, [fetchChatListData, user]);

@@ -240,7 +240,7 @@ export const fetchChatList = (user) => async (dispatch: Dispatch) => {
         // Here, you can call the real-time listener for opponent data
         const opponentDatas = await fetchOpponentDataRealtime(opponentIds, dispatch);
         
-        console.log('updated opponent name : ',opponentDatas[0].name)
+        //console.log('updated opponent name : ',opponentDatas[0].name)
         dispatch({
           type: CHAT_LIST_SUCCESS,
           payload: { chatListDatas, opponentDatas },
@@ -263,7 +263,7 @@ const fetchOpponentDataRealtime = async (opponentIds, dispatch) => {
       // Set up a listener for real-time data updates on the opponent user
       opponentRef.on('value', (opponentSnapshot) => {
         const opponentData = opponentSnapshot.val();
-        console.log('Received new data for opponent :',opponentData.name);
+        //console.log('Received new data for opponent :',opponentData.name);
 
         // Handle the updated opponent data, e.g., dispatch an action to update the state
         dispatch({

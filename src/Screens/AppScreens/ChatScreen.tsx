@@ -115,16 +115,24 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     }
   };
 
-  const onChangeMessageText = () => {
-   console.log('haii');
+  const clearInputMessage = () => {
+    setInputMessage('');
+  };
+
+  const handleMessageTextChange = (text) => {
+    console.log('onSend called with text:', text);
+    scrollToBottom();     
+    setInputMessage(text);
   };
 
   const onAttachmentSend = () => {
-    console.log('attachment')
+    scrollToBottom();     
     
   };
 
   const onSend = () => {
+    console.log('onSend called with text:');
+    scrollToBottom();     
     if (inputMessage.trim() === '') return;
 
     const newMessage = {
@@ -178,9 +186,11 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     dispatch(
       createChat(moreUserChatData, moreUserMessageData, moreOpponentChatData, moreOpponentMessageData)
     );
-
-    setInputMessage(newMessage);
-    scrollToBottom();
+    
+    setInputMessage(''); // Clear the input field
+    handleMessageTextChange('');
+    scrollToBottom(); // Scroll to the bottom
+    
   };
 
   const renderItem = (item) => {
@@ -281,31 +291,13 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
 
             </View>
 
-
-            <ChatInput onAttachmentSend={onAttachmentSend} onSend={onSend} onChangeMessageText={onChangeMessageText} />
-        
-          {/* <View style={styles.inputWraper}>
-            <TextInput
-              style={styles.input}
-              placeholder="Type a message..."
-              value={inputMessage}
-              onChangeText={(text) => setInputMessage(text)}
-              onFocus={() => setKeyboardVisible(false)}
-            />
-
-             <TouchableOpacity onPress={onAttachmentSend} style={styles.attachmentButton}>
-              <MaterialIcons name="attach-file" size={wp('5%')} color={colors.white} />
-            </TouchableOpacity>
-
-            </View>
-
-         
-          <TouchableOpacity onPress={onSend} style={[styles.sendButton, { backgroundColor: colors.transparent }]}>
-            <Icon name="send" size={wp('5%')} color={colors.white} />
-          </TouchableOpacity> */}
-        
-       
-
+            <ChatInput 
+            onAttachmentSend={onAttachmentSend} 
+            onSend={onSend} 
+            handleMessageTextChange={handleMessageTextChange}
+            clearInputMessage={clearInputMessage}
+             />
+                      
 
       </KeyboardAvoidingView>
     </BackgroundImage>

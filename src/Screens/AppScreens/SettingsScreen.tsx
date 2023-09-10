@@ -62,7 +62,7 @@ const SettingsScreen = () => {
  
   useEffect(() => {
 
-    console.log('Settigs isloading :',isLoading);
+    //console.log('Settigs isloading :',isLoading);
 
   });
   
