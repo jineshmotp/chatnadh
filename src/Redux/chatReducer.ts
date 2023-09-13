@@ -39,6 +39,7 @@ import {
   createChatTableLoading:false,
   createChatTableerror:null, 
 
+  createChatData:[],
   createChatLoading:false,
   createChaterror:null,
 
@@ -144,7 +145,7 @@ export const createChatReducer = ( state = initialState,action: ChatActionTypes)
       return { ...state, createChatLoading: false, createChaterror: action.payload  };
     
     case CHAT_CREATE_RESET:
-      return { ...state, createChatLoading: false,createChaterror: null  };
+      return { ...state, createChatLoading: false, createChaterror: null  };
   
     default:
       return state;

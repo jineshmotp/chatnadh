@@ -63,10 +63,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation();
 
   const [messages, setMessages] = useState([]);
-  const [chatUsers, setChatUser] = useState(chatUser);
-  const [moreUserDatas, setMoreUserDatas] = useState(moreUserData);
-  const [moreOpponentDatas, setMoreOpponentDatas] = useState(moreOpponentData);
-
+ 
   const [inputMessage, setInputMessage] = useState('');
   const [faceemotion, setFaceemotion] = useState('happiness');
   const scrollViewRef = useRef();
@@ -76,37 +73,26 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   const { user, isLoading, error } = userLogin;
   const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector((state) => state.fetchChat);
   
-  useEffect(() => {
+   useEffect(() => {
+    dispatch(resetcreateChatTable());    
+    callfetchchatdata();
+   }, []);
 
-    setChatUser(chatUser);
-    setMoreUserDatas(moreUserData);
-    setMoreOpponentDatas(moreOpponentData);
-    scrollToBottom();
+   const callfetchchatdata = async() => {
    
-  }, [chatUser,moreUserData,moreOpponentData]);
-
-
-
-
-  useEffect(() => {
-    if(chatUsers && moreUserDatas && moreOpponentDatas)
-    {
-      //console.log(chatUsers.name);
-      dispatch(resetcreateChatTable());
-      dispatch(fetchChat(moreUserDatas));
-      scrollToBottom();
-    }    
-  }, [dispatch,chatUsers,moreUserDatas,moreOpponentDatas]);
-
+    await dispatch(fetchChat(moreUserData));
+    scrollToBottom();
+    };
+    
+ 
 
   useEffect(() => {
     scrollToBottom();
-    if (fetchChatData) {
-      //console.log(fetchChatData);
+    if (fetchChatData) { 
       setMessages(fetchChatData);
       scrollToBottom();
     }
-  }, [dispatch, fetchChatData]);
+  }, [dispatch,fetchChatData]);
 
   
   const scrollToBottom = () => {
@@ -116,7 +102,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   };
 
   const clearInputMessage = () => {
-    setInputMessage('');
+    setInputMessage('');    
   };
 
   const handleMessageTextChange = (text) => {
@@ -130,33 +116,36 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     
   };
 
-  const onSend = () => {
+  const onSend = async() => {
     console.log('onSend called with text:');
-    scrollToBottom();     
+       
     if (inputMessage.trim() === '') return;
 
     const newMessage = {
       messageId: uuid.v4(),
-      chatId: moreUserDatas.chatId,
+      chatId: moreUserData.chatId,
       senderId: user.id,
       content: inputMessage,
       timestamp: new Date().toISOString(),
       delivered: false,
       emotion: faceemotion,
     };
+   
+    //setMessages([...messages, newMessage]);  
+   
 
     let moreUserChatData = {
-      chatId: moreUserDatas.chatId,
-      participants: moreUserDatas.participants,
+      chatId: moreUserData.chatId,
+      participants: moreUserData.participants,
       lastMessage: inputMessage,
       lastMessageTime: new Date(),
-      notification: moreUserDatas.notification,
+      notification: moreUserData.notification,
       emotion: faceemotion,
     };
 
     let moreUserMessageData = {
       messageId: uuid.v4(),
-      chatId: moreUserDatas.chatId,
+      chatId: moreUserData.chatId,
       senderId: user.id,
       content: inputMessage,
       timestamp: new Date().toISOString(),
@@ -165,17 +154,17 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     };
 
     let moreOpponentChatData = {
-      chatId: moreOpponentDatas.chatId,
-      participants: moreUserDatas.participants,
+      chatId: moreOpponentData.chatId,
+      participants: moreUserData.participants,
       lastMessage: inputMessage,
       lastMessageTime: new Date(),
-      notification: moreUserDatas.notification + 1,
+      notification: moreUserData.notification + 1,
       emotion: faceemotion,
     };
 
     let moreOpponentMessageData = {
       messageId: uuid.v4(),
-      chatId: moreOpponentDatas.chatId,
+      chatId: moreOpponentData.chatId,
       senderId: user.id,
       content: inputMessage,
       timestamp: new Date().toISOString(),
@@ -183,11 +172,11 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       emotion: faceemotion,
     };
 
-    dispatch(
+    await dispatch(
       createChat(moreUserChatData, moreUserMessageData, moreOpponentChatData, moreOpponentMessageData)
     );
-    
-    setInputMessage(''); // Clear the input field
+     
+    callfetchchatdata();
     handleMessageTextChange('');
     scrollToBottom(); // Scroll to the bottom
     
@@ -263,10 +252,10 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     <BackgroundImage>
       <Header
         
-        labeltxt={chatUsers.name}
-        onlinestatus={chatUsers.onlineStatus}
+        labeltxt={chatUser.name}
+        onlinestatus={chatUser.onlineStatus}
         pageidx={3}
-        chatuserimg={chatUsers.img}
+        chatuserimg={chatUser.img}
       />
       <KeyboardAvoidingView
         style={{ flex: 1 }}

@@ -121,24 +121,24 @@ export const fetchChat = (moreUserData) => (dispatch: Dispatch) => {
 
   try {
     const messagesRef = database()
-      .ref('messages')
-      .orderByChild('chatId')
-      .equalTo(moreUserData.chatId)
-      .limitToLast(10);
+    .ref('messages')
+    .orderByChild('chatId')
+    .equalTo(moreUserData.chatId);// Order by timestamp
+    //.limitToLast(5); // Limit the number of messages to retrieve
 
     messagesRef.on('value', (snapshot) => {
       const messagesData = snapshot.val();
       if (messagesData) {
         const messagesArray = Object.values(messagesData);
 
-        // Sort messages by timestamp in ascending order (oldest to newest)
+        // Sort messages by timestamp in descending order (newest to oldest)
         messagesArray.sort((a, b) => {
           const timestampA = a.timestamp;
           const timestampB = b.timestamp;
           return timestampA.localeCompare(timestampB);
         });
 
-        //console.log('fetchChat value:', messagesArray);
+        console.log('fetchChat value:', messagesArray);
 
         dispatch({ type: CHAT_FETCH_SUCCESS, payload: messagesArray });
       } else {
@@ -191,7 +191,8 @@ export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChat
     
     await database().ref('/messages/'+moreUserMessageData.messageId).set(moreUserMessageData);
     await database().ref('/messages/'+moreOpponentMessageData.messageId).set(moreOpponentMessageData);
-    dispatch({ type: CHAT_CREATE_SUCCESS });      
+          
+    dispatch({ type: CHAT_CREATE_SUCCESS });    
    
   } catch (error) {
     dispatch({ type: CHAT_CREATE_FAIL, payload: error.message });

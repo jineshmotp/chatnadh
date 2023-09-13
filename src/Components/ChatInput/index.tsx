@@ -5,14 +5,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { colors } from '../../Constants/colors';
 
-interface InputProps {
+interface ChatInputProps {
   handleMessageTextChange: (text: string) => void; // Corrected prop definition
   onSend: () => void;
-  onAttachmentSend: () => void;
+  onAttachSend: () => void;
   clearInputMessage: () => void; 
 }
 
-const ChatInput: FunctionComponent<InputProps> = ({ onAttachmentSend, onSend, handleMessageTextChange,clearInputMessage }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onAttachSend, onSend, handleMessageTextChange,clearInputMessage }) => {
 
   const [text, setText] = useState(''); // Define the text state
 
@@ -42,7 +42,8 @@ const ChatInput: FunctionComponent<InputProps> = ({ onAttachmentSend, onSend, ha
           />
         </View>
 
-        <TouchableOpacity style={styles.iconContainer} onPress={onAttachmentSend} >
+        <TouchableOpacity style={styles.iconContainer}  onPress={onAttachSend}>
+
           <MaterialIcons name='attach-file' size={wp('5%')} color={colors.secondary} style={styles.icon} />
         </TouchableOpacity>
 
