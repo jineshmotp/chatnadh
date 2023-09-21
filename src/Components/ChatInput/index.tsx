@@ -8,11 +8,11 @@ import { colors } from '../../Constants/colors';
 interface ChatInputProps {
   handleMessageTextChange: (text: string) => void; // Corrected prop definition
   onSend: () => void;
-  onAttachSend: () => void;
+  onAttachmentSend: () => void;
   clearInputMessage: () => void; 
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onAttachSend, onSend, handleMessageTextChange,clearInputMessage }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onAttachmentSend, onSend, handleMessageTextChange,clearInputMessage }) => {
 
   const [text, setText] = useState(''); // Define the text state
 
@@ -42,7 +42,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onAttachSend, onSend, handleMessa
           />
         </View>
 
-        <TouchableOpacity style={styles.iconContainer}  onPress={onAttachSend}>
+        <TouchableOpacity style={styles.iconContainer}  onPress={onAttachmentSend}>
 
           <MaterialIcons name='attach-file' size={wp('5%')} color={colors.secondary} style={styles.icon} />
         </TouchableOpacity>

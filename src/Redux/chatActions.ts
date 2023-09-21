@@ -123,8 +123,8 @@ export const fetchChat = (moreUserData) => (dispatch: Dispatch) => {
     const messagesRef = database()
     .ref('messages')
     .orderByChild('chatId')
-    .equalTo(moreUserData.chatId);// Order by timestamp
-    //.limitToLast(5); // Limit the number of messages to retrieve
+    .equalTo(moreUserData.chatId);
+    //.limitToLast(5); 
 
     messagesRef.on('value', (snapshot) => {
       const messagesData = snapshot.val();

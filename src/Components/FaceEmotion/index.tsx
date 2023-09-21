@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: colors.white,
-    fontSize: hp('1%'),
+    fontSize: hp('1.5%'),
   },
 });
 

@@ -1,53 +1,30 @@
-import { Alert } from 'react-native';
-import { Platform } from 'react-native';
-import { check, PERMISSIONS, openSettings } from 'react-native-permissions';
+import { PermissionsAndroid, Platform } from "react-native";
 
-const requestImagePickerPermission = async (): Promise<boolean> => {
-  try {
-    let permissionStatus;
-
-    if (Platform.OS === 'android') {
-      permissionStatus = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
-    } else if (Platform.OS === 'ios') {
-      permissionStatus = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
+export const requestImagePickerPermission = () => new Promise<boolean>(async (resolve, reject) => {
+    try {
+        if (Platform.OS === 'android' && Platform.Version && Platform.Version > 22) {
+            const granted = await PermissionsAndroid.requestMultiple([
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+            ]);
+            console.log(granted, 'granted response');
+            if (
+                granted['android.permission.CAMERA'] !== 'granted' ||
+                granted['android.permission.WRITE_EXTERNAL_STORAGE'] !== 'granted' ||
+                granted['android.permission.READ_EXTERNAL_STORAGE'] !== 'granted'
+            ) {
+                // You should define or import the showError function here
+                // For example, if showError is from a library or utility, make sure to import it.
+                // showError("Don't have required permission. Please allow permissions");
+                console.error("Don't have required permission. Please allow permissions"); // Log an error message instead
+                return resolve(false);
+            }
+            return resolve(true);
+        }
+        return resolve(true);
+    } catch (error) {
+        console.error('Error requesting permissions:', error);
+        return resolve(false);
     }
-
-    console.log(permissionStatus); // Log the permission status here
-
-    if (permissionStatus === 'granted') {
-      return true;
-    } else if (permissionStatus === 'denied') {
-      // Permission denied, prompt the user to grant permission
-      Alert.alert(
-        'Permission Required',
-        'To use this feature, please grant permission to access photos in your device settings.',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Open app settings to let the user manually grant permission
-              openSettings();
-            },
-          },
-          {
-            text: 'Cancel',
-            onPress: () => {
-              // Permission denied, handle accordingly
-            },
-            style: 'cancel',
-          },
-        ]
-      );
-    } else if (permissionStatus === 'unavailable') {
-      // The permission is not available on this device/platform
-      // Handle accordingly (e.g., inform the user)
-    }
-
-    return false; // Permission denied
-  } catch (error) {
-    console.error('Error checking permission:', error);
-    return false;
-  }
-};
-
-export default requestImagePickerPermission;
+});

@@ -30,14 +30,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import ChatInput from '../../Components/ChatInput';
 
-import ImagePicker from 'react-native-image-crop-picker';
-
-import { requestImagePickerPermission } from '../../Utilities/requestImagePickerPermission';
-
 
 type RootStackParamList = {
   ChatStack: {
     chatUser: any; // Replace 'any' with the actual type of chatUser
+    loadfetchChatdata: any; // Replace 'any' with the actual type of loadfetchChatdata
     moreUserData: any; // Replace 'any' with the actual type of moreUserData
     moreOpponentData: any; // Replace 'any' with the actual type of moreOpponentData
   };
@@ -105,23 +102,9 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     setInputMessage(text);
   };
 
-  const onAttachmentSend = async() => {
-
-    console.log('attachment pressed');
-     const hasPermission = await requestImagePickerPermission();
-     console.log(hasPermission);   
+  const onAttachmentSend = () => {
+    scrollToBottom();     
     
-       ImagePicker.openPicker({       
-         width: 300,
-         height: 400,
-         cropping: false
-       })
-         .then(image => {
-           console.log(image); 
-         })
-         .catch(error => {
-           console.error('Image picker error:', error);
-         });  
   };
 
   const onSend = async() => {
@@ -139,7 +122,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       emotion: faceemotion,
     };
    
-    setMessages([...messages, newMessage]);  
+    //setMessages([...messages, newMessage]);  
    
 
     let moreUserChatData = {
