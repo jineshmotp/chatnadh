@@ -5,7 +5,9 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView, 
+  Image,
+  PermissionsAndroid,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -34,7 +36,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 import { requestImagePickerPermission } from '../../Utilities/requestImagePickerPermission';
 
-
 type RootStackParamList = {
   ChatStack: {
     chatUser: any; // Replace 'any' with the actual type of chatUser
@@ -60,6 +61,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
  
   const [inputMessage, setInputMessage] = useState('');
   const [faceemotion, setFaceemotion] = useState('happiness');
+  const [imagedet, setImagedet] = useState('');
   const scrollViewRef = useRef();
 
   const dispatch = useDispatch();
@@ -96,7 +98,8 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   };
 
   const clearInputMessage = () => {
-    setInputMessage('');    
+    setInputMessage('');  
+    setImagedet('');  
   };
 
   const handleMessageTextChange = (text) => {
@@ -105,66 +108,65 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     setInputMessage(text);
   };
 
-  const onAttachmentSend = async() => {
-
-    console.log('attachment pressed');
-     const hasPermission = await requestImagePickerPermission();
-     console.log(hasPermission);   
+  const onAttachmentSend = async () => {
     
-       ImagePicker.openPicker({       
-         width: 300,
-         height: 400,
-         cropping: false
-       })
-         .then(image => {
-           console.log(image); 
-         })
-         .catch(error => {
-           console.error('Image picker error:', error);
-         });  
+      ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: false,
+      })
+        .then((image) => {         
+          setImagedet(image);        
+          onSend(image.path, 'image');
+        })
+        .catch((error) => {
+          console.error('Image picker error:', error);
+        });
+   
   };
 
-  const onSend = async() => {
-    console.log('onSend called with text:');
-       
-    if (inputMessage.trim() === '') return;
-
+  const onSend = async (messageContent,msgtype) => {
+               
+    if (messageContent === '') return;
+    console.log('input message',messageContent);
     const newMessage = {
       messageId: uuid.v4(),
       chatId: moreUserData.chatId,
       senderId: user.id,
-      content: inputMessage,
+      content: messageContent,
       timestamp: new Date().toISOString(),
       delivered: false,
-      emotion: faceemotion,
+      emotion: faceemotion,      
+      messagetype:msgtype
     };
    
-    setMessages([...messages, newMessage]);  
+    //setMessages([...messages, newMessage]);  
    
 
     let moreUserChatData = {
       chatId: moreUserData.chatId,
       participants: moreUserData.participants,
-      lastMessage: inputMessage,
+      lastMessage: messageContent,
       lastMessageTime: new Date(),
       notification: moreUserData.notification,
-      emotion: faceemotion,
+      emotion: faceemotion,     
     };
 
     let moreUserMessageData = {
       messageId: uuid.v4(),
       chatId: moreUserData.chatId,
       senderId: user.id,
-      content: inputMessage,
+      content: messageContent,
       timestamp: new Date().toISOString(),
       delivered: false,
-      emotion: faceemotion,
+      emotion: faceemotion,      
+      messagetype:msgtype
     };
 
     let moreOpponentChatData = {
       chatId: moreOpponentData.chatId,
       participants: moreUserData.participants,
-      lastMessage: inputMessage,
+      lastMessage: messageContent,
       lastMessageTime: new Date(),
       notification: moreUserData.notification + 1,
       emotion: faceemotion,
@@ -174,12 +176,13 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       messageId: uuid.v4(),
       chatId: moreOpponentData.chatId,
       senderId: user.id,
-      content: inputMessage,
+      content: messageContent,
       timestamp: new Date().toISOString(),
       delivered: false,
-      emotion: faceemotion,
+      emotion: faceemotion,     
+      messagetype:msgtype
     };
-
+    console.log('calling createchat')
     await dispatch(
       createChat(moreUserChatData, moreUserMessageData, moreOpponentChatData, moreOpponentMessageData)
     );
@@ -221,7 +224,19 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
         >
           <FaceEmotion emotion={item.emotion} text={item.emotion} />
 
-          <Text style={styles.messageText}>{item.content}</Text>
+          { item.messagetype === 'image' ? 
+          (
+            <Image
+          source={{ uri: item.content }} // Use the correct source for the image
+          style={styles.chatimageStyle} // Define a style for the image
+           />
+          )
+          :
+          (
+            <Text style={styles.messageText}>{item.content}</Text>
+          )
+
+          }          
           <Text style={styles.timestampText}>
                {formatDate(item.timestamp)}
             {deliveredIcon}
@@ -290,7 +305,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
 
             <ChatInput 
             onAttachmentSend={onAttachmentSend} 
-            onSend={onSend} 
+            onSend={(message) => onSend(message,'text')}
             handleMessageTextChange={handleMessageTextChange}
             clearInputMessage={clearInputMessage}
              />

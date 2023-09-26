@@ -1,7 +1,7 @@
 // src/redux-reducer/userActions.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import database from '@react-native-firebase/database';
-
+import storage from '@react-native-firebase/storage';
 import { 
   CONTACT_LIST_REQUEST,
   CONTACT_LIST_SUCCESS,
@@ -17,6 +17,11 @@ import {
   CHAT_CREATE_SUCCESS,
   CHAT_CREATE_RESET,
   CHAT_CREATE_FAIL,
+
+  CHAT_UPLOADIMG_REQUEST,
+  CHAT_UPLOADIMG_SUCCESS,
+  CHAT_UPLOADIMG_RESET,
+  CHAT_UPLOADIMG_FAIL,
 
   CHAT_FETCH_REQUEST,
   CHAT_FETCH_SUCCESS,
@@ -95,10 +100,7 @@ export const createChatTable = (moreUserData, moreOpponentData) => async (dispat
      // console.log('user if check works');
       await database().ref('/chats/' + moreUserData.chatId).set(moreUserData);
       dispatch({ type: CHAT_TABLE_SUCCESS, payload: null });
-    } else {
-      //console.log('user else check works', moreUserData.chatId);
-      //const fetchChatResult = await dispatch(fetchChat(moreUserData));
-      //console.log('FetchChatResult : ',fetchChatResult); 
+    } else {      
       dispatch({ type: CHAT_TABLE_SUCCESS, payload: null });
     }
   } catch (error) {
@@ -138,7 +140,7 @@ export const fetchChat = (moreUserData) => (dispatch: Dispatch) => {
           return timestampA.localeCompare(timestampB);
         });
 
-        console.log('fetchChat value:', messagesArray);
+        //console.log('fetchChat value:', messagesArray);
 
         dispatch({ type: CHAT_FETCH_SUCCESS, payload: messagesArray });
       } else {
@@ -166,31 +168,77 @@ export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChat
  
   try {
 
+
+    let lastmsgg = moreUserChatData.lastMessage;
+    let contents = moreUserMessageData.content;
+    if(moreUserMessageData.messagetype === 'image')
+    {    
+    let image = moreUserMessageData.content;    
+    let imgName = image.substring(image.lastIndexOf('/')+1);
+    let ext = imgName.split('.').pop();
+    let name = imgName.split('.')[0];
+    let newName = name + Date.now()+'.'+ext;   
+    const reference =storage().ref('ChatMedia/'+newName);
+    await reference.putFile(image);
+    const url = await storage()
+                .ref('ChatMedia/'+newName)
+                .getDownloadURL();
+    console.log(url);
+    contents=url;
+    lastmsgg = 'image'
+    }
+
+    
+
     const userChatRef = database().ref('/chats/' + moreUserChatData.chatId);
     const userChatSnapshot = await userChatRef.once('value');
     if (userChatSnapshot.exists()) {
       await userChatRef.update({
-        lastMessage: moreUserChatData.lastMessage,
+        lastMessage: lastmsgg,
         lastMessageTime: (moreUserChatData.lastMessageTime).toISOString(), 
         emotion:moreUserChatData.emotion,
         notification:moreUserChatData.notification
       });
     }
+    
+    
 
      // Update last message and last message time for the opponent's chat
      const opponentChatRef = database().ref('/chats/' + moreOpponentChatData.chatId);
      const opponentChatSnapshot = await opponentChatRef.once('value');
      if (opponentChatSnapshot.exists()) {
        await opponentChatRef.update({
-         lastMessage: moreOpponentChatData.lastMessage,
+         lastMessage: lastmsgg,
          lastMessageTime: (moreOpponentChatData.lastMessageTime).toISOString(), 
          emotion:moreOpponentChatData.emotion,
          notification:moreOpponentChatData.notification,
        });
      }   
     
-    await database().ref('/messages/'+moreUserMessageData.messageId).set(moreUserMessageData);
-    await database().ref('/messages/'+moreOpponentMessageData.messageId).set(moreOpponentMessageData);
+    await database().ref('/messages/'+moreUserMessageData.messageId)
+                      .set({
+                        messageId: moreUserMessageData.messageId,
+                        chatId: moreUserMessageData.chatId,
+                        senderId: moreUserMessageData.senderId,
+                        content: contents,
+                        timestamp: moreUserMessageData.timestamp,
+                        delivered: moreUserMessageData.delivered,
+                        emotion: moreUserMessageData.emotion,      
+                        messagetype:moreUserMessageData.messagetype                        
+                      });
+                      
+    await database().ref('/messages/'+moreOpponentMessageData.messageId)
+                      .set({
+                        messageId: moreOpponentMessageData.messageId,
+                        chatId: moreOpponentMessageData.chatId,
+                        senderId:moreOpponentMessageData.senderId,
+                        content: contents,
+                        timestamp: moreOpponentMessageData.timestamp,
+                        delivered: moreOpponentMessageData.delivered,
+                        emotion: moreOpponentMessageData.emotion,     
+                        messagetype:moreOpponentMessageData.messagetype                      
+                        
+                        });
           
     dispatch({ type: CHAT_CREATE_SUCCESS });    
    

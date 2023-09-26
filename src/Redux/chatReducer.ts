@@ -9,6 +9,11 @@ import {
   CHAT_TABLE_RESET,
   CHAT_TABLE_FAIL,
 
+  CHAT_UPLOADIMG_REQUEST,
+  CHAT_UPLOADIMG_SUCCESS,
+  CHAT_UPLOADIMG_RESET,
+  CHAT_UPLOADIMG_FAIL,
+
   CHAT_CREATE_REQUEST,
   CHAT_CREATE_SUCCESS,
   CHAT_CREATE_RESET,
@@ -42,6 +47,9 @@ import {
   createChatData:[],
   createChatLoading:false,
   createChaterror:null,
+
+  uploadImageLoading:false,
+  uploadImageerror:null,
 
   fetchChatData : [],
   fetchChatLoading:false,
@@ -86,6 +94,13 @@ type ChatActionTypes =
         | typeof CHAT_FETCH_RESET
         | typeof CHAT_FETCH_FAIL;
         payload: (string[] | null); // Replace with actual payload type
+    }
+  | {
+      type:
+        | typeof CHAT_UPLOADIMG_REQUEST
+        | typeof CHAT_UPLOADIMG_SUCCESS
+        | typeof CHAT_UPLOADIMG_RESET
+        | typeof CHAT_UPLOADIMG_FAIL;       
     }
   | {
       type:
@@ -147,12 +162,31 @@ export const createChatReducer = ( state = initialState,action: ChatActionTypes)
     case CHAT_CREATE_RESET:
       return { ...state, createChatLoading: false, createChaterror: null  };
   
-    default:
+   //############################### UPLOAD IMAGE ###################################
+
+      case CHAT_UPLOADIMG_REQUEST:
+        return { ...state, uploadImageLoading: true, uploadImageerror: null };    
+      case CHAT_UPLOADIMG_SUCCESS:       
+        return { ...state, uploadImageLoading: false, uploadImageerror: null };
+      case CHAT_UPLOADIMG_FAIL:
+        return { ...state, uploadImageLoading: false, uploadImageerror: action.payload  };
+      
+      case CHAT_UPLOADIMG_RESET:
+        return { ...state, uploadImageLoading: false, uploadImageerror: null  };
+    
+  
+    //#############################################################
+  
+  
+  
+      default:
       return state;
   }
 };
 
 
+
+//#########################################################################
 
 export const fetchChatReducer = ( state = initialState,action: ChatActionTypes) => {
   switch (action.type) {

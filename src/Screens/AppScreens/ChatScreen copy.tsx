@@ -5,7 +5,8 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView, 
+  PermissionsAndroid,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -30,11 +31,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import ChatInput from '../../Components/ChatInput';
 
+import ImagePicker from 'react-native-image-crop-picker';
+
+import { requestImagePickerPermission } from '../../Utilities/requestImagePickerPermission';
 
 type RootStackParamList = {
   ChatStack: {
     chatUser: any; // Replace 'any' with the actual type of chatUser
-    loadfetchChatdata: any; // Replace 'any' with the actual type of loadfetchChatdata
     moreUserData: any; // Replace 'any' with the actual type of moreUserData
     moreOpponentData: any; // Replace 'any' with the actual type of moreOpponentData
   };
@@ -57,6 +60,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
  
   const [inputMessage, setInputMessage] = useState('');
   const [faceemotion, setFaceemotion] = useState('happiness');
+  const [imagedet, setImagedet] = useState('');
   const scrollViewRef = useRef();
 
   const dispatch = useDispatch();
@@ -93,7 +97,8 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   };
 
   const clearInputMessage = () => {
-    setInputMessage('');    
+    setInputMessage('');  
+    setImagedet('');  
   };
 
   const handleMessageTextChange = (text) => {
@@ -102,16 +107,42 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     setInputMessage(text);
   };
 
-  const onAttachmentSend = () => {
-    scrollToBottom();     
+  const onAttachmentSend = async () => {
+  //   console.log('attachment pressed');
+  // const hasPermission = await requestImagePickerPermission();
+  // console.log(hasPermission);
+
+  //   if (hasPermission) {
     
+      ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: false,
+      })
+        .then((image) => {
+          // Now you can set the imagedet state with the image details
+          
+          setImagedet(image);
+  
+          let imgName = image.path.substring(image.path.lastIndexOf('/') + 1);
+          let ext = imgName.split('.').pop();
+          let name = imgName.split('.')[0];
+          let newName = name + Date.now() + '.' + ext;
+          
+          console.log(image);
+          onSend();
+        })
+        .catch((error) => {
+          console.error('Image picker error:', error);
+        });
+    //}
   };
 
   const onSend = async() => {
-    console.log('onSend called with text:');
-       
-    if (inputMessage.trim() === '') return;
-
+    console.log('onSend called with textttttttttt:',imagedet);
+               
+    if (inputMessage.trim() === '' && imagedet === '') return;
+   // console.log('input message',inputMessage);
     const newMessage = {
       messageId: uuid.v4(),
       chatId: moreUserData.chatId,
@@ -120,9 +151,10 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       timestamp: new Date().toISOString(),
       delivered: false,
       emotion: faceemotion,
+      chatimg:image
     };
    
-    //setMessages([...messages, newMessage]);  
+    setMessages([...messages, newMessage]);  
    
 
     let moreUserChatData = {
@@ -131,7 +163,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       lastMessage: inputMessage,
       lastMessageTime: new Date(),
       notification: moreUserData.notification,
-      emotion: faceemotion,
+      emotion: faceemotion,     
     };
 
     let moreUserMessageData = {
@@ -142,6 +174,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       timestamp: new Date().toISOString(),
       delivered: false,
       emotion: faceemotion,
+      chatimg:image
     };
 
     let moreOpponentChatData = {
@@ -161,6 +194,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       timestamp: new Date().toISOString(),
       delivered: false,
       emotion: faceemotion,
+      chatimg:image
     };
 
     await dispatch(

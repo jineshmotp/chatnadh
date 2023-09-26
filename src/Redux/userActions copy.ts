@@ -2,8 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import database from '@react-native-firebase/database';
 import { auth } from '../config/firebase';
-import { ThunkAction } from 'redux-thunk';
-import { RootState } from '../../store'; 
+
 
 import { 
   USER_LOGIN_REQUEST, 
@@ -34,14 +33,7 @@ import {
 } from './userConstants';
 
 
-// Define the types for your action and thunk
-type UserActions =
-  | { type: typeof USER_REGISTER_REQUEST }
-  | { type: typeof USER_REGISTER_SUCCESS; payload: UserData }
-  | { type: typeof USER_REGISTER_FAIL; payload: string }
-  | { type: typeof USER_REGISTER_RESET };
 
-type RegisterAction = ThunkAction<void, RootState, null, UserActions>;
 
 export const initializeUserDataListener = () => async (dispatch, getState) => { 
   const user = getState().userLogin.user;
@@ -86,35 +78,44 @@ export const updateOnlineStatus = (isOnline: boolean) => async (dispatch, getSta
 //###############################################################
 
 export const login = (data) => async (dispatch) => {
+  
   try {
-    // Step 1: Authenticate the user with Firebase Authentication
+
     const userCredential = await auth.signInWithEmailAndPassword(
       data.emailId,
       data.password
     );
 
-    // Step 2: Get the user's UID from Firebase Authentication
-    const userUid = userCredential.user.uid;
+    console.log(userCredential)
 
-    // Step 3: Fetch the user's data from the Realtime Database using the UID
-    const userSnapshot = await database()
-      .ref(`/users/${userUid}`)
+    const snapshot = await database()
+      .ref('/users/')
+      .orderByChild('emailId')
+      .equalTo(data.emailId)
       .once('value');
 
-    const userData = userSnapshot.val();
+    const userArray = snapshot.val();
+   
+    const userId = Object.keys(userArray)[0];
+    const user = userArray[userId];
 
-    if (!userData) {
+    if (!userArray) {
       throw new Error('User not found');
+          }
+    if (user.password !== data.password) 
+    {
+      throw new Error('Invalid password');     
     }
+   
 
-    // Step 4: Update the user's online status in the Realtime Database
-    await database().ref(`/users/${userUid}`).update({ onlineStatus: true });
+    await database().ref(`/users/${user.id}`).update({ onlineStatus: true });
+    await dispatch({ type: USER_UPDATE_ONLINE_STATUS, payload: true });
+   
+    await dispatch({ type: USER_LOGIN_REQUEST });
 
-    // Step 5: Dispatch Redux actions and save user data to AsyncStorage
-    dispatch({ type: USER_UPDATE_ONLINE_STATUS, payload: true });
-    dispatch({ type: USER_LOGIN_REQUEST });
-    await AsyncStorage.setItem('user', JSON.stringify(userData));
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: userData });
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+    
+    dispatch({ type: USER_LOGIN_SUCCESS, payload: user });
     dispatch(initializeUserDataListener());
   } catch (error) {
     dispatch({ type: USER_LOGIN_FAIL, payload: error.message });
@@ -140,11 +141,10 @@ export const logout = () => async (dispatch) => {
   
   try {
    
-   
+    
     await dispatch(updateOnlineStatus(false)); 
     await AsyncStorage.removeItem('user');
      
-    await auth.signOut(); 
     dispatch({ type: USER_LOGOUT });
     return Promise.resolve(); // Resolve the promise if logout is successful
   } catch (error) {
@@ -171,66 +171,30 @@ export const checkLoginStatus = () => async (dispatch) => { // Wrap the action c
 };
 
 //#############################################################
-interface UserData {
-  name: string;
-  emailId: string;
-  password: string;
-  about: string;
-  notification: string;
-  hasStory: boolean;
-  onlineStatus: boolean;
-  accountactivation: string;
-  img: string;
-}
 
-export const register = (data: UserData): RegisterAction => async (dispatch) => {
+export const register = (data) => async (dispatch) => {
   try {
-
-    dispatch({ type: USER_REGISTER_REQUEST });
-    // Attempt to sign in with the user's email and password to check if the user exists
-    await auth.signInWithEmailAndPassword(data.emailId, data.password);
-
-    // If the sign-in succeeds, it means the user already exists
-    throw new Error('User with the same email already exists');
-  } catch (signInError) {
-    if (signInError.code === 'auth/user-not-found') {
-      // If the error is 'auth/user-not-found', it means the user doesn't exist, so proceed with user creation
-      const userRecord = await auth.createUserWithEmailAndPassword(
-        data.emailId,
-        data.password
-      );
-
-      // Get the UID of the newly created user
-      const userUid = userRecord.user.uid;
-      console.log(userUid)
-     
-
-      // Store user data in the Realtime Database
-      await database()
-        .ref(`/users/${userUid}`)
-        .set({
-          id: userUid,
-          name: data.name,
-          emailId: data.emailId,
-          password: data.password,
-          about: data.about,
-          notification: data.notification,
-          hasStory: data.hasStory,
-          onlineStatus: data.onlineStatus,
-          accountactivation: data.accountactivation,
-          img: data.img,
-        });
-
-      dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-    } else {
-      // Handle other sign-in errors (e.g., invalid email or password) here
-      console.error('Sign-in error:', signInError);
-      throw signInError;
+    // Check if a user with the same email already exists
+    const snapshot = await database().ref('/users').orderByChild('emailId').equalTo(data.emailId).once('value');
+    
+    if (snapshot.exists()) {
+      throw new Error('User with the same email already exists');
     }
+    else
+    {
+      dispatch({ type: USER_REGISTER_REQUEST });
+      await database().ref('/users/' + data.id).set(data);      
+    }
+    
+    
+    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+    
+    
+  } catch (error) {
+    console.log("Database error:", error);
+    dispatch({ type: USER_REGISTER_FAIL, payload: error.message });
   }
 };
-
-
 
 
 export const resetdata = () => async (dispatch) => {

@@ -215,6 +215,12 @@ scrollViewContent: {
   backgroundColor:colors.white
 },
 
+chatimageStyle:{
+  margin: wp('2%'),
+  width: wp('30%'),
+  height: wp('30%'),
+
+}
 
   });
   

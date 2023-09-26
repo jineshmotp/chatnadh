@@ -118,7 +118,7 @@ const RegisterScreen = () => {
       try {
         await dispatch(register(data));
 
-        console.log('error : ',error);
+        //console.log('error : ',error);
               
         
       } catch (error) {
