@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView, 
   Image,
+  TouchableOpacity,
   PermissionsAndroid,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,7 +35,9 @@ import ChatInput from '../../Components/ChatInput';
 
 import ImagePicker from 'react-native-image-crop-picker';
 
-import { requestImagePickerPermission } from '../../Utilities/requestImagePickerPermission';
+import ImageFullScreen from '../../Components/ImageFullScreen';
+
+//import { requestImagePickerPermission } from '../../Utilities/requestImagePickerPermission';
 
 type RootStackParamList = {
   ChatStack: {
@@ -68,6 +71,8 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { user, isLoading, error } = userLogin;
   const { fetchChatLoading, fetchChaterror, fetchChatData } = useSelector((state) => state.fetchChat);
+  const [isImageFullScreenVisible, setImageFullScreenVisible] = useState(false);
+  const [fullScreenImageUrl, setFullScreenImageUrl] = useState('');  
   
    useEffect(() => {
     dispatch(resetcreateChatTable());    
@@ -140,7 +145,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       messagetype:msgtype
     };
    
-    //setMessages([...messages, newMessage]);  
+    setMessages([...messages, newMessage]);  
    
 
     let moreUserChatData = {
@@ -193,6 +198,12 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     
   };
 
+  const openImageFullScreen = (imageUrl: string) => {
+    console.log(imageUrl)
+    setFullScreenImageUrl(imageUrl);
+    setImageFullScreenVisible(true);
+  };
+
   const renderItem = (item) => {
     const isUserMessage = item.senderId === user.id;
     const deliveredIcon = item.delivered ? (
@@ -211,7 +222,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
           },
         ]}
       >
-        <View
+        <TouchableOpacity
           style={[
             styles.messageBubble,
             {
@@ -221,15 +232,29 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
               borderBottomLeftRadius: isUserMessage ? 10 : 0,
             },
           ]}
+            
+          onPress={() => {
+            if (item.messagetype === 'image') {
+              openImageFullScreen(item.content);
+            }
+          }}
+
         >
           <FaceEmotion emotion={item.emotion} text={item.emotion} />
+          
+         
 
+
+          
           { item.messagetype === 'image' ? 
           (
+           
+           
             <Image
           source={{ uri: item.content }} // Use the correct source for the image
           style={styles.chatimageStyle} // Define a style for the image
            />
+          
           )
           :
           (
@@ -241,7 +266,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
                {formatDate(item.timestamp)}
             {deliveredIcon}
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -310,7 +335,9 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
             clearInputMessage={clearInputMessage}
              />
                       
-
+                      {isImageFullScreenVisible && (
+  <ImageFullScreen imageUrl={fullScreenImageUrl} onClose={() => setImageFullScreenVisible(false)} />
+)}
       </KeyboardAvoidingView>
     </BackgroundImage>
   );

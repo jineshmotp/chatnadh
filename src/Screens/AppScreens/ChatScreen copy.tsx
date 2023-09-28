@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView, 
+  Image,
   PermissionsAndroid,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -108,50 +109,35 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   };
 
   const onAttachmentSend = async () => {
-  //   console.log('attachment pressed');
-  // const hasPermission = await requestImagePickerPermission();
-  // console.log(hasPermission);
-
-  //   if (hasPermission) {
     
       ImagePicker.openPicker({
         width: 300,
         height: 400,
         cropping: false,
       })
-        .then((image) => {
-          // Now you can set the imagedet state with the image details
-          
-          setImagedet(image);
-  
-          let imgName = image.path.substring(image.path.lastIndexOf('/') + 1);
-          let ext = imgName.split('.').pop();
-          let name = imgName.split('.')[0];
-          let newName = name + Date.now() + '.' + ext;
-          
-          console.log(image);
-          onSend();
+        .then((image) => {         
+          setImagedet(image);        
+          onSend(image.path, 'image');
         })
         .catch((error) => {
           console.error('Image picker error:', error);
         });
-    //}
+   
   };
 
-  const onSend = async() => {
-    console.log('onSend called with textttttttttt:',imagedet);
+  const onSend = async (messageContent,msgtype) => {
                
-    if (inputMessage.trim() === '' && imagedet === '') return;
-   // console.log('input message',inputMessage);
+    if (messageContent === '') return;
+    console.log('input message',messageContent);
     const newMessage = {
       messageId: uuid.v4(),
       chatId: moreUserData.chatId,
       senderId: user.id,
-      content: inputMessage,
+      content: messageContent,
       timestamp: new Date().toISOString(),
       delivered: false,
-      emotion: faceemotion,
-      chatimg:image
+      emotion: faceemotion,      
+      messagetype:msgtype
     };
    
     setMessages([...messages, newMessage]);  
@@ -160,7 +146,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     let moreUserChatData = {
       chatId: moreUserData.chatId,
       participants: moreUserData.participants,
-      lastMessage: inputMessage,
+      lastMessage: messageContent,
       lastMessageTime: new Date(),
       notification: moreUserData.notification,
       emotion: faceemotion,     
@@ -170,17 +156,17 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       messageId: uuid.v4(),
       chatId: moreUserData.chatId,
       senderId: user.id,
-      content: inputMessage,
+      content: messageContent,
       timestamp: new Date().toISOString(),
       delivered: false,
-      emotion: faceemotion,
-      chatimg:image
+      emotion: faceemotion,      
+      messagetype:msgtype
     };
 
     let moreOpponentChatData = {
       chatId: moreOpponentData.chatId,
       participants: moreUserData.participants,
-      lastMessage: inputMessage,
+      lastMessage: messageContent,
       lastMessageTime: new Date(),
       notification: moreUserData.notification + 1,
       emotion: faceemotion,
@@ -190,13 +176,13 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
       messageId: uuid.v4(),
       chatId: moreOpponentData.chatId,
       senderId: user.id,
-      content: inputMessage,
+      content: messageContent,
       timestamp: new Date().toISOString(),
       delivered: false,
-      emotion: faceemotion,
-      chatimg:image
+      emotion: faceemotion,     
+      messagetype:msgtype
     };
-
+    console.log('calling createchat')
     await dispatch(
       createChat(moreUserChatData, moreUserMessageData, moreOpponentChatData, moreOpponentMessageData)
     );
@@ -238,7 +224,19 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
         >
           <FaceEmotion emotion={item.emotion} text={item.emotion} />
 
-          <Text style={styles.messageText}>{item.content}</Text>
+          { item.messagetype === 'image' ? 
+          (
+            <Image
+          source={{ uri: item.content }} // Use the correct source for the image
+          style={styles.chatimageStyle} // Define a style for the image
+           />
+          )
+          :
+          (
+            <Text style={styles.messageText}>{item.content}</Text>
+          )
+
+          }          
           <Text style={styles.timestampText}>
                {formatDate(item.timestamp)}
             {deliveredIcon}
@@ -307,7 +305,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
 
             <ChatInput 
             onAttachmentSend={onAttachmentSend} 
-            onSend={onSend} 
+            onSend={(message) => onSend(message,'text')}
             handleMessageTextChange={handleMessageTextChange}
             clearInputMessage={clearInputMessage}
              />
