@@ -1,7 +1,7 @@
 import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 import notifee from '@notifee/react-native';
 
-export const  requestUserPermission = async() => {
+export const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
   const enabled =
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
@@ -40,14 +40,15 @@ export const notificationListener = async () => {
 export const getToken = async () => {
   await messaging().registerDeviceForRemoteMessages();
   const token = await messaging().getToken();
-  console.log('#######################################3');
-  console.log(token);
-  console.log('#######################################3');
+  // console.log('#######################################3');
+  // console.log(token);
+  // console.log('#######################################3');
+  return token;
 };
 
 
 
-export const onDisplayNotification = async() => {
+export const onDisplayNotification = async () => {
   // Request permissions (required for iOS)
   await notifee.requestPermission()
 

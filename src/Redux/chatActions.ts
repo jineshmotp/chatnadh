@@ -2,6 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
+import messaging from '@react-native-firebase/messaging';
 import { 
   CONTACT_LIST_REQUEST,
   CONTACT_LIST_SUCCESS,
@@ -162,12 +163,11 @@ export const resetfetchChat = () => async (dispatch: Dispatch) => {
 
 //##################################################################
 
-export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChatData,moreOpponentMessageData) => async (dispatch: Dispatch) => {
+export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChatData,moreOpponentMessageData,chatUser,user) => async (dispatch: Dispatch) => {
   dispatch({ type: CHAT_CREATE_REQUEST });
   
  
   try {
-
 
     let lastmsgg = moreUserChatData.lastMessage;
     let contents = moreUserMessageData.content;
@@ -239,6 +239,13 @@ export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChat
                         messagetype:moreOpponentMessageData.messagetype                      
                         
                         });
+
+    
+                        const opponentFCMToken = chatUser.fcmToken; // Get the opponent's FCM token from your database
+                        console.log('usertoken on chat :',opponentFCMToken)
+                        // Send the push notification
+                        sendPushNotification(opponentFCMToken,user);
+                                           
           
     dispatch({ type: CHAT_CREATE_SUCCESS });    
    
@@ -253,6 +260,29 @@ export const resetcreateChat = () => async (dispatch: Dispatch) => {
   dispatch({ type: CHAT_CREATE_RESET });
 
 };
+
+
+//########################### push  notification ###########################
+
+export const sendPushNotification = async (opponentFCMToken,user) => {
+ 
+  try {
+    const response = await messaging().send({
+      data: {
+        image: user.image, // Replace 'image' with the actual key you want to use
+      },
+      notification: {
+        title: 'FCM Message',
+        body: 'This is an FCM notification message!',
+      },
+      token: opponentFCMToken,
+    });
+
+    console.log('Successfully sent FCM message:', response);
+  } catch (error) {
+    console.error('Error sending FCM message:', error);
+  }
+ };
 
 //#########################################################################
 

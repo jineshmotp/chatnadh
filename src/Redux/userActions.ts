@@ -62,9 +62,32 @@ export const initializeUserDataListener = () => async (dispatch, getState) => {
   }
 };
 
-//#########################################################
+//######################### Updateuser Token ################################
 
 
+export const updateUserToken = (userId: string, token: string) => async (dispatch) => {
+  try {
+    const userRef = database().ref(`/users/${userId}`);
+    userRef.once('value', (snapshot) => {
+      const userData = snapshot.val();
+      if (userData) {
+        if (!userData.fcmToken) {
+          // If the user does not have an fcmToken, add it
+          userRef.update({ fcmToken: token });
+        } else if (userData.fcmToken !== token) {
+          // If the user's fcmToken is different from the new token, update it
+          userRef.update({ fcmToken: token });
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error updating user token:', error);
+  }
+};
+
+
+
+//########################################################################
 export const updateOnlineStatus = (isOnline: boolean) => async (dispatch, getState) => {
    
   console.log('updateOnlineStatus');
@@ -219,6 +242,7 @@ export const register = (data: UserData): RegisterAction => async (dispatch) => 
           onlineStatus: data.onlineStatus,
           accountactivation: data.accountactivation,
           img: data.img,
+          fcmToken: "", 
         });
 
       dispatch({ type: USER_REGISTER_SUCCESS, payload: data });

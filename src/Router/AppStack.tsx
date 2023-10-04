@@ -8,26 +8,76 @@ import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../Constants/colors';
 
 import { fetchChatList,resetfetchChat,resetcreateChat,resetfetchChatList, resetcreateChatTable } from '../Redux/chatActions';
+import { updateUserToken } from '../Redux/userActions'
+
 import { useDispatch, useSelector } from 'react-redux'
 
-
+import { requestUserPermission,notificationListener,getToken } from '../Utilities/commonUtils';
 
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => {
 
+
+  interface RootState {
+    userLogin: {
+      user: {
+      id: string;
+      about: string;
+      accountactivation: number;
+      emailId: string;
+      hasStory: boolean;
+      img: string;
+      lastMessage: string;
+      name: string;
+      notification: number;
+      onlineStatus: boolean;      
+      time: string;
+      fcmToken:string;
+      };
+      isLoading: boolean;
+      error: string | null;
+    };   
+  }
+
   const dispatch = useDispatch<Dispatch>();
+  const [currentToken, setCurrentToken] = useState('');
+
+  const {user, isLoading, error } = useSelector((state: RootState) => state.userLogin);
 
   const resetFunction = () => {
    
      dispatch(resetcreateChat())
      dispatch(resetcreateChatTable())
      dispatch(resetfetchChat())  
-     dispatch(resetfetchChatList()) 
-   
+     dispatch(resetfetchChatList())    
   };
 
- 
+  useEffect(() => {
+    const getTokenAndHandle = async () => {
+      await requestUserPermission();
+      await notificationListener();  
+      const token = await getToken();  
+     // console.log('user : ',user.name);
+      //console.log('\nToken : ',token);
+      setCurrentToken(token);
+      await dispatch(updateUserToken(user.id, token));  
+      
+    };  
+
+    getTokenAndHandle();
+    
+  }, []);
+
+   // Use useEffect with currentToken as a dependency to monitor token changes
+  useEffect(() => {
+        
+    if (user.id && currentToken && user.fcmToken !== currentToken) {
+      dispatch(updateUserToken(user.id, currentToken)); // Update the token in the database
+    }
+  }, [currentToken]);
+
+
   
   return (
     <Tab.Navigator

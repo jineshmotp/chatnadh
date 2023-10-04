@@ -75,6 +75,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   const [fullScreenImageUrl, setFullScreenImageUrl] = useState('');  
   
    useEffect(() => {
+    //console.log('chat opponent : ',chatUser.name,' id :',chatUser.id)
     dispatch(resetcreateChatTable());    
     callfetchchatdata();
    }, []);
@@ -108,7 +109,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
   };
 
   const handleMessageTextChange = (text) => {
-    console.log('onSend called with text:', text);
+    //console.log('onSend called with text:', text);
     scrollToBottom();     
     setInputMessage(text);
   };
@@ -189,7 +190,7 @@ const ChatScreen: React.FC<Props> = ({ route }) => {
     };
     console.log('calling createchat')
     await dispatch(
-      createChat(moreUserChatData, moreUserMessageData, moreOpponentChatData, moreOpponentMessageData)
+      createChat(moreUserChatData, moreUserMessageData, moreOpponentChatData, moreOpponentMessageData,chatUser,user)
     );
      
     callfetchchatdata();
