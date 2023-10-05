@@ -12,7 +12,7 @@ import { updateUserToken } from '../Redux/userActions'
 
 import { useDispatch, useSelector } from 'react-redux'
 
-import { requestUserPermission,notificationListener,getToken } from '../Utilities/commonUtils';
+import { requestUserPermission,notificationListener,getToken,onDisplayLocalNotification } from '../Utilities/commonUtils';
 
 const Tab = createBottomTabNavigator();
 
@@ -55,13 +55,21 @@ const AppStack = () => {
 
   useEffect(() => {
     const getTokenAndHandle = async () => {
-      await requestUserPermission();
+      const authstatus = await requestUserPermission();
       await notificationListener();  
-      const token = await getToken();  
-     // console.log('user : ',user.name);
-      //console.log('\nToken : ',token);
-      setCurrentToken(token);
-      await dispatch(updateUserToken(user.id, token));  
+      if (authstatus == 1)
+      {
+        const token = await getToken();       
+        console.log('user : ',user.name,'\ntoke : ',token)
+        setCurrentToken(token);
+        await dispatch(updateUserToken(user.id, token));  
+
+      }
+      else
+      {
+        console.log('Authorization not granted yet !!!');
+      }
+     
       
     };  
 

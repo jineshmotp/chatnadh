@@ -10,6 +10,7 @@ export const requestUserPermission = async () => {
   if (enabled) {
     console.log('Authorization status:', authStatus);
   }
+  return authStatus;
 }
 
 
@@ -48,27 +49,39 @@ export const getToken = async () => {
 
 
 
-export const onDisplayNotification = async () => {
-  // Request permissions (required for iOS)
-  await notifee.requestPermission()
+export const onDisplayLocalNotification = async(title,body,data) => {
 
-  // Create a channel (required for Android)
+  const authstatus = await requestUserPermission();
+  console.log('again status : ',authstatus);
+  
+  
   const channelId = await notifee.createChannel({
     id: 'default',
-    name: 'Default Channel',
+    name: 'ChatNadh',
   });
 
-  // Display a notification
-  await notifee.displayNotification({
-    title: 'Notification Title',
-    body: 'Main body content of the notification',
+  // Required for iOS
+  // See https://notifee.app/react-native/docs/ios/permissions
+  await notifee.requestPermission();
+
+  const notificationId = await notifee.displayNotification({
+    id: '123',
+    title: title,
+    body: body,
+    data:data ? data : null,
     android: {
       channelId,
-      smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
-      // pressAction is needed if you want the notification to open the app when pressed
-      pressAction: {
-        id: 'default',
-      },
     },
   });
-}
+
+  // // Sometime later...
+  // await notifee.displayNotification({
+  //   id: '1234',
+  //   title: 'Updated Notification Title',
+  //   body: 'Updated main body content of the notification',
+  //   android: {
+  //     channelId,
+  //   },
+  // });
+  
+};
