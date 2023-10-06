@@ -3,6 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
 import messaging from '@react-native-firebase/messaging';
+import { SERVER_KEY } from '../config/constants';
+import axios from 'axios';
+
 import { 
   CONTACT_LIST_REQUEST,
   CONTACT_LIST_SUCCESS,
@@ -242,9 +245,9 @@ export const createChat = (moreUserChatData,moreUserMessageData,moreOpponentChat
 
     
                         const opponentFCMToken = chatUser.fcmToken; // Get the opponent's FCM token from your database
-                        console.log('usertoken on chat :',opponentFCMToken)
+                        //console.log('usertoken on chat :',opponentFCMToken)
                         // Send the push notification
-                        sendPushNotification(opponentFCMToken,user);
+                        sendPushNotification(opponentFCMToken,user,lastmsgg);
                                            
           
     dispatch({ type: CHAT_CREATE_SUCCESS });    
@@ -264,21 +267,40 @@ export const resetcreateChat = () => async (dispatch: Dispatch) => {
 
 //########################### push  notification ###########################
 
-export const sendPushNotification = async (opponentFCMToken,user) => {
+export const sendPushNotification = async (opponentFCMToken,user,lastmsgg) => {
  
   try {
-    const response = await messaging().send({
-      data: {
-        image: user.image, // Replace 'image' with the actual key you want to use
-      },
+    const serverKey = 'AAAAHKgQF7Q:APA91bHkYq0g_njItbWl4BTPnGiFbLpdJsYwoD9V6H-EcEGBvjb-gaY1rjU45zeawQRo8AEwuT-L_t_gL8-2jSF_ycUepzbJREv2auOE3zRAJ81Yy3Y41V-EUZ2fLL0F9upMtkIDGcaM'; // Replace with your Firebase Server Key
+
+    // Create the message payload
+    const message = {
+      to: opponentFCMToken,
       notification: {
-        title: 'FCM Message',
-        body: 'This is an FCM notification message!',
+        title: user.name,
+        body: lastmsgg,
       },
-      token: opponentFCMToken,
+      data: {
+        key1: 'value1',
+        key2: 'value2',
+      },
+    };
+
+    const response = await fetch('https://fcm.googleapis.com/fcm/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `key=${serverKey}`,
+      },
+      body: JSON.stringify(message),
     });
 
-    console.log('Successfully sent FCM message:', response);
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log('Successfully sent FCM message:', responseData);
+    } else {
+      console.error('Error sending FCM message:', response.statusText);
+    }
+
   } catch (error) {
     console.error('Error sending FCM message:', error);
   }
