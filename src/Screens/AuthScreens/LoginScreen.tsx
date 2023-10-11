@@ -108,7 +108,7 @@ const LoginScreen = () => {
  
 
   const gotoRegister = () => {
-    navigation.navigate('RegisterScreen');
+    navigation.navigate('PhoneNumberScreen');
   };
 
   const gotoForgotPassword = () => {
