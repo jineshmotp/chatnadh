@@ -15,6 +15,7 @@ interface PhoneNumberInputProps {
 const PhoneNumberInput: FunctionComponent<PhoneNumberInputProps> = ({
   value,
   setValue,
+  setSelectedCountryCode
 }) => {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isCountryPickerVisible, setCountryPickerVisible] = useState(false);
@@ -27,7 +28,8 @@ const PhoneNumberInput: FunctionComponent<PhoneNumberInputProps> = ({
 
   const onSelectCountry = (country: Country) => {
     console.log(country.callingCode[0]);
-    setSelectedCountryCode(country.callingCode[0]);
+    let phcodes = "+"+country.callingCode[0];
+    setSelectedCountryCode(phcodes);
     setSelectedCountry(country.cca2);
     setCountryPickerVisible(false); // Close the country picker modal
   };
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
     borderColor: colors.secondary,
     borderRadius: wp('2%'),
     paddingHorizontal: wp('2%'),
-    marginBottom: hp('4%'),
+    marginBottom: hp('2%'),
   },
   countryPickerContainer: {
     backgroundColor: colors.white,

@@ -14,7 +14,7 @@ interface ButtonInputProps {
 
 const ButtonInput: React.FC<ButtonInputProps> = ({ styless, contentStyle, labelStyle, onPress, label,buttonLoading }) => {
   return (
-    <View> 
+    <View style={styles.buttonContainer}> 
        {!buttonLoading ? (
       <TouchableOpacity onPress={onPress} style={[styles.button, styless, contentStyle]}>
           <Text style={[styles.buttonLabel, labelStyle]}>{label}</Text>
@@ -36,6 +36,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    //marginBottom: hp('4%'),
+    marginTop: hp('4%'),
   },
   button: {
     backgroundColor: 'blue',

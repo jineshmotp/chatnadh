@@ -32,32 +32,25 @@ const OTPInput: FunctionComponent<OTPInputProps> = ({ value,setval,onchangeOTP }
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    
   
-  },
- 
   inputWrapper: {
-    flex: 1,
+     flex:1,
     alignItems: 'center',
     justifyContent:'center',
-    width: wp('15%'),
+    width: wp('10%'), // Adjust the width to make it larger
     height: hp('7%'),
     borderWidth: 1,
     borderColor: colors.secondary,
     borderRadius: wp('2%'),
-    paddingHorizontal: wp('0%'),
-    margin: hp('2%'),   
-    marginBottom: hp('4%'),   
-    backgroundColor: 'transparent',   
-    overflow: 'hidden',
+    paddingHorizontal: wp('0%'), // Add some padding to center the digit
+    margin: hp('0.5%'), // Adjust margin as needed
+    marginBottom: hp('2%'), // Adjust margin as needed
+    backgroundColor: 'transparent',
   },
   input: {
     backgroundColor: 'transparent',
     fontSize: wp('4%'),
     color: colors.primary,
-    paddingTop: 0, // Reset paddingTop
-    paddingBottom: 0, // Reset paddingBottom
   },
 
 });

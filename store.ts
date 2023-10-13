@@ -6,7 +6,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   userLoginReducer,
   userRegisterReducer, 
-  userIndividualReducer
+  userIndividualReducer,
+  userOTPReducer,
   //userLogoutReducer
 } from './src/Redux/userReducer';
 
@@ -23,6 +24,8 @@ const rootReducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userIndividual:userIndividualReducer,
+
+  userOTP:userOTPReducer,
 
   getallContacts:getallContactsReducer,
 

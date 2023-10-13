@@ -25,7 +25,19 @@ import {
   USER_INDIVIDUAL_RESET,
 
   
-  USER_UPDATE_ONLINE_STATUS
+  USER_UPDATE_ONLINE_STATUS,
+
+
+  OTP_REQUEST,
+  OTP_FAIL,
+  OTP_SUCCESS,
+  OTP_RESET,
+
+  OTP_VALIDATION_REQUEST,
+  OTP_VALIDATION_FAIL,
+  OTP_VALIDATION_SUCCESS,
+  OTP_VALIDATION_RESET,
+
 
 } from './userConstants';
 
@@ -36,9 +48,17 @@ interface UserState {
   error: string | null;
   isOnline: boolean; // Add this field
 
+  otpRequestLoading:boolean;
+  otpRequesterror: string | null;
+  otpRequestData:null | [],
+
+  otpValidationLoading:boolean;
+  otpValidationerror:string | null;
+  otpValidationData:null | [],
+
   userIndividualLoading:boolean;
   userIndividualerror:string | null;
-  userIndividualData:[],
+  userIndividualData:null | [],
 }
 
 const initialState: UserState = {
@@ -47,6 +67,17 @@ const initialState: UserState = {
   buttonLoading: false,
   error: null,
   isOnline: false, 
+
+  
+  otpRequestLoading:false,
+  otpRequesterror:null,
+  otpRequestData:null,
+
+  otpValidationLoading:false,
+  otpValidationerror:null,
+  otpValidationData:null,
+
+
 
   userIndividualLoading:false,
   userIndividualerror:null,
@@ -99,6 +130,39 @@ export const userIndividualReducer = (state = initialState, action) => {
       return state; // Return the initial state here
   }
 };
+
+//###################### userOTPReducer #############################
+
+export const userOTPReducer = (state = initialState, action) => {
+
+
+  switch (action.type) {
+
+    case OTP_REQUEST:
+      return { ...state, otpRequestLoading: false, otpRequesterror: null };    
+    case OTP_SUCCESS: 
+      return { ...state, otpRequestData: action.payload, otpRequestLoading: false, otpRequesterror: null };
+    case OTP_FAIL:
+     return { ...state, otpRequestData:null, otpRequestLoading: false, otpRequesterror: action.payload  };
+    case OTP_RESET:
+        return { ...state, otpRequestData:null, otpRequestLoading: false, otpRequesterror: null  };
+      
+    case OTP_VALIDATION_REQUEST:
+        return { ...state, otpValidationLoading: false, otpValidationerror: null };    
+    case OTP_VALIDATION_SUCCESS: 
+        return { ...state, otpValidationData: action.payload, otpValidationLoading: false, otpValidationerror: null };
+    case OTP_VALIDATION_FAIL:
+        return { ...state, otpValidationData:null, otpValidationLoading: false, otpValidationerror: action.payload  };
+    case OTP_VALIDATION_RESET:
+        return { ...state, otpValidationData:null, otpValidationLoading: false, otpValidationerror: null  };
+    
+    default:
+      return state;
+  }
+
+};
+
+//######################### User Register ########################################
 
 export const userRegisterReducer = (state = { }, action) => {
 

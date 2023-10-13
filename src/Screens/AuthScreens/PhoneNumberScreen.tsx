@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-native-simple-toast';
 import uuid from 'react-native-uuid';
 
+import { OTPPhoneAuth } from '../../Redux/userActions';
+
 import PhoneNumberInput from '../../Components/PhoneNumberInput';
 
 const PhoneNumberScreen = () => {
@@ -32,14 +34,17 @@ const PhoneNumberScreen = () => {
   const dispatch = useDispatch()
   const userRegister = useSelector(state => state.userRegister)
   const {user,isLoading,error } = userRegister
-     
+  const userOTP = useSelector(state => state.userOTP)
+  const {otpRequestData,otpRequestLoading,otpRequesterror } = userOTP;
+   
   
   const handleButtonPress = async () => {
 
     let val = selectedCountryCode+value
-    console.log(val);
-    navigation.navigate('OTPScreen');
-   
+    console.log('phone number ',val);
+    
+   // let phonenumber = '+1 650-555-3434';
+    dispatch(OTPPhoneAuth(val)); 
   };
 
   const gotoLogin = () => {
@@ -50,9 +55,14 @@ const PhoneNumberScreen = () => {
 
   useEffect(() => {
 
+    if(otpRequestData !== null)
+    {
+      console.log('logvalue : ',otpRequestData)
+    }
+   //navigation.navigate('OTPScreen');
   
 
-  }, []);
+  }, [otpRequestData,otpRequestLoading]);
 
 
   useEffect(() => {

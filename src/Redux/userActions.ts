@@ -29,7 +29,18 @@ import {
   USER_INDIVIDUAL_SUCCESS,
   USER_INDIVIDUAL_RESET,
 
-  USER_UPDATE_ONLINE_STATUS
+  USER_UPDATE_ONLINE_STATUS,
+
+  OTP_REQUEST,
+  OTP_FAIL,
+  OTP_SUCCESS,
+  OTP_RESET,
+
+  OTP_VALIDATION_REQUEST,
+  OTP_VALIDATION_FAIL,
+  OTP_VALIDATION_SUCCESS,
+  OTP_VALIDATION_RESET,
+
 
 } from './userConstants';
 
@@ -116,6 +127,9 @@ export const login = (data) => async (dispatch) => {
       data.password
     );
 
+    //const userCredential = await auth.signInWithPhoneNumber('+48729667992')
+
+
     // Step 2: Get the user's UID from Firebase Authentication
     const userUid = userCredential.user.uid;
 
@@ -192,6 +206,31 @@ export const checkLoginStatus = () => async (dispatch) => { // Wrap the action c
     throw error;
   }
 };
+//######################### OPT LOGIN/ REGISTER ####################
+
+export const OTPPhoneAuth = (Phonenumber) => async (dispatch) => {
+  
+try {
+    dispatch({ type: OTP_REQUEST });
+    const confirmation = await auth.signInWithPhoneNumber(Phonenumber);
+
+    dispatch({ type: OTP_SUCCESS, payload: confirmation });
+
+    //console.log(confirmation)
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: OTP_FAIL, payload: error.message });
+  }
+
+
+};
+
+export const OTPValidation = (OTPValue) => async (dispatch) => {
+
+
+
+  
+};
 
 //#############################################################
 interface UserData {
@@ -211,10 +250,14 @@ export const register = (data: UserData): RegisterAction => async (dispatch) => 
 
     dispatch({ type: USER_REGISTER_REQUEST });
     // Attempt to sign in with the user's email and password to check if the user exists
+    //await auth.signInWithEmailAndPassword(data.emailId, data.password);
+   
     await auth.signInWithEmailAndPassword(data.emailId, data.password);
+    //await auth.signInWithPhoneNumber('+1 650-555-3434');
 
     // If the sign-in succeeds, it means the user already exists
     throw new Error('User with the same email already exists');
+
   } catch (signInError) {
     if (signInError.code === 'auth/user-not-found') {
       // If the error is 'auth/user-not-found', it means the user doesn't exist, so proceed with user creation
@@ -249,7 +292,8 @@ export const register = (data: UserData): RegisterAction => async (dispatch) => 
     } else {
       // Handle other sign-in errors (e.g., invalid email or password) here
       console.error('Sign-in error:', signInError);
-      throw signInError;
+      //throw signInError;
+      dispatch({ type: USER_REGISTER_FAIL, payload: signInError });
     }
   }
 };

@@ -31,11 +31,13 @@ const OTPScreen = () => {
   const [second_value, setSecond_value] = useState('');
   const [third_value, setThird_value] = useState('');
   const [fourth_value, setFourth_value] = useState('');
+  const [fifth_value, setFifth_value] = useState('');
+  const [sixth_value, setSixth_value] = useState('');
   
   const dispatch = useDispatch()
   const userRegister = useSelector(state => state.userRegister)
-  const {user,isLoading,error } = userRegister
-
+  const {user,isLoading,error } = userRegister;
+  
 
   const onOTPchange = async (txt,otpnum) => {
 
@@ -55,17 +57,27 @@ const OTPScreen = () => {
      {
       setFourth_value(txt);
      }
+     if(otpnum == 5)
+     {
+      setFifth_value(txt);
+     }
+     if(otpnum == 6)
+     {
+      setSixth_value(txt);
+     }
        
   
  };
      
   
   const handleButtonPress = async () => {
-    
-    console.log(first_value+second_value+third_value+fourth_value)
-    Keyboard.dismiss();
 
-    navigation.navigate('RegisterScreen');
+    let otpval = first_value+second_value+third_value+fourth_value+fifth_value+sixth_value
+    
+    console.log(otpval)
+    
+
+    //navigation.navigate('RegisterScreen');
 
   };
 
@@ -149,7 +161,21 @@ const OTPScreen = () => {
              onchangeOTP={(txt)=> onOTPchange(txt,4)}
              />
 
+                <OTPInput 
+             value={fifth_value}             
+             onchangeOTP={(txt)=> onOTPchange(txt,5)}
+             />
+
+          <OTPInput 
+             value={sixth_value}             
+             onchangeOTP={(txt)=> onOTPchange(txt,6)}
+             />
+
             </View>
+
+            <TouchableOpacity >
+              <Label textval="Don't get OTP yet? Request New OTP" styless={{ color: 'blue', marginBottom: hp('2%'), fontSize: wp('3.8%') }} />
+            </TouchableOpacity>
           
             
             <ButtonInput
