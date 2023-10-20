@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef  } from 'react';
 import { View, Image, Animated, ScrollView, TouchableOpacity, KeyboardAvoidingView, Keyboard, Platform,Text } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Label from '../../Components/Label';
@@ -17,9 +17,19 @@ import uuid from 'react-native-uuid';
 import PhoneNumberInput from '../../Components/PhoneNumberInput';
 import OTPInput from '../../Components/OTPInput';
 
-const OTPScreen = () => {
+import { OTPValidation,OTPPhoneAuth } from '../../Redux/userActions'
+
+const OTPScreen = ({ route }) => {
+  const { confirmation } = route.params;
   const navigation = useNavigation();
-  const route = useRoute();
+
+ // Create refs for each OTP input
+const firstInputRef = useRef();
+const secondInputRef = useRef();
+const thirdInputRef = useRef();
+const fourthInputRef = useRef();
+const fifthInputRef = useRef();
+const sixthInputRef = useRef(); 
   
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
   const [translateYAnim] = useState(new Animated.Value(30)); // Initial value for translateY: 30
@@ -37,13 +47,16 @@ const OTPScreen = () => {
   const dispatch = useDispatch()
   const userRegister = useSelector(state => state.userRegister)
   const {user,isLoading,error } = userRegister;
-  
+
+  const userOTP = useSelector(state => state.userOTP)
+  const {otpValidationData,otpValidationLoading,otpValidationerror } = userOTP;
 
   const onOTPchange = async (txt,otpnum) => {
 
      if(otpnum == 1)
      {
       setFirst_value(txt);
+      
      }
      if(otpnum == 2)
      {
@@ -64,35 +77,52 @@ const OTPScreen = () => {
      if(otpnum == 6)
      {
       setSixth_value(txt);
-     }
-       
+     }      
   
  };
+
+ const resentOTP = async () => {
+
+  console.log(confirmation._auth._user.phoneNumber)
+
+  dispatch(OTPPhoneAuth(confirmation._auth._user.phoneNumber)); 
+
+};
      
   
   const handleButtonPress = async () => {
 
     let otpval = first_value+second_value+third_value+fourth_value+fifth_value+sixth_value
-    
-    console.log(otpval)
-    
-
-    //navigation.navigate('RegisterScreen');
+    console.log(otpval)    
+    dispatch(OTPValidation(confirmation,otpval)); 
 
   };
 
   const gotoLogin = () => {
-    navigation.navigate('LoginScreen');
+    navigation.popToTop();
+    navigation.reset({
+      index: 0, // The index of the screen you want to navigate to in the stack
+      routes: [{ name: 'LoginScreen' }], // The name of the route you want to navigate to
+    });       
   };
 
-  
 
   useEffect(() => {
 
+    if(otpValidationData !== null)
+    {
+      console.log('logvalue : ',otpValidationData)
+
+      navigation.navigate('RegisterScreen', {
+        otpuser: otpValidationData,  
+    
+      });
+
+    } 
+
+  }, [otpValidationData,otpValidationLoading]);
+
   
-
-  }, []);
-
 
   useEffect(() => {
     Animated.parallel([
@@ -145,35 +175,45 @@ const OTPScreen = () => {
              <OTPInput 
              value={first_value}             
              onchangeOTP={(txt)=> onOTPchange(txt,1)}
+             ref={firstInputRef}
+             handleFocusChange={() => handleFocusChange(firstInputRef, secondInputRef)}
              />
               <OTPInput 
              value={second_value}             
              onchangeOTP={(txt)=> onOTPchange(txt,2)}
+             ref={secondInputRef}
+             handleFocusChange={() => handleFocusChange(secondInputRef,thirdInputRef)}
              />
 
             <OTPInput 
              value={third_value}             
              onchangeOTP={(txt)=> onOTPchange(txt,3)}
+             ref={thirdInputRef}
+             handleFocusChange={() => handleFocusChange(thirdInputRef,fourthInputRef)}
              />
 
             <OTPInput 
              value={fourth_value}             
              onchangeOTP={(txt)=> onOTPchange(txt,4)}
+             ref={fourthInputRef}
+             handleFocusChange={() => handleFocusChange(fourthInputRef,fifthInputRef)}
              />
 
                 <OTPInput 
              value={fifth_value}             
              onchangeOTP={(txt)=> onOTPchange(txt,5)}
+             ref={fifthInputRef}
              />
 
           <OTPInput 
              value={sixth_value}             
              onchangeOTP={(txt)=> onOTPchange(txt,6)}
+             ref={sixthInputRef}
              />
 
             </View>
 
-            <TouchableOpacity >
+            <TouchableOpacity onPress={resentOTP} >
               <Label textval="Don't get OTP yet? Request New OTP" styless={{ color: 'blue', marginBottom: hp('2%'), fontSize: wp('3.8%') }} />
             </TouchableOpacity>
           

@@ -8,6 +8,7 @@ export const colors = {
     black:'#000000',
     tertiary:'#1f085f',
     background: '#29292b',
+    placeholdercolor:'#7044c9',
     chat_background: '#e3e3e3',
     transparent:'transparent',
     text: '#000000',

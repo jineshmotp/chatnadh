@@ -59,6 +59,7 @@ const PhoneNumberInput: FunctionComponent<PhoneNumberInputProps> = ({
       <View style={styles.inputWrapper}>
         <TextInput
           placeholder="Phone Number"
+          placeholderTextColor={colors.placeholdercolor}
           keyboardType="phone-pad"
           style={styles.input}
           value={value}

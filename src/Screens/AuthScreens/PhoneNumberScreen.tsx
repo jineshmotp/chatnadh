@@ -40,7 +40,7 @@ const PhoneNumberScreen = () => {
   
   const handleButtonPress = async () => {
 
-    let val = selectedCountryCode+value
+    let val = String(selectedCountryCode+value);
     console.log('phone number ',val);
     
    // let phonenumber = '+1 650-555-3434';
@@ -48,7 +48,11 @@ const PhoneNumberScreen = () => {
   };
 
   const gotoLogin = () => {
-    navigation.navigate('LoginScreen');
+    navigation.popToTop();
+    navigation.reset({
+      index: 0, // The index of the screen you want to navigate to in the stack
+      routes: [{ name: 'LoginScreen' }], // The name of the route you want to navigate to
+    });   
   };
 
   
@@ -58,8 +62,18 @@ const PhoneNumberScreen = () => {
     if(otpRequestData !== null)
     {
       console.log('logvalue : ',otpRequestData)
+
+
+      navigation.navigate('OTPScreen', {
+        confirmation: otpRequestData,  
+    
+      });
+
+
+
+
     }
-   //navigation.navigate('OTPScreen');
+  
   
 
   }, [otpRequestData,otpRequestLoading]);

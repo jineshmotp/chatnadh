@@ -43,6 +43,7 @@ import {
 
 
 } from './userConstants';
+import { Alert } from 'react-native';
 
 
 // Define the types for your action and thunk
@@ -211,6 +212,7 @@ export const checkLoginStatus = () => async (dispatch) => { // Wrap the action c
 export const OTPPhoneAuth = (Phonenumber) => async (dispatch) => {
   
 try {
+  //console.log('phone number is : ',Phonenumber);
     dispatch({ type: OTP_REQUEST });
     const confirmation = await auth.signInWithPhoneNumber(Phonenumber);
 
@@ -225,10 +227,24 @@ try {
 
 };
 
-export const OTPValidation = (OTPValue) => async (dispatch) => {
+export const OTPValidation = (confirmation,otpval) => async (dispatch) => {
 
+      dispatch({ type: OTP_VALIDATION_REQUEST });
 
+      confirmation
+          .confirm(otpval)
+          .then((userCredential) => {
+            // Phone number verified successfully
+            const user = userCredential.user;
+            console.log(userCredential);
+            console.log('\nuser :',user);
+            //Alert('\nuser uid :',user);
+            dispatch({ type: OTP_VALIDATION_SUCCESS, payload: user });
 
+          })
+          .catch((error) => {
+            dispatch({ type: OTP_VALIDATION_FAIL, payload: error.message });
+          });
   
 };
 

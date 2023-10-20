@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native'; 
+import { colors } from '../../Constants/colors';
 
 interface ModalProps {  
   isModalVisible: boolean; // Custom styles for the button label
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
   modalOption: {
     fontSize: hp('2%'),
     paddingVertical: wp('3%'),
+    color:colors.primary
   },
   modeltouch:
   {

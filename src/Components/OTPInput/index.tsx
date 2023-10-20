@@ -1,17 +1,25 @@
-import React, { FunctionComponent,useState } from 'react';
-import { View, StyleSheet,TextInput, TouchableOpacity } from 'react-native';
+import React, { FunctionComponent,useRef,useEffect } from 'react';
+import { View, StyleSheet,TextInput } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../../Constants/colors';
 
 interface OTPInputProps {
-  value: string;
-  setval: (text: string) => void;
+  value: string; 
   onchangeOTP?: (text: string) => void; // Add this prop
+  autoFocus?: boolean; // Add autoFocus prop
+  onSubmitEditing?: () => void;
+
 }
 
-const OTPInput: FunctionComponent<OTPInputProps> = ({ value,setval,onchangeOTP }) => {
+const OTPInput: FunctionComponent<OTPInputProps> = ({ value,onchangeOTP,autoFocus,onSubmitEditing }) => {
  
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [autoFocus]);
    
   return (
     
@@ -19,11 +27,21 @@ const OTPInput: FunctionComponent<OTPInputProps> = ({ value,setval,onchangeOTP }
       <View style={styles.inputWrapper}>
       <TextInput
         style={styles.input}
+        placeholderTextColor={colors.placeholdercolor}
         value={value}
         keyboardType="number-pad"
         onChangeText={onchangeOTP}
         textAlign="center" // Center the text horizontally
         maxLength={1} // Allow only one digit per input
+        autoFocus={autoFocus} // Use the autoFocus prop
+        onSubmitEditing={() => {
+          if (onSubmitEditing) {
+            onSubmitEditing();
+          }
+          focusNextInput();
+        }}
+        ref={inputRef}
+        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'} // Customize return key based on platform
       />
       </View>      
      

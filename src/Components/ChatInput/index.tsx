@@ -31,6 +31,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onAttachmentSend, onSend, handleM
         <View style={styles.inputWrapper}>
           <TextInput
             placeholder="Type a message"
+            placeholderTextColor={colors.placeholdercolor}
             style={styles.input}           
             theme={{ colors: { primary: 'transparent' } }}           
             onChangeText={(newText) => {

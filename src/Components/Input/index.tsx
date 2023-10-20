@@ -29,6 +29,7 @@ const Input: FunctionComponent<InputProps> = ({ label,emailtype, secure, iconNam
       <View style={styles.inputWrapper}>
         <TextInput
           placeholder={label}   
+          placeholderTextColor={colors.placeholdercolor}
           keyboardType= {emailtype ? 'email-address': 'default'}       
           style={styles.input}
           secureTextEntry={!isPasswordVisible}
